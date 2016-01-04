@@ -3,7 +3,6 @@ package com.bortbort.arduino.FiloFirmata.PortAdapters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.util.ArrayList;
 
@@ -19,9 +18,9 @@ public abstract class SerialPort {
     private OutputStream outputStream;
     private Boolean connected = false;
     // Used by adapter implementations that do not support streams;
-    private PipedOutputStream adapterOutputStream;
-    private PipedInputStream adapterInputStream;
-    private AdapterInputStreamListener adapterInputStreamListener;
+    //private PipedOutputStream adapterOutputStream;
+    //private PipedInputStream adapterInputStream;
+    //private AdapterInputStreamListener adapterInputStreamListener;
     private Boolean useAdapterOutputStream;
     private Boolean useAdapterInputStream;
 
@@ -69,7 +68,7 @@ public abstract class SerialPort {
     // Could be called multiple times, even if not connected.
     protected abstract Boolean closePort();
 
-    /* <Not yet used> */
+    /* <Not yet used>
     // If using a serial library that does not use streams, write the bytes to here, which will pipe to a stream.
     protected PipedOutputStream getAdapterOutputStream() {
         return adapterOutputStream;
@@ -100,7 +99,7 @@ public abstract class SerialPort {
         }
         this.adapterInputStreamListener = null;
     }
-    /* </Not yet used> */
+    </Not yet used> */
 
 
     /* Client API */
@@ -120,6 +119,7 @@ public abstract class SerialPort {
             return true;
         }
 
+        /* Uncomment and fix bugs if/when used.
         if (useAdapterOutputStream) {
             inputStream = new PipedInputStream();
             try {
@@ -147,6 +147,7 @@ public abstract class SerialPort {
                 return false;
             }
         }
+        */
 
         if (!openPort()) {
             disconnect();
@@ -160,6 +161,7 @@ public abstract class SerialPort {
     public Boolean disconnect() {
         Boolean ret = closePort();
 
+        /* Uncomment and fix bugs if/when used.
         if (useAdapterOutputStream) {
             try {
                 if (adapterOutputStream != null) {
@@ -211,6 +213,10 @@ public abstract class SerialPort {
         else {
             outputStream = null;
         }
+        */
+
+        inputStream = null;
+        outputStream = null;
 
         connected = !ret;
         return ret;
