@@ -15,29 +15,137 @@ public abstract class SerialPort {
     private String portID;
     private Integer baudRate;
     private ArrayList<SerialPortEventListener> eventListeners = new ArrayList<>();
-    private PipedOutputStream outputStream;
     private InputStream inputStream;
+    private OutputStream outputStream;
     private Boolean connected = false;
+    // Used by adapter implementations that do not support streams;
+    private PipedOutputStream adapterOutputStream;
+    private PipedInputStream adapterInputStream;
+    private AdapterInputStreamListener adapterInputStreamListener;
+    private Boolean useAdapterOutputStream;
+    private Boolean useAdapterInputStream;
 
 
     public SerialPort(String portID, Integer baudRate) {
-        this.portID = portID;
-        this.baudRate = baudRate;
+        this(portID, baudRate, true, true);
     }
 
-    public Boolean connect() {
+    public SerialPort(String portID, Integer baudRate, Boolean useAdapterOutputStream, Boolean useAdapterInputStream) {
+        this.portID = portID;
+        this.baudRate = baudRate;
+        this.useAdapterOutputStream = useAdapterOutputStream;
+        this.useAdapterInputStream = useAdapterInputStream;
+    }
+
+
+    // Set the input stream the client will read from
+    protected void setInputStream(InputStream inputStream) {
+        if (useAdapterOutputStream) {
+            throw new RuntimeException("Cannot set input stream while useAdapterOutputStream is enabled." +
+            " Use the other constructor to turn off piped streams if you are supplying your own.");
+        }
+        this.inputStream = inputStream;
+    }
+
+    // Set the output stream the client will write to
+    protected void setOutputStream(OutputStream outputStream) {
+        if (useAdapterInputStream) {
+            throw new RuntimeException("Cannot set input stream while useAdapterInputStream is enabled." +
+                    " Use the other constructor to turn off piped streams if you are supplying your own.");
+        }
+        this.outputStream = outputStream;
+    }
+
+    // Tell the client if there is data available, etc.
+    protected void fireEvent(SerialPortEventTypes eventType) {
+        for (SerialPortEventListener listener : eventListeners) {
+            listener.serialEvent(new SerialPortEvent(eventType, inputStream));
+        }
+    }
+
+    // Will only be called once if a connection is established.
+    protected abstract Boolean openPort();
+
+    // Could be called multiple times, even if not connected.
+    protected abstract Boolean closePort();
+
+    /* <Not yet used> */
+    // If using a serial library that does not use streams, write the bytes to here, which will pipe to a stream.
+    protected PipedOutputStream getAdapterOutputStream() {
+        return adapterOutputStream;
+    }
+
+    // If using a serial library that does not use streams, read the bytes written from the client here.
+    protected PipedInputStream getAdapterInputStream() { return adapterInputStream; }
+
+    // Register an input stream listener to get notified when the user has written bytes to the adapter
+    //   Use when adapting a SerialPort library that does not support streams.
+    protected void addAdapterInputStreamListener(AdapterInputStreamListener adapterInputStreamListener) {
+        if (!useAdapterInputStream) {
+            throw new RuntimeException("Do not add an input stream listener if not using adapterInputStream");
+        }
+        if (outputStream != null) {
+            ((EventedAdapterPipedOutputStream) outputStream).addInputStreamListener(adapterInputStreamListener);
+        }
+        this.adapterInputStreamListener = adapterInputStreamListener;
+    }
+
+    // Remove the listener if needed by the adapting library
+    protected void removeAdapterInputStreamListener() {
+        if (!useAdapterInputStream) {
+            throw new RuntimeException("Do not remove an input stream listener if not using adapterInputStream");
+        }
+        if (outputStream != null && adapterInputStreamListener != null) {
+            ((EventedAdapterPipedOutputStream) outputStream).removeInputStreamListener(adapterInputStreamListener);
+        }
+        this.adapterInputStreamListener = null;
+    }
+    /* </Not yet used> */
+
+
+    /* Client API */
+
+    public Boolean connect(SerialPortEventListener eventListener) {
+        addEventListener(eventListener);
+        return connect();
+    }
+
+    public Boolean disconnect(SerialPortEventListener eventListener) {
+        removeEventListener(eventListener);
+        return disconnect();
+    }
+
+    public synchronized Boolean connect() {
         if (connected) {
             return true;
         }
 
-        inputStream = new PipedInputStream();
-        try {
-            outputStream = new PipedOutputStream((PipedInputStream) inputStream);
-        } catch (IOException e) {
-            log.error("Unable to generate output stream for SerialPort adapter!");
-            e.printStackTrace();
-            disconnect();
-            return false;
+        if (useAdapterOutputStream) {
+            inputStream = new PipedInputStream();
+            try {
+                adapterOutputStream = new PipedOutputStream((PipedInputStream) inputStream);
+            } catch (IOException e) {
+                log.error("Unable to generate input stream for SerialPort adapter!");
+                e.printStackTrace();
+                disconnect();
+                return false;
+            }
+        }
+
+        if (useAdapterInputStream) {
+            EventedAdapterPipedOutputStream os = new EventedAdapterPipedOutputStream();
+            if (adapterInputStreamListener != null) {
+                os.addInputStreamListener(adapterInputStreamListener);
+            }
+            outputStream = os;
+            try {
+                adapterInputStream = new PipedInputStream((PipedOutputStream) outputStream);
+            } catch (IOException e) {
+                log.error("Unable to generate output stream for SerialPort adapter!");
+                e.printStackTrace();
+                disconnect();
+                return false;
+            }
         }
 
         if (!openPort()) {
@@ -50,33 +158,63 @@ public abstract class SerialPort {
     }
 
     public Boolean disconnect() {
-        if (!connected) {
-            return true;
-        }
-
         Boolean ret = closePort();
 
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            log.error("Unable to close outputstream!");
-            e.printStackTrace();
-            ret = false;
+        if (useAdapterOutputStream) {
+            try {
+                if (adapterOutputStream != null) {
+                    adapterOutputStream.close();
+                }
+            } catch (IOException e) {
+                log.error("Unable to close adapter output stream!");
+                e.printStackTrace();
+                ret = false;
+            }
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                log.error("Unable to close input stream!");
+                e.printStackTrace();
+                ret = false;
+            }
         }
-        try {
-            inputStream.close();
-        } catch (IOException e) {
-            log.error("Unable to close inputstream!");
-            e.printStackTrace();
-            ret = false;
+        else {
+            inputStream = null;
         }
 
-        connected = ret;
+        if (useAdapterInputStream) {
+            try {
+                if (adapterInputStream != null) {
+                    adapterInputStream.close();
+                }
+            } catch (IOException e) {
+                log.error("Unable to close adapter input stream!");
+                e.printStackTrace();
+                ret = false;
+            }
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                    if (adapterInputStreamListener != null) {
+                        ((EventedAdapterPipedOutputStream) outputStream).removeInputStreamListener(
+                                adapterInputStreamListener);
+                    }
+                }
+            } catch (IOException e) {
+                log.error("Unable to close output stream!");
+                e.printStackTrace();
+                ret = false;
+            }
+        }
+        else {
+            outputStream = null;
+        }
+
+        connected = !ret;
         return ret;
     }
-
-    protected abstract Boolean openPort();
-    protected abstract Boolean closePort();
 
     public void addEventListener(SerialPortEventListener eventListener) {
         if (!eventListeners.contains(eventListener)) {
@@ -88,18 +226,12 @@ public abstract class SerialPort {
         eventListeners.remove(eventListener);
     }
 
-    public void fireEvent(SerialPortEventTypes eventType) {
-        for (SerialPortEventListener listener : eventListeners) {
-            listener.serialEvent(new SerialPortEvent(eventType, inputStream));
-        }
-    }
-
     public InputStream getInputStream() {
         return inputStream;
     }
 
-    protected PipedOutputStream getOutputStream() {
-        return  outputStream;
+    public OutputStream getOutputStream() {
+        return outputStream;
     }
 
     public String getPortID() {

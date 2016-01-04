@@ -5,6 +5,6 @@ package com.bortbort.arduino.FiloFirmata.PortAdapters;
  */
 public enum SerialPortEventTypes {
     DATA_AVAILABLE,
-    OUTPUT_EMPTY,
+    OUTPUT_BUFFER_EMPTY,
     PORT_CLOSED,
 }

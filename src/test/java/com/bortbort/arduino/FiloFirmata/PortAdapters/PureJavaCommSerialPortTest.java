@@ -27,17 +27,21 @@ public class PureJavaCommSerialPortTest extends TestCase {
     @Test
     public void testOpenClosePort() throws Exception {
         assertTrue("Port did not open!", serialPort.openPort());
+        Thread.sleep(1000);
         assertTrue("Port did not close!", serialPort.closePort());
         assertTrue("Port did not re-open!", serialPort.openPort());
+        Thread.sleep(1000);
         assertTrue("Port did not re-close!", serialPort.closePort());
     }
 
 
 
-//    @Test
-//    public void testConnect() throws Exception {
-//
-//    }
+    @Test
+    public void testConnect() throws Exception {
+        assertTrue("Unable to connect serial port / streams!", serialPort.connect());
+        Thread.sleep(1000);
+        assertTrue("Unable to disconnect serial port / streams!", serialPort.disconnect());
+    }
 //
 //    @Test
 //    public void testDisconnect() throws Exception {

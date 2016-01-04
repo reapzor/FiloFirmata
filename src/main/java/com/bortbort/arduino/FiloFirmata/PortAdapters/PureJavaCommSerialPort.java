@@ -4,6 +4,7 @@ import purejavacomm.*;
 import purejavacomm.SerialPortEvent;
 import purejavacomm.SerialPortEventListener;
 
+import java.io.IOException;
 import java.util.TooManyListenersException;
 
 /**
@@ -12,10 +13,24 @@ import java.util.TooManyListenersException;
 public class PureJavaCommSerialPort extends SerialPort implements SerialPortEventListener {
     private PureJavaSerialPort serialPort = null;
     private CommPortIdentifier commPortIdentifier = null;
-
+    private Integer dataBits;
+    private Integer parity;
+    private Integer stopBits;
 
     public PureJavaCommSerialPort(String portID, Integer baudRate) {
-        super(portID, baudRate);
+        this(portID, baudRate, SerialPortDataBits.DATABITS_8, SerialPortStopBits.STOPBITS_1,
+                SerialPortParity.PARITY_NONE);
+    }
+
+    public PureJavaCommSerialPort(String portID, Integer baudRate, SerialPortDataBits dataBits,
+                                  SerialPortStopBits stopBits, SerialPortParity parity) {
+        // Do not use piped streams since this library uses input and output streams already
+        super(portID, baudRate, false, false);
+
+        // The port mappings in the adapter directly match the PureJava implementation. No need to translate.
+        this.dataBits = dataBits.getDataBits();
+        this.parity = parity.getParity();
+        this.stopBits = stopBits.getStopBits();
     }
 
     @Override
@@ -30,27 +45,30 @@ public class PureJavaCommSerialPort extends SerialPort implements SerialPortEven
         }
 
         if (commPortIdentifier.isCurrentlyOwned()) {
-            log.warn("Communications port {} is currently in use by {}. Trying to open anyway.",
+            log.error("Communications port {} is currently in use by {}. Trying to open anyway.",
                     getPortID(), commPortIdentifier.getCurrentOwner());
         }
+
+        log.info("Connecting to port {} at baudrate {} with databits setting {}, stopbits setting {}, and parity " +
+        "setting {}. Timeout: 2s", getPortID(), getBaudRate(), dataBits, stopBits, parity);
 
         try {
             serialPort = (PureJavaSerialPort) commPortIdentifier.open(
                     PureJavaCommSerialPort.class.getName(),
                     2000);
         } catch (PortInUseException e) {
-            log.error("Communications port {} is in use. Cannot obtain ownership.", getPortID());
+            log.error("Cannot open communications port {}. Cannot obtain ownership!", getPortID());
             return false;
         }
 
         try {
             serialPort.setSerialPortParams(
                     getBaudRate(),
-                    purejavacomm.SerialPort.DATABITS_8,
-                    purejavacomm.SerialPort.STOPBITS_1,
-                    purejavacomm.SerialPort.PARITY_NONE);
+                    dataBits,
+                    stopBits,
+                    parity);
         } catch (UnsupportedCommOperationException e) {
-            log.error("Unable to configure communications port {} to baud rate {}", getPortID(), getBaudRate());
+            log.error("Unable to configure communications port {} to baud rate {}.", getPortID(), getBaudRate());
             return false;
         }
 
@@ -58,7 +76,7 @@ public class PureJavaCommSerialPort extends SerialPort implements SerialPortEven
         serialPort.notifyOnPortClosed(true);
         serialPort.notifyOnOutputEmpty(true);
 
-        // Adding the event listener is where this serial port really opens up, so make sure it is the last
+        // Adding the event listener is where this serial port really starts churning, so make sure it is the last
         //   thing we do, ensuring all configuration is done beforehand.
         try {
             serialPort.addEventListener(this);
@@ -66,23 +84,53 @@ public class PureJavaCommSerialPort extends SerialPort implements SerialPortEven
             log.warn("Already listening to serial port! {}", e.getMessage());
         }
 
+        try {
+            setInputStream(serialPort.getInputStream());
+        } catch (IOException e) {
+            log.error("Unable to get input stream from port {}. {}", getPortID(), e.getMessage());
+            return false;
+        }
+
+        try {
+            setOutputStream(serialPort.getOutputStream());
+        } catch (IOException e) {
+            log.error("Unable to get output stream to port {}. {}", getPortID(), e.getMessage());
+            return false;
+        }
+
         return true;
     }
 
     @Override
     protected Boolean closePort() {
-        Boolean ret = true;
-
         if (serialPort != null) {
-            serialPort.removeEventListener();
+            log.info("Disconnecting from port {}.", getPortID());
             serialPort.close();
+            serialPort.removeEventListener();
+            serialPort = null;
         }
 
-        return ret;
+        return true;
     }
 
     @Override
     public void serialEvent(SerialPortEvent event) {
-
+        switch (event.getEventType()) {
+            case SerialPortEvent.DATA_AVAILABLE:
+                fireEvent(SerialPortEventTypes.DATA_AVAILABLE);
+                break;
+            case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
+                fireEvent(SerialPortEventTypes.OUTPUT_BUFFER_EMPTY);
+                break;
+            case SerialPortEvent.PORT_CLOSED:
+                fireEvent(SerialPortEventTypes.PORT_CLOSED);
+                break;
+            default:
+                log.error("Unrecognized event {}! {} {}",
+                        event.getEventType(), event.getOldValue(), event.getNewValue());
+                break;
+        }
     }
+
+
 }
