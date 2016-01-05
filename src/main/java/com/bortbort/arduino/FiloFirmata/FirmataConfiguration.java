@@ -6,6 +6,9 @@ import com.bortbort.arduino.FiloFirmata.PortAdapters.*;
  * Created by chuck on 1/4/2016.
  */
 public class FirmataConfiguration {
+    // Anything added here must also be added to:
+    // Constructor method "protected FirmataConfiguration(FirmataConfiguration configuration)"
+    // String method "public String toString()"
     private String serialPortID = "COM3";
     private Integer serialPortBaudRate = 57600;
     private SerialPortDataBits serialPortDataBits = SerialPortDataBits.DATABITS_8;
