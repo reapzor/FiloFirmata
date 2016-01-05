@@ -23,6 +23,7 @@ sourceSets {
     main {
         java {
             srcDir 'lib/purejavacomm/src'
+            srcDir 'lib/JavaHelpers/src/main/java'
         }
     }
 

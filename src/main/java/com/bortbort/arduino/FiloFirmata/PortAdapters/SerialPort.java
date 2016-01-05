@@ -26,7 +26,7 @@ public abstract class SerialPort {
 
 
     public SerialPort(String portID, Integer baudRate) {
-        this(portID, baudRate, true, true);
+        this(portID, baudRate, false, false);
     }
 
     public SerialPort(String portID, Integer baudRate, Boolean useAdapterOutputStream, Boolean useAdapterInputStream) {
@@ -58,7 +58,7 @@ public abstract class SerialPort {
     // Tell the client if there is data available, etc.
     protected void fireEvent(SerialPortEventTypes eventType) {
         for (SerialPortEventListener listener : eventListeners) {
-            listener.serialEvent(new SerialPortEvent(eventType, inputStream));
+            listener.serialEvent(new SerialPortEvent(eventType));
         }
     }
 

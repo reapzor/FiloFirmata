@@ -1,3 +1,6 @@
 [submodule ".\\lib\\purejavacomm"]
 	path = .\\lib\\purejavacomm
 	url = https://github.com/reapzor/purejavacomm
+[submodule ".\\lib\\JavaHelpers"]
+	path = .\\lib\\JavaHelpers
+	url = https://github.com/reapzor/JavaHelpers

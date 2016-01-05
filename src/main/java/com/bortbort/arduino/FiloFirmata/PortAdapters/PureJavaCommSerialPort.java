@@ -3,7 +3,6 @@ package com.bortbort.arduino.FiloFirmata.PortAdapters;
 import purejavacomm.*;
 import purejavacomm.SerialPortEvent;
 import purejavacomm.SerialPortEventListener;
-
 import java.io.IOException;
 import java.util.TooManyListenersException;
 

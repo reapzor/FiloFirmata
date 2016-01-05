@@ -7,18 +7,12 @@ import java.io.InputStream;
  */
 public class SerialPortEvent {
     private SerialPortEventTypes eventType;
-    private InputStream inputStream;
 
-    public SerialPortEvent(SerialPortEventTypes eventType, InputStream inputStream) {
+    public SerialPortEvent(SerialPortEventTypes eventType) {
         this.eventType = eventType;
-        this.inputStream = inputStream;
     }
 
     public SerialPortEventTypes getEventType() {
         return eventType;
-    }
-
-    public InputStream getInputStream() {
-        return inputStream;
     }
 }
