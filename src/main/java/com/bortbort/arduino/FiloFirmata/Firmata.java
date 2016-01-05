@@ -76,11 +76,6 @@ public class Firmata {
 
     // Generate the SerialPort object using the adapter class provided in the configuration
     private void createSerialPort() {
-        if (serialPort != null) {
-            log.warn("Trying to create serial port while one is already made!");
-            removeSerialPort();
-        }
-
         Constructor<? extends SerialPort> constructor;
 
         try {
@@ -89,7 +84,7 @@ public class Firmata {
                     SerialPortDataBits.class, SerialPortStopBits.class, SerialPortParity.class);
         } catch (NoSuchMethodException e) {
             log.error("Unable to construct SerialPort object. Programming error. Your class adapter must support " +
-                    "a construction with input args of" +
+                    "a constructor with input args of" +
                     "YourSerialPort(String.class, Integer.class, SerialPortDataBits.class, " +
                     "SerialPortStopBits.class, SerialPortParity.class);");
             e.printStackTrace();

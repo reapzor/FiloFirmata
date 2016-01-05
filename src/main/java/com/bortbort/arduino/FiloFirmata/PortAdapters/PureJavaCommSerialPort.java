@@ -12,9 +12,6 @@ import java.util.TooManyListenersException;
 public class PureJavaCommSerialPort extends SerialPort implements SerialPortEventListener {
     private PureJavaSerialPort serialPort = null;
     private CommPortIdentifier commPortIdentifier = null;
-    private Integer dataBits;
-    private Integer parity;
-    private Integer stopBits;
 
     // Test constructor
     public PureJavaCommSerialPort(String portID, Integer baudRate) {
@@ -25,12 +22,8 @@ public class PureJavaCommSerialPort extends SerialPort implements SerialPortEven
     public PureJavaCommSerialPort(String portID, Integer baudRate, SerialPortDataBits dataBits,
                                   SerialPortStopBits stopBits, SerialPortParity parity) {
         // Do not use piped streams since this library uses input and output streams already
-        super(portID, baudRate, false, false);
-
         // The port mappings in the adapter directly match the PureJava implementation. No need to translate.
-        this.dataBits = dataBits.getDataBits();
-        this.parity = parity.getParity();
-        this.stopBits = stopBits.getStopBits();
+        super(portID, baudRate, dataBits, stopBits, parity, false, false);
     }
 
     @Override
@@ -50,7 +43,7 @@ public class PureJavaCommSerialPort extends SerialPort implements SerialPortEven
         }
 
         log.info("Connecting to port {} at baudrate {} with databits setting {}, stopbits setting {}, and parity " +
-        "setting {}. Timeout: 2s", getPortID(), getBaudRate(), dataBits, stopBits, parity);
+        "setting {}. Timeout: 2s", getPortID(), getBaudRate(), getDataBits(), getStopBits(), getParity());
 
         try {
             serialPort = (PureJavaSerialPort) commPortIdentifier.open(
@@ -64,9 +57,9 @@ public class PureJavaCommSerialPort extends SerialPort implements SerialPortEven
         try {
             serialPort.setSerialPortParams(
                     getBaudRate(),
-                    dataBits,
-                    stopBits,
-                    parity);
+                    getDataBits().getDataBitsInt(),
+                    getStopBits().getStopBitsInt(),
+                    getParity().getParityInt());
         } catch (UnsupportedCommOperationException e) {
             log.error("Unable to configure communications port {} to baud rate {}.", getPortID(), getBaudRate());
             return false;

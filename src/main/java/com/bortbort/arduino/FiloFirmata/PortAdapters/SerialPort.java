@@ -17,6 +17,9 @@ public abstract class SerialPort {
     private InputStream inputStream;
     private OutputStream outputStream;
     private Boolean connected = false;
+    private SerialPortDataBits dataBits;
+    private SerialPortStopBits stopBits;
+    private SerialPortParity parity;
     // Used by adapter implementations that do not support streams;
     //private PipedOutputStream adapterOutputStream;
     //private PipedInputStream adapterInputStream;
@@ -25,13 +28,18 @@ public abstract class SerialPort {
     private Boolean useAdapterInputStream;
 
 
-    public SerialPort(String portID, Integer baudRate) {
-        this(portID, baudRate, false, false);
+    public SerialPort(String portID, Integer baudRate, SerialPortDataBits dataBits,
+                      SerialPortStopBits stopBits, SerialPortParity parity) {
+        this(portID, baudRate, dataBits, stopBits, parity, false, false);
     }
 
-    public SerialPort(String portID, Integer baudRate, Boolean useAdapterOutputStream, Boolean useAdapterInputStream) {
+    public SerialPort(String portID, Integer baudRate, SerialPortDataBits dataBits, SerialPortStopBits stopBits,
+                      SerialPortParity parity, Boolean useAdapterOutputStream, Boolean useAdapterInputStream) {
         this.portID = portID;
         this.baudRate = baudRate;
+        this.dataBits = dataBits;
+        this.stopBits = stopBits;
+        this.parity = parity;
         this.useAdapterOutputStream = useAdapterOutputStream;
         this.useAdapterInputStream = useAdapterInputStream;
     }
@@ -250,5 +258,17 @@ public abstract class SerialPort {
 
     public Boolean getConnected() {
         return connected;
+    }
+
+    public SerialPortDataBits getDataBits() {
+        return dataBits;
+    }
+
+    public SerialPortStopBits getStopBits() {
+        return stopBits;
+    }
+
+    public SerialPortParity getParity() {
+        return parity;
     }
 }

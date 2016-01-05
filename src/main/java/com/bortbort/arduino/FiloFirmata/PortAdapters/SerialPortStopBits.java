@@ -15,7 +15,7 @@ public enum SerialPortStopBits {
         this.stopBits = stopBits;
     }
 
-    public Integer getStopBits() {
+    public Integer getStopBitsInt() {
         return stopBits;
     }
 }

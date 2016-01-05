@@ -16,7 +16,7 @@ public enum SerialPortParity {
         this.parity = parity;
     }
 
-    public Integer getParity() {
+    public Integer getParityInt() {
         return parity;
     }
 }

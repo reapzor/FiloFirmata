@@ -15,7 +15,7 @@ public enum SerialPortDataBits {
         this.dataBits = dataBits;
     }
 
-    public Integer getDataBits() {
+    public Integer getDataBitsInt() {
         return dataBits;
     }
 }
