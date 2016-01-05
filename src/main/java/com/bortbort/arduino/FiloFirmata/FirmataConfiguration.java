@@ -9,6 +9,7 @@ public class FirmataConfiguration {
     // Anything added here must also be added to:
     // Constructor method "protected FirmataConfiguration(FirmataConfiguration configuration)"
     // String method "public String toString()"
+    // Getter & Setter methods generated
     private String serialPortID = "COM3";
     private Integer serialPortBaudRate = 57600;
     private SerialPortDataBits serialPortDataBits = SerialPortDataBits.DATABITS_8;
