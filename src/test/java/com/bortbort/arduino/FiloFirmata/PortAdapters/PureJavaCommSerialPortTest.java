@@ -2,7 +2,6 @@ package com.bortbort.arduino.FiloFirmata.PortAdapters;
 
 import com.bortbort.helpers.DataTypeHelpers;
 import junit.framework.TestCase;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,17 +11,18 @@ import org.slf4j.LoggerFactory;
 public class PureJavaCommSerialPortTest extends TestCase {
     protected static final Logger log = LoggerFactory.getLogger(PureJavaCommSerialPortTest.class);
 
+    // f0 = sysex start. 79 = firmware report. 02 05 = version (2.5). "filename". f7 = sysex end.
+    // f0 79 02 05 StandardFirmata.ino f7
     private static final String expectedResponseBytes = "F07902055300740061006E006400610072006400460069" +
-            "0072006D006100740061002E0069006E006F00F7"; // f0 79 02 05 StandardFirmata.ino f7
+            "0072006D006100740061002E0069006E006F00F7";
     PureJavaCommSerialPort serialPort = new PureJavaCommSerialPort("COM3", 57600);
 
 
-    @Test
     public void testDataRXTX() throws Exception {
         assertTrue("Unable to connect serial port!",
                 serialPort.connect());
 
-        // Clear out the buffer if theres anything in it
+        // Clear out the buffer if there's anything in it
         while (serialPort.getInputStream().available() != 0) {
             serialPort.getInputStream().read();
         }

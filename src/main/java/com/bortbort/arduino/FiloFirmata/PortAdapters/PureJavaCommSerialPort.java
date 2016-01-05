@@ -16,6 +16,7 @@ public class PureJavaCommSerialPort extends SerialPort implements SerialPortEven
     private Integer parity;
     private Integer stopBits;
 
+    // Test constructor
     public PureJavaCommSerialPort(String portID, Integer baudRate) {
         this(portID, baudRate, SerialPortDataBits.DATABITS_8, SerialPortStopBits.STOPBITS_1,
                 SerialPortParity.PARITY_NONE);

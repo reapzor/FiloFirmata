@@ -49,7 +49,7 @@ public class EventedAdapterPipedOutputStream extends PipedOutputStream {
 
     private void fireEvent(Integer byteCount) {
         for (AdapterInputStreamListener inputStreamListener : inputStreamListeners) {
-            inputStreamListener.inputStreamAvailable(new AdapterInputStreamEvent(byteCount));
+            inputStreamListener.dataAvailableEvent(new AdapterInputStreamEvent(byteCount));
         }
     }
 }

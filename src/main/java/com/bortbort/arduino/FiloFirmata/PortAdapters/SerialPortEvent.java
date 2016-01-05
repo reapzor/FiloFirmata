@@ -1,6 +1,5 @@
 package com.bortbort.arduino.FiloFirmata.PortAdapters;
 
-import java.io.InputStream;
 
 /**
  * Created by chuck on 1/3/2016.
