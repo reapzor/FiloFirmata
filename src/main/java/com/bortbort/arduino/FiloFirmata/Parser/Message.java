@@ -16,6 +16,6 @@ public abstract class Message {
         return identifierByte;
     }
 
-    public abstract Boolean parseMessage(InputStream inputStream);
+    public abstract Boolean buildMessage(InputStream inputStream);
 
 }

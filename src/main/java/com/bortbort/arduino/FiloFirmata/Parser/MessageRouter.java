@@ -11,28 +11,28 @@ import java.util.HashMap;
  */
 public class MessageRouter {
     private static final Logger log = LoggerFactory.getLogger(MessageRouter.class);
-    private static final HashMap<Byte, Message> messages = new HashMap<>();
+    private static final HashMap<Byte, Message> messageParsers = new HashMap<>();
 
     static {
-        MessageRouter.registerMessageParsers(
+        MessageRouter.registerParser(
 
         );
     }
 
-    public static void registerMessageParser(Message message) {
-        messages.put(message.getIdentifierByte(), message);
+    public static void registerParser(Message message) {
+        messageParsers.put(message.getIdentifierByte(), message);
     }
 
-    public static void registerMessageParsers(Message... messageList) {
+    public static void registerParser(Message... messageList) {
         for (Message message : messageList) {
-            registerMessageParser(message);
+            registerParser(message);
         }
     }
 
     protected static void handleByte(byte messageByte, InputStream inputStream) {
-        Message message = messages.get(messageByte);
+        Message message = messageParsers.get(messageByte);
         if (message != null) {
-            message.parseMessage(inputStream);
+            message.buildMessage(inputStream);
         }
         else {
             log.warn("Dropped byte {}", DataTypeHelpers.bytesToHexString(messageByte));
