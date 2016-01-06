@@ -17,7 +17,7 @@ public class Firmata {
     private static final Logger log = LoggerFactory.getLogger(Firmata.class);
     private SerialPort serialPort;
     private FirmataConfiguration configuration;
-    private MessageParser messageParser;
+    private MessageParser messageParser = new MessageParser(this);
     private Boolean started = false;
 
 
@@ -46,7 +46,6 @@ public class Firmata {
 
         messageParser = new MessageParser(this);
         serialPort.addEventListener(messageParser);
-        messageParser.start();
 
         if (!serialPort.connect()) {
             log.error("Failed to start Firmata Library. Cannot connect to Serial Port.");
@@ -62,8 +61,6 @@ public class Firmata {
     public synchronized  Boolean stop() {
         if (serialPort != null) {
             serialPort.removeEventListener(messageParser);
-            messageParser.stop();
-            messageParser = null;
         }
 
         if (!removeSerialPort()) {

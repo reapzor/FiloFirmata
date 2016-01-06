@@ -5,11 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by chuck on 1/3/2016.
  */
 public abstract class SerialPort {
+    private ExecutorService executor;
     protected static final Logger log = LoggerFactory.getLogger(SerialPort.class);
     private String portID;
     private Integer baudRate;
@@ -65,9 +68,15 @@ public abstract class SerialPort {
 
     // Tell the client if there is data available, etc.
     protected void fireEvent(SerialPortEventTypes eventType) {
-        for (SerialPortEventListener listener : eventListeners) {
-            listener.serialEvent(new SerialPortEvent(eventType));
-        }
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                for (SerialPortEventListener listener : eventListeners) {
+                    listener.serialEvent(new SerialPortEvent(eventType));
+                }
+
+            }
+        });
     }
 
     // Will only be called once if a connection is established.
@@ -127,6 +136,8 @@ public abstract class SerialPort {
             return true;
         }
 
+        executor = Executors.newSingleThreadExecutor();
+
         /* Uncomment and fix bugs if/when used.
         if (useAdapterOutputStream) {
             inputStream = new PipedInputStream();
@@ -168,6 +179,9 @@ public abstract class SerialPort {
 
     public Boolean disconnect() {
         Boolean ret = closePort();
+
+        executor.shutdown();
+        executor = null;
 
         /* Uncomment and fix bugs if/when used.
         if (useAdapterOutputStream) {
