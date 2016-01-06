@@ -30,6 +30,11 @@ public class MessageRouter {
     }
 
     protected static void handleByte(byte messageByte, InputStream inputStream) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Message message = messages.get(messageByte);
         if (message != null) {
             message.parseMessage(inputStream);

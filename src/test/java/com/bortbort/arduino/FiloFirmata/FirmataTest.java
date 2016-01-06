@@ -14,7 +14,7 @@ public class FirmataTest {
         firmata.start();
         // Report Firmware
         firmata.getSerialPort().getOutputStream().write(new byte[] {(byte) 0xf0, (byte) 0x79, (byte) 0xf7});
-        Thread.sleep(1000);
+        Thread.sleep(20000);
         firmata.stop();
     }
 
