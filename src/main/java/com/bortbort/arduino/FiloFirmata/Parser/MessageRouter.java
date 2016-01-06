@@ -1,4 +1,4 @@
-package com.bortbort.arduino.FiloFirmata.MessageParser;
+package com.bortbort.arduino.FiloFirmata.Parser;
 
 import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
@@ -30,11 +30,6 @@ public class MessageRouter {
     }
 
     protected static void handleByte(byte messageByte, InputStream inputStream) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         Message message = messages.get(messageByte);
         if (message != null) {
             message.parseMessage(inputStream);

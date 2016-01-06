@@ -1,4 +1,4 @@
-package com.bortbort.arduino.FiloFirmata.MessageParser;
+package com.bortbort.arduino.FiloFirmata.Parser;
 
 import java.io.InputStream;
 

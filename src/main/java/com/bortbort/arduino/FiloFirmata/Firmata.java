@@ -1,6 +1,6 @@
 package com.bortbort.arduino.FiloFirmata;
 
-import com.bortbort.arduino.FiloFirmata.MessageParser.MessageParser;
+import com.bortbort.arduino.FiloFirmata.Parser.MessageParser;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPort;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortDataBits;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortParity;
