@@ -1,6 +1,6 @@
 package com.bortbort.arduino.FiloFirmata;
 
-import com.bortbort.arduino.FiloFirmata.Parser.MessageParser;
+import com.bortbort.arduino.FiloFirmata.Parser.FirmataDataHandler;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPort;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortDataBits;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortParity;
@@ -17,7 +17,7 @@ public class Firmata {
     private static final Logger log = LoggerFactory.getLogger(Firmata.class);
     private SerialPort serialPort;
     private FirmataConfiguration configuration;
-    private MessageParser messageParser = new MessageParser(this);
+    private FirmataDataHandler firmataDataHandler = new FirmataDataHandler(this);
     private Boolean started = false;
 
 
@@ -44,8 +44,8 @@ public class Firmata {
 
         createSerialPort();
 
-        messageParser = new MessageParser(this);
-        serialPort.addEventListener(messageParser);
+        firmataDataHandler = new FirmataDataHandler(this);
+        serialPort.addEventListener(firmataDataHandler);
 
         if (!serialPort.connect()) {
             log.error("Failed to start Firmata Library. Cannot connect to Serial Port.");
@@ -60,7 +60,7 @@ public class Firmata {
 
     public synchronized  Boolean stop() {
         if (serialPort != null) {
-            serialPort.removeEventListener(messageParser);
+            serialPort.removeEventListener(firmataDataHandler);
         }
 
         if (!removeSerialPort()) {
