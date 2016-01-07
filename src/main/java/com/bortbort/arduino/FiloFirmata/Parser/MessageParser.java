@@ -1,5 +1,8 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
+import com.bortbort.arduino.FiloFirmata.Listeners.MessageListener;
+import com.bortbort.arduino.FiloFirmata.Messages.Message;
+
 import java.io.InputStream;
 
 /**
@@ -20,6 +23,6 @@ public abstract class MessageParser {
         return commandByte;
     }
 
-    public abstract Boolean buildMessage(InputStream inputStream);
+    public abstract Message buildMessage(InputStream inputStream);
 
 }

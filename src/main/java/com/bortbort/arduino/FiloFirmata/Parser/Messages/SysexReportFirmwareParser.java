@@ -1,5 +1,6 @@
 package com.bortbort.arduino.FiloFirmata.Parser.Messages;
 
+import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageParser;
@@ -20,7 +21,7 @@ public class SysexReportFirmwareParser extends SysexMessageParser {
     }
 
     @Override
-    public Boolean buildMessage(byte[] messageBody) {
+    public Message buildMessage(byte[] messageBody) {
         String firmwareName;
 
         try {
@@ -33,12 +34,10 @@ public class SysexReportFirmwareParser extends SysexMessageParser {
             firmwareName = null;
         }
 
-        SysexReportFirmwareMessage message = new SysexReportFirmwareMessage(
+        return new SysexReportFirmwareMessage(
                 messageBody[0],
                 messageBody[1],
                 firmwareName
         );
-
-        return true;
     }
 }

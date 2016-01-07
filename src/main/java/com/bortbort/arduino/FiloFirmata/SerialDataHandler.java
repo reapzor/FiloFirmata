@@ -1,6 +1,7 @@
-package com.bortbort.arduino.FiloFirmata.Parser;
+package com.bortbort.arduino.FiloFirmata;
 
-import com.bortbort.arduino.FiloFirmata.Firmata;
+import com.bortbort.arduino.FiloFirmata.Messages.Message;
+import com.bortbort.arduino.FiloFirmata.Parser.MessageRouter;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortEvent;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortEventListener;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortEventTypes;
@@ -12,12 +13,12 @@ import java.io.InputStream;
 /**
  * Created by chuck on 1/5/2016.
  */
-public class FirmataDataHandler extends SerialPortEventListener {
-    private static final Logger log = LoggerFactory.getLogger(FirmataDataHandler.class);
+public class SerialDataHandler extends SerialPortEventListener {
+    private static final Logger log = LoggerFactory.getLogger(SerialDataHandler.class);
     private Firmata firmata;
 
 
-    public FirmataDataHandler(Firmata firmata) {
+    public SerialDataHandler(Firmata firmata) {
         this.firmata = firmata;
     }
 
@@ -34,7 +35,11 @@ public class FirmataDataHandler extends SerialPortEventListener {
         try {
             while (inputStream.available() > 0) {
                 byte inputByte = (byte) inputStream.read();
-                MessageRouter.handleByte(inputByte, inputStream);
+                Message message = MessageRouter.handleByte(inputByte, inputStream);
+                if (message != null) {
+                    log.info("Dispatching message {}", message.getClass().getName());
+                    firmata.getMessageDispatcher().dispatchMessage(message);
+                }
             }
         } catch (IOException e) {
             log.error("IO Error reading from serial port. Closing connection.");

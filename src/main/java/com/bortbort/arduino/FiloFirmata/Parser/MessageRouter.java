@@ -1,5 +1,6 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
+import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,32 +15,38 @@ public class MessageRouter {
     private static final HashMap<Byte, MessageParser> messageParsers = new HashMap<>();
 
     static {
-        MessageRouter.registerParser(
+        MessageRouter.addParser(
                 new SysexMessageRouter()
         );
     }
 
-    public static void registerParser(MessageParser messageParser) {
+    public static void addParser(MessageParser messageParser) {
         messageParsers.put(messageParser.getCommandByte(), messageParser);
     }
 
-    public static void registerParser(MessageParser... messageParserList) {
+    public static void addParser(MessageParser... messageParserList) {
         for (MessageParser messageParser : messageParserList) {
-            registerParser(messageParser);
+            addParser(messageParser);
         }
     }
 
-    protected static void handleByte(byte commandByte, InputStream inputStream) {
+    public static Message handleByte(byte commandByte, InputStream inputStream) {
         MessageParser messageParser = messageParsers.get(commandByte);
         if (messageParser != null) {
-            if (!messageParser.buildMessage(inputStream)) {
+            Message message = messageParser.buildMessage(inputStream);
+            if (message == null) {
                 log.error("Error building Firmata messageParser for command byte {}.",
                         DataTypeHelpers.bytesToHexString(commandByte));
+            }
+            else {
+                return message;
             }
         }
         else {
             log.warn("Dropped byte {}.", DataTypeHelpers.bytesToHexString(commandByte));
         }
+
+        return null;
     }
 
     private MessageRouter() {

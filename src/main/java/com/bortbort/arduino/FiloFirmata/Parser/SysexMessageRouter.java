@@ -1,5 +1,6 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
+import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Parser.Messages.SysexReportFirmwareParser;
 import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
@@ -17,18 +18,18 @@ public class SysexMessageRouter extends MessageParser {
     private static HashMap<Byte, SysexMessageParser> sysexMessageParsers = new HashMap<>();
 
     static {
-        SysexMessageRouter.registerParsers(
+        SysexMessageRouter.addParser(
             new SysexReportFirmwareParser()
         );
     }
 
-    public static void registerParser(SysexMessageParser sysexMessageParser) {
+    public static void addParser(SysexMessageParser sysexMessageParser) {
         sysexMessageParsers.put(sysexMessageParser.getCommandByte(), sysexMessageParser);
     }
 
-    public static void registerParsers(SysexMessageParser... sysexMessageParsers) {
+    public static void addParser(SysexMessageParser... sysexMessageParsers) {
         for (SysexMessageParser sysexMessageParser : sysexMessageParsers) {
-            registerParser(sysexMessageParser);
+            addParser(sysexMessageParser);
         }
     }
 
@@ -37,18 +38,16 @@ public class SysexMessageRouter extends MessageParser {
     }
 
     @Override
-    public Boolean buildMessage(InputStream inputStream) {
-        ByteArrayOutputStream messageBodyBuilder = new ByteArrayOutputStream();
+    public Message buildMessage(InputStream inputStream) {
         byte commandByte;
-        byte[] messageBodyBytes;
-
         try {
             commandByte = (byte) inputStream.read();
         } catch (IOException e) {
             log.error("Error reading Sysex command byte.");
-            return false;
+            return null;
         }
 
+        ByteArrayOutputStream messageBodyBuilder = new ByteArrayOutputStream();
         try {
             int messagePiece;
             while ((messagePiece = inputStream.read()) != -1) {
@@ -58,28 +57,28 @@ public class SysexMessageRouter extends MessageParser {
                 messageBodyBuilder.write(messagePiece);
             }
         } catch (IOException e) {
-            log.error("Error reading Sysex message body.");
-            return false;
+            log.error("Error reading Sysex message body for command {}.",
+                    DataTypeHelpers.bytesToHexString(commandByte));
+            return null;
         }
 
-        messageBodyBytes = messageBodyBuilder.toByteArray();
+        byte[] messageBodyBytes = messageBodyBuilder.toByteArray();
+
         try {
             messageBodyBuilder.close();
         } catch (IOException e) {
             log.error("Programming error. Cannot close our byte buffer.");
         }
 
-
         SysexMessageParser messageParser = sysexMessageParsers.get(commandByte);
         if (messageParser == null) {
             log.error("There is no Sysex message parser registered for command {}. Body: {}",
                     DataTypeHelpers.bytesToHexString(commandByte),
                     DataTypeHelpers.bytesToHexString(messageBodyBuilder.toByteArray()));
-            return false;
+            return null;
         }
-        else {
-            return messageParser.buildMessage(messageBodyBytes);
-        }
+
+        return messageParser.buildMessage(messageBodyBytes);
     }
 
 }
