@@ -1,8 +1,6 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
-import com.bortbort.arduino.FiloFirmata.Listeners.MessageListener;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
-
 import java.io.InputStream;
 
 /**
