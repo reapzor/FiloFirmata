@@ -1,9 +1,9 @@
-package com.bortbort.arduino.FiloFirmata.Parser.Messages;
+package com.bortbort.arduino.FiloFirmata.Parser.Builders;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
-import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageParser;
+import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
 import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +13,10 @@ import java.io.UnsupportedEncodingException;
 /**
  * Created by chuck on 1/6/2016.
  */
-public class SysexReportFirmwareParser extends SysexMessageParser {
-    private static final Logger log = LoggerFactory.getLogger(SysexReportFirmwareParser.class);
+public class SysexReportFirmwareBuilder extends SysexMessageBuilder {
+    private static final Logger log = LoggerFactory.getLogger(SysexReportFirmwareBuilder.class);
 
-    public SysexReportFirmwareParser() {
+    public SysexReportFirmwareBuilder() {
         super(SysexCommandBytes.REPORT_FIRMWARE.getCommandByte());
     }
 

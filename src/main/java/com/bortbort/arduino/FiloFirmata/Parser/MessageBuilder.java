@@ -8,14 +8,14 @@ import java.io.InputStream;
 /**
  * Created by chuck on 1/5/2016.
  */
-public abstract class MessageParser {
+public abstract class MessageBuilder {
     private byte commandByte;
 
-    public MessageParser(byte commandByte) {
+    public MessageBuilder(byte commandByte) {
         this.commandByte = commandByte;
     }
 
-    public MessageParser(CommandBytes commandByte) {
+    public MessageBuilder(CommandBytes commandByte) {
         this.commandByte = commandByte.getCommandByte();
     }
 

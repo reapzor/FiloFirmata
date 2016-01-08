@@ -16,7 +16,7 @@ public class MessageDispatcher {
     }
 
     public void addMessageListener(MessageListener messageListener) {
-        Class messageListenerClass = messageListener.getMessageListenerClass();
+        Class messageListenerClass = messageListener.getMessageType();
 
         if (!messageListenerMap.containsKey(messageListenerClass)) {
             ArrayList<MessageListener> listenerArray = new ArrayList<>();
@@ -30,8 +30,7 @@ public class MessageDispatcher {
 
 
     public void removeMessageListener(MessageListener messageListener) {
-        Class<? extends MessageListener> messageListenerClass = messageListener.getClass();
-
+        Class messageListenerClass = messageListener.getMessageType();
         if (messageListenerMap.containsKey(messageListenerClass)) {
             messageListenerMap.get(messageListenerClass).remove(messageListener);
         }
@@ -42,10 +41,9 @@ public class MessageDispatcher {
     //   implementations, which we are also generic here.
     @SuppressWarnings("unchecked")
     public void dispatchMessage(Message message) {
-        Class messageListenerClass = message.getMessageListenerClass();
-        if (messageListenerMap.containsKey(messageListenerClass)) {
-            ArrayList<MessageListener> messageListeners =
-                    messageListenerMap.get(messageListenerClass);
+        Class messageClass = message.getClass();
+        if (messageListenerMap.containsKey(messageClass)) {
+            ArrayList<MessageListener> messageListeners = messageListenerMap.get(messageClass);
             for (MessageListener listener : messageListeners) {
                 listener.messageReceived(message);
             }

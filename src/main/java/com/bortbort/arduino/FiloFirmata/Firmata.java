@@ -1,5 +1,10 @@
 package com.bortbort.arduino.FiloFirmata;
 
+import com.bortbort.arduino.FiloFirmata.Listeners.MessageListener;
+import com.bortbort.arduino.FiloFirmata.Parser.CommandParser;
+import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
+import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandParser;
+import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPort;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortDataBits;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortParity;
@@ -20,6 +25,14 @@ public class Firmata {
     private MessageDispatcher messageDispatcher = new MessageDispatcher();
     private Boolean started = false;
 
+    public static void addCustomCommandParser(MessageBuilder messageBuilder) {
+        CommandParser.addParser(messageBuilder);
+    }
+
+    public static void addCustomSysexParser(SysexMessageBuilder messageBuilder) {
+        SysexCommandParser.addParser(messageBuilder);
+    }
+
 
 
     public Firmata() {
@@ -31,13 +44,16 @@ public class Firmata {
     }
 
 
+    public void addMessageListener(MessageListener messageListener) {
+        messageDispatcher.addMessageListener(messageListener);
+    }
+
+    public void removeMessageListener(MessageListener messageListener) {
+        messageDispatcher.removeMessageListener(messageListener);
+    }
 
     public SerialPort getSerialPort() {
         return serialPort;
-    }
-
-    public MessageDispatcher getMessageDispatcher() {
-        return messageDispatcher;
     }
 
     public synchronized Boolean start() {
@@ -118,5 +134,9 @@ public class Firmata {
         }
 
         return ret;
+    }
+
+    protected MessageDispatcher getMessageDispatcher() {
+        return messageDispatcher;
     }
 }

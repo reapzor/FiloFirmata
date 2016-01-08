@@ -6,15 +6,15 @@ import com.bortbort.arduino.FiloFirmata.Messages.Message;
  * Created by chuck on 1/6/2016.
  */
 public abstract class MessageListener<T extends Message> {
-    private Class messageListenerClass;
+    private Class<T> messageType;
 
-    public MessageListener(Class<? extends MessageListener> messageListenerClass) {
-        this.messageListenerClass = messageListenerClass;
+    public MessageListener(Class<T> messageType) {
+        this.messageType = messageType;
     }
 
     public abstract void messageReceived(T message);
 
-    public Class getMessageListenerClass() {
-        return messageListenerClass;
+    public Class<T> getMessageType() {
+        return messageType;
     }
 }

@@ -8,7 +8,7 @@ import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareMessage;
 public abstract class SysexReportFirmwareListener extends MessageListener<SysexReportFirmwareMessage> {
 
     public SysexReportFirmwareListener() {
-        super(SysexReportFirmwareListener.class);
+        super(SysexReportFirmwareMessage.class);
     }
 
     @Override

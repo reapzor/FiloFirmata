@@ -1,7 +1,7 @@
 package com.bortbort.arduino.FiloFirmata;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
-import com.bortbort.arduino.FiloFirmata.Parser.MessageRouter;
+import com.bortbort.arduino.FiloFirmata.Parser.CommandParser;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortEvent;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortEventListener;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.SerialPortEventTypes;
@@ -35,7 +35,7 @@ public class SerialDataHandler extends SerialPortEventListener {
         try {
             while (inputStream.available() > 0) {
                 byte inputByte = (byte) inputStream.read();
-                Message message = MessageRouter.handleByte(inputByte, inputStream);
+                Message message = CommandParser.handleByte(inputByte, inputStream);
                 if (message != null) {
                     log.info("Dispatching message {}", message.getClass().getName());
                     firmata.getMessageDispatcher().dispatchMessage(message);
