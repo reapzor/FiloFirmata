@@ -1,7 +1,9 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
 /**
- * Created by chuck on 1/6/2016.
+ * Firmata Protocol SysexCommand Bytes
+ * List of all bytes used to identify specific messages sent from the Firmata device over the SerialPort
+ * https://github.com/firmata/protocol/blob/master/protocol.md
  */
 public enum SysexCommandBytes {
     ENCODER_DATA                (0x61), // reply with encoders current positions

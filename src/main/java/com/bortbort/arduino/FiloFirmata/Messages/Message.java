@@ -2,7 +2,7 @@ package com.bortbort.arduino.FiloFirmata.Messages;
 
 
 /**
- * Created by chuck on 1/6/2016.
+ * Firmata message packet describing the details for an implemented Firmata Message
  */
 public abstract class Message {
 

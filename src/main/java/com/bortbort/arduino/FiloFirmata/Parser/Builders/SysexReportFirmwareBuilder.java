@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created by chuck on 1/6/2016.
+ * SysexReportFirmwareBuilder to build a SysexReportFirmwareMessage packet
+ * https://github.com/firmata/protocol/blob/master/protocol.md
  */
 public class SysexReportFirmwareBuilder extends SysexMessageBuilder {
     private static final Logger log = LoggerFactory.getLogger(SysexReportFirmwareBuilder.class);

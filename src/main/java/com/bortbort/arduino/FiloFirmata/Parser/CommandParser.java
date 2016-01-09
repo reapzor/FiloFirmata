@@ -8,7 +8,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 /**
- * Created by chuck on 1/5/2016.
+ * Firmata Command Parser
+ * Handles parsing of a Firmata command message discovered over the SerialPort.
  */
 public class CommandParser {
     private static final Logger log = LoggerFactory.getLogger(CommandParser.class);
