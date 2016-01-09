@@ -21,7 +21,7 @@ public class Firmata {
     private static final Logger log = LoggerFactory.getLogger(Firmata.class);
     private SerialPort serialPort;
     private FirmataConfiguration configuration;
-    private SerialDataHandler serialDataHandler = new SerialDataHandler(this);
+    private SerialDataHandler serialDataHandler;
     private MessageDispatcher messageDispatcher = new MessageDispatcher();
     private Boolean started = false;
 

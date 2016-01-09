@@ -2,13 +2,14 @@ package com.bortbort.arduino.FiloFirmata;
 
 import com.bortbort.arduino.FiloFirmata.Listeners.MessageListener;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by chuck on 1/6/2016.
  */
-public class MessageDispatcher {
+class MessageDispatcher {
     private final HashMap<Class, ArrayList<MessageListener>> messageListenerMap = new HashMap<>();
 
     public MessageDispatcher() {

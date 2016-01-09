@@ -13,7 +13,7 @@ import java.io.InputStream;
 /**
  * Created by chuck on 1/5/2016.
  */
-public class SerialDataHandler extends SerialPortEventListener {
+class SerialDataHandler extends SerialPortEventListener {
     private static final Logger log = LoggerFactory.getLogger(SerialDataHandler.class);
     private Firmata firmata;
 
