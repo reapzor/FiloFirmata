@@ -34,7 +34,7 @@ public class SysexCommandParser extends MessageBuilder {
     }
 
     public SysexCommandParser() {
-        super(CommandBytes.START_SYSEX.getCommandByte());
+        super(CommandBytes.START_SYSEX);
     }
 
     @Override

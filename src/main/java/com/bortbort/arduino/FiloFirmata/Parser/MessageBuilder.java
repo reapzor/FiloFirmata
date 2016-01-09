@@ -8,6 +8,10 @@ import java.io.InputStream;
  */
 public abstract class MessageBuilder extends MessageBuilderBase {
 
+    public MessageBuilder(CommandBytes commandByte) {
+        super(commandByte.getCommandByte());
+    }
+
     public MessageBuilder(byte commandByte) {
         super(commandByte);
     }

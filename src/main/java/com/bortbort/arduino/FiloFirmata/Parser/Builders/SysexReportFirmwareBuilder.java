@@ -17,7 +17,7 @@ public class SysexReportFirmwareBuilder extends SysexMessageBuilder {
     private static final Logger log = LoggerFactory.getLogger(SysexReportFirmwareBuilder.class);
 
     public SysexReportFirmwareBuilder() {
-        super(SysexCommandBytes.REPORT_FIRMWARE.getCommandByte());
+        super(SysexCommandBytes.REPORT_FIRMWARE);
     }
 
     @Override

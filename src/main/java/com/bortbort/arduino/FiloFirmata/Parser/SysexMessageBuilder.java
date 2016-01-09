@@ -7,6 +7,10 @@ import com.bortbort.arduino.FiloFirmata.Messages.Message;
  */
 public abstract class SysexMessageBuilder extends MessageBuilderBase {
 
+    public SysexMessageBuilder(SysexCommandBytes commandByte) {
+        super(commandByte.getCommandByte());
+    }
+
     public SysexMessageBuilder(byte commandByte) {
         super(commandByte);
     }
