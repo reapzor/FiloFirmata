@@ -3,7 +3,7 @@ package com.bortbort.arduino.FiloFirmata.Parser;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 
 /**
- * SysexMessageBuilder definition for building Firmata Sysex Message objects from a determined byte array
+ * SysexMessageBuilder definition for building Firmata Sysex Message objects from a determined byte array.
  */
 public abstract class SysexMessageBuilder extends MessageBuilderBase {
 

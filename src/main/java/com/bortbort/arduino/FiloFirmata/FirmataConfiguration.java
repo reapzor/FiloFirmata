@@ -3,7 +3,7 @@ package com.bortbort.arduino.FiloFirmata;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.*;
 
 /**
- * Firmata Configuration
+ * Firmata Configuration.
  * Defines the requirements necessary to implement the Firmata protocol over your desired SerialPort
  * communications line.
  */

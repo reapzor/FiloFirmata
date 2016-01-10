@@ -1,8 +1,8 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
 /**
- * Firmata Protocol Command Bytes
- * List of all bytes used to identify specific messages sent from the Firmata device over the SerialPort
+ * Firmata Protocol Command Bytes.
+ * List of all bytes used to identify specific messages sent from the Firmata device over the SerialPort.
  * https://github.com/firmata/protocol/blob/master/protocol.md
  */
 public enum CommandBytes {

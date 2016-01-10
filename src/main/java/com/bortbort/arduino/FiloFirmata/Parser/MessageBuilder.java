@@ -4,7 +4,7 @@ import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import java.io.InputStream;
 
 /**
- * MessageBuilder definition for building Firmata Message objects from a SerialPort's InputStream
+ * MessageBuilder definition for building Firmata Message objects from a SerialPort's InputStream.
  */
 public abstract class MessageBuilder extends MessageBuilderBase {
 

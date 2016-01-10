@@ -3,7 +3,7 @@ package com.bortbort.arduino.FiloFirmata.Messages;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 
 /**
- * SysexReportFirmwareMessage packet
+ * SysexReportFirmwareMessage packet.
  * https://github.com/firmata/protocol/blob/master/protocol.md
  */
 public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
@@ -18,7 +18,7 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
     private Integer minorVersion;
 
     /**
-     * Firmata Firmare Name. (For Arduino, is generally the name of the .ino Arduino Processing file)
+     * Firmata Firmare Name. (For Arduino, is generally the name of the .ino Arduino Processing file.)
      */
     private String firmwareName;
 
