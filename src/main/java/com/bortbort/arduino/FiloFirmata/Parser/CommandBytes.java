@@ -13,7 +13,9 @@ public enum CommandBytes {
     SET_PIN_MODE        (0xF4),
     SET_PIN_VALUE       (0xF5),
     START_SYSEX         (0xF0), // Start of SYSEX packet. Used by SysexCommandParser.
-    END_SYSEX           (0xF7); // End of SYSEX packet. Used by SysexCommandParser.
+    END_SYSEX           (0xF7), // End of SYSEX packet. Used by SysexCommandParser.
+    PROTOCOL_VERSION    (0xF9),
+    SYSTEM_RESET        (0xFF);
 
     /**
      * Command Byte representing the CommandBytes enum value.

@@ -1,6 +1,7 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
+import com.bortbort.arduino.FiloFirmata.Parser.Builders.ProtocolVersionBuilder;
 import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,9 @@ public class CommandParser {
     static {
         CommandParser.addParser(
                 // Support Sysex commands
-                new SysexCommandParser()
+                new SysexCommandParser(),
+                // Support Protocol Version command
+                new ProtocolVersionBuilder()
         );
     }
 

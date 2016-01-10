@@ -48,7 +48,7 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
     }
 
     /**
-     * Firmata Firmare Name. (For Arduino, is generally the name of the .ino Arduino Processing file)
+     * Firmata Firmware Name. (For Arduino, is generally the name of the .ino Arduino Processing file)
      *
      * @return String representing the Firmata device's firmware library name.
      */
