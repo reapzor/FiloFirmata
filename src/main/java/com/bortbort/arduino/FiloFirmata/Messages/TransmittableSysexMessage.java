@@ -4,26 +4,26 @@ import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 
 /**
- * Transmittable SysexMessage used to represent a set of Java data that can be serialized into a Firmata data packet
+ * Transmittable SysexMessage used to represent a set of Java data that can be serialized into a Firmata data packet.
  */
 public abstract class TransmittableSysexMessage extends TransmittableMessage {
     /**
-     * SysexCommandByte used to identify this sysex message over the SerialPort communications line
+     * SysexCommandByte used to identify this sysex message over the SerialPort communications line.
      */
     Byte sysexCommandByte;
 
     /**
-     * Construct a new TransmittableSysexMessage using a pre-defined Firmata SysexCommandByte
+     * Construct a new TransmittableSysexMessage using a pre-defined Firmata SysexCommandByte.
      *
      * @param sysexCommandByte SysexCommandBytes sysexCommandByte identifying the sysex command
      *                         that this sysex message is for.
      */
     public TransmittableSysexMessage(SysexCommandBytes sysexCommandByte) {
-        this(sysexCommandByte.getCommandByte());
+        this(sysexCommandByte.getSysexCommandByte());
     }
 
     /**
-     * Construct a new TransmittableSysexMessage using a SysexCommandByte
+     * Construct a new TransmittableSysexMessage using a SysexCommandByte.
      *
      * @param sysexCommandByte SysexCommandByte identifying the sysex command that this sysex message is for.
      */
@@ -36,7 +36,7 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
      * Serialize a SysexMessage object into an array of bytes to be sent over the SerialPort to the Firmata supported
      * communications device.
      *
-     * @return byte[] array representing the full TransmittableSysexMessage data packet
+     * @return byte[] array representing the full TransmittableSysexMessage data packet.
      */
     public abstract byte[] serializeSysex();
 
@@ -62,7 +62,7 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
     }
 
     /**
-     * SysexCommandByte used to identify this sysex message over the SerialPort communications line
+     * SysexCommandByte used to identify this sysex message over the SerialPort communications line.
      */
     public Byte getSysexCommandByte() {
         return sysexCommandByte;

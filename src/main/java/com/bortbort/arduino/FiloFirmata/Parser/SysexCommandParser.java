@@ -25,7 +25,7 @@ public class SysexCommandParser extends MessageBuilder {
     private static HashMap<Byte, SysexMessageBuilder> messageBuilderMap = new HashMap<>();
 
     /**
-     * Register all pre-built Message builder objects available in the Firmata library
+     * Register all pre-built Message builder objects available in the Firmata library.
      */
     static {
         SysexCommandParser.addParser(

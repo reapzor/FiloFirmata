@@ -8,6 +8,7 @@ import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandParser;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.*;
+import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -26,22 +27,22 @@ public class Firmata extends SerialPortEventListener {
     private static final Logger log = LoggerFactory.getLogger(Firmata.class);
 
     /**
-     * Map of listener objects registered to respond to specific message events
+     * Map of listener objects registered to respond to specific message events.
      */
     private final HashMap<Class, ArrayList<MessageListener>> messageListenerMap = new HashMap<>();
 
     /**
-     * Serial port adapter reference
+     * Serial port adapter reference.
      */
     private SerialPort serialPort;
 
     /**
-     * Firmata configuration reference
+     * Firmata configuration reference.
      */
     private FirmataConfiguration configuration;
 
     /**
-     * Flag identifying if the Firmata library (and serial port) is started
+     * Flag identifying if the Firmata library (and serial port) is started.
      */
     private Boolean started = false;
 
@@ -50,7 +51,7 @@ public class Firmata extends SerialPortEventListener {
      * Add a custom parser to the Firmata library. When the command byte for the parser is received, the parser
      * will be responsible for turning the the data that follows into a Firmata message.
      *
-     * @param messageBuilder Builder class that translates the byte message into a message object
+     * @param messageBuilder Builder class that translates the byte message into a message object.
      */
     public static void addCustomCommandParser(MessageBuilder messageBuilder) {
         CommandParser.addParser(messageBuilder);
@@ -60,7 +61,7 @@ public class Firmata extends SerialPortEventListener {
      * Add a custom sysex parser to the Firmata library. When the command byte for the parser is received, the parser
      * will be responsible for turning the the data that follows into a Firmata message.
      *
-     * @param messageBuilder SysexMessageBuilder object describing how to build a message
+     * @param messageBuilder SysexMessageBuilder object describing how to build a message.
      */
     public static void addCustomSysexParser(SysexMessageBuilder messageBuilder) {
         SysexCommandParser.addParser(messageBuilder);
@@ -68,16 +69,16 @@ public class Firmata extends SerialPortEventListener {
 
 
     /**
-     * Implement the Firmata library using the default FirmataConfiguration()
+     * Implement the Firmata library using the default FirmataConfiguration().
      */
     public Firmata() {
         this.configuration = new FirmataConfiguration();
     }
 
     /**
-     * Implement the Firmata library using a custom FirmataConfiguration()
+     * Implement the Firmata library using a custom FirmataConfiguration().
      *
-     * @param configuration FirmataConfiguration custom object to match your port/api needs
+     * @param configuration FirmataConfiguration custom object to match your port/api needs.
      */
     public Firmata(FirmataConfiguration configuration) {
         this.configuration = new FirmataConfiguration(configuration);
@@ -117,10 +118,10 @@ public class Firmata extends SerialPortEventListener {
     }
 
     /**
-     * Send a message over the serial port to a Firmata supported device.
+     * Send a Message over the serial port to a Firmata supported device.
      *
      * @param message TransmittableMessage object used to translate a series of bytes to the SerialPort.
-     * @return True if message sent. False if message was not sent.
+     * @return True if the Message sent. False if the Message was not sent.
      */
     public Boolean sendMessage(TransmittableMessage message) {
         try {
@@ -128,6 +129,25 @@ public class Firmata extends SerialPortEventListener {
             return true;
         } catch (IOException e) {
             log.error("Unable to transmit message {} through serial port", message.getClass().getName());
+            stop();
+        }
+
+        return false;
+    }
+
+    /**
+     * Send a series of raw bytes over the serial port to a Firmata supported device.
+     *
+     * @param rawBytes byte array to be sent over the SerialPort OutputStream.
+     * @return True if the bytes were sent. False if the bytes were not sent.
+     */
+    public Boolean sendRaw(byte... rawBytes) {
+        try {
+            serialPort.getOutputStream().write(rawBytes);
+            return true;
+        } catch (IOException e) {
+            log.error("Unable to transmit raw bytes through serial port. Bytes: {}",
+                    DataTypeHelpers.bytesToHexString(rawBytes));
             stop();
         }
 
@@ -239,8 +259,8 @@ public class Firmata extends SerialPortEventListener {
     /**
      * Handle events from the SerialPort object. When DATA_AVAILABLE is sent, handleDataAvailable() and build a message
      * object that can be passed up to the client for interpretation and handling.
-     * Note: Currently only handling DATA_AVAILABLE
-     * @param event SerialPortEvent indicating the type of event that was raised from the SerialPort object
+     * Note: Currently only handling DATA_AVAILABLE.
+     * @param event SerialPortEvent indicating the type of event that was raised from the SerialPort object.
      */
     @Override
     public void serialEvent(SerialPortEvent event) {
@@ -251,7 +271,7 @@ public class Firmata extends SerialPortEventListener {
 
     /**
      * Handles the SerialPort input stream and builds a message object if a detected CommandByte is discovered
-     * over the communications stream
+     * over the communications stream.
      */
     private void handleDataAvailable() {
         InputStream inputStream = serialPort.getInputStream();

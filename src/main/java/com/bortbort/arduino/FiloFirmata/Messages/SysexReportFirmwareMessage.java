@@ -8,12 +8,12 @@ import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
  */
 public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
     /**
-     * Firmata Major version (x.y or 2.5) where x or 2 is "major"
+     * Firmata Major version (x.y or 2.5) where x or 2 is "major".
      */
     private Integer majorVersion;
 
     /**
-     * Firmata Minor version (x.y or 2.5) where y or 5 is "minor"
+     * Firmata Minor version (x.y or 2.5) where y or 5 is "minor".
      */
     private Integer minorVersion;
 
@@ -30,14 +30,14 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
     }
 
     /**
-     * Firmata Major version (x.y or 2.5) where x or 2 is "major"
+     * Firmata Major version (x.y or 2.5) where x or 2 is "major".
      */
     public int getMajorVersion() {
         return majorVersion;
     }
 
     /**
-     * Firmata Minor version (x.y or 2.5) where y or 5 is "minor"
+     * Firmata Minor version (x.y or 2.5) where y or 5 is "minor".
      */
     public int getMinorVersion() {
         return minorVersion;
@@ -53,8 +53,8 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
     /**
      * When transmitting the request for a SysexReportFirmware message, we need no body data, only the command
      * to be sent, which is handled by the parent class. Treat the implementation as a no-op and return
-     * no body. This will ensure the output is {0xF9 0x79 0xF7} (start_sysex, report_firmware, end_sysex)
-     * @return null
+     * no body. This will ensure the output is {0xF9 0x79 0xF7} (start_sysex, report_firmware, end_sysex).
+     * @return null.
      */
     @Override
     public byte[] serializeSysex() {

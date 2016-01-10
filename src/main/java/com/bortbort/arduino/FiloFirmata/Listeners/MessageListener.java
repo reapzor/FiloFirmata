@@ -3,7 +3,7 @@ package com.bortbort.arduino.FiloFirmata.Listeners;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 
 /**
- * MessageListener
+ * MessageListener.
  * Abstract class definition for a listener that can be registered to fire when specific Message events are
  * given as defined by the Generic. When registered, only messages of the provided type
  * will be evented to messageReceived.
@@ -16,9 +16,9 @@ public abstract class MessageListener<T extends Message> {
     private Class<T> messageType;
 
     /**
-     * Construct a new message listener for the given Message messageType classes
+     * Construct a new message listener for the given Message messageType classes.
      *
-     * @param messageType Message class representing the Message to listen to and handle events from
+     * @param messageType Message class representing the Message to listen to and handle events from.
      */
     public MessageListener(Class<T> messageType) {
         this.messageType = messageType;
@@ -28,7 +28,7 @@ public abstract class MessageListener<T extends Message> {
      * Handler for messageReceived() events. Whenever a Firmata message from the SerialPort is received, this event
      * will fire to any corresponding listener that wants to handle the specific type of message.
      *
-     * @param message Message implementation containing data about the Firmata command sent from the SerialPort
+     * @param message Message implementation containing data about the Firmata command sent from the SerialPort.
      */
     public abstract void messageReceived(T message);
 
