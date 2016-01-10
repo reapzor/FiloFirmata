@@ -10,7 +10,6 @@ import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -89,7 +88,7 @@ public class Firmata extends SerialPortEventListener {
      * over the SerialPort.
      *
      * @param messageListener MessageListener object to handle a received Message event over the SerialPort.
-     * */
+     */
     public void addMessageListener(MessageListener messageListener) {
         Class messageListenerClass = messageListener.getMessageType();
 
@@ -275,7 +274,7 @@ public class Firmata extends SerialPortEventListener {
     /**
      * Dispatch a Message object built from data over the SerialPort communication line to a corresponding
      * MessageListener class designed to handle and interpret the object for processing in the client code.
-     * It seems unchecked warning suppression is is necessary, since this is the only part of the
+     * It seems the unchecked warning suppression is necessary, since this is the only part of the
      * design where we need to translate from generics to implementations, and the only objects
      * that know what Message implementation this is are the MessageListener implementations, which
      * we are also generic here.

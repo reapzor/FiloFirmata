@@ -11,32 +11,67 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 /**
- * Created by chuck on 1/6/2016.
+ * Firmata Sysex Command Parser.
+ * Handles parsing of a Firmata sysex command message discovered over the SerialPort.
+ * This is essentially a re-implementation of CommandParser, with one extra layer to handle
+ * the padded START_SYSEX and END_SYSEX bytes.
  */
 public class SysexCommandParser extends MessageBuilder {
     private static final Logger log = LoggerFactory.getLogger(SysexCommandParser.class);
+
+    /**
+     * Map of sysexMessageBuilders used to parse an array/inputstream of bytes into a Firmata Sysex Message object.
+     */
     private static HashMap<Byte, SysexMessageBuilder> messageBuilderMap = new HashMap<>();
 
+    /**
+     * Register all pre-built Message builder objects available in the Firmata library
+     */
     static {
         SysexCommandParser.addParser(
-            new SysexReportFirmwareBuilder()
+                // Support Sysex Report Firmware
+                new SysexReportFirmwareBuilder()
         );
     }
 
+    /**
+     * Add a custom sysex parser to the Firmata library. When the sysex command byte for the parser is received,
+     * the parser will be responsible for turning the the data that follows into a Firmata sysex message.
+     *
+     * @param sysexMessageBuilder SysexMessageBuilder object that translates the byte message into
+     *                            a sysex Message object.
+     */
     public static void addParser(SysexMessageBuilder sysexMessageBuilder) {
         messageBuilderMap.put(sysexMessageBuilder.getCommandByte(), sysexMessageBuilder);
     }
 
+    /**
+     * Array input for addParser(SysexMessageBuilder).
+     * @param sysexMessageBuilders Array of SysexMessageBuilder objects that translate
+     *                             the byte message into a sysex Message object.
+     */
     public static void addParser(SysexMessageBuilder... sysexMessageBuilders) {
         for (SysexMessageBuilder sysexMessageBuilder : sysexMessageBuilders) {
             addParser(sysexMessageBuilder);
         }
     }
 
+    /**
+     * Implement the MessageBuilder object using the START_SYSEX command byte to handle all sysex messaged passed
+     * from the Firmata SerialPort.
+     */
     public SysexCommandParser() {
         super(CommandBytes.START_SYSEX);
     }
 
+    /**
+     * Attempts to identify the corresponding Firmata Sysex Message object that responds to the
+     * identified sysexCommandByte. If found, it will ask for the sysex message to be built using
+     * the identified bytes between the sysexCommandByte and the END_SYSEX commandByte later in the input stream.
+     *
+     * @param inputStream InputStream representing the data following the START_SYSEX command byte.
+     * @return Message representing the Firmata Sysex Message that the SerialPort communications device sent.
+     */
     @Override
     public Message buildMessage(InputStream inputStream) {
         byte commandByte;
