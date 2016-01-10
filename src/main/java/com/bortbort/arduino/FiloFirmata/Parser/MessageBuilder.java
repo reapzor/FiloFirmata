@@ -10,6 +10,8 @@ public abstract class MessageBuilder extends MessageBuilderBase {
 
     /**
      * Construct a MessageBuilder using the given CommandByte.
+     *
+     * @param commandByte CommandBytes enum value representing a Firmata command byte.
      */
     public MessageBuilder(CommandBytes commandByte) {
         super(commandByte.getCommandByte());
@@ -17,6 +19,8 @@ public abstract class MessageBuilder extends MessageBuilderBase {
 
     /**
      * Construct a MessageBuilder using the given commandByte.
+     *
+     * @param commandByte Byte value representing a Firmata command byte.
      */
     public MessageBuilder(byte commandByte) {
         super(commandByte);

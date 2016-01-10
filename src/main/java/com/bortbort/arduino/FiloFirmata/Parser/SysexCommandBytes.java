@@ -29,13 +29,14 @@ public enum SysexCommandBytes {
     SYSEX_REALTIME              (0x7F); // MIDI Reserved for realtime messages
 
     /**
-     * Sysex Command Byte representing the SysexCommandBytes enum value
+     * Sysex Command Byte representing the SysexCommandBytes enum value.
      */
     private byte sysexCommandByte;
 
     /**
-     * Construct enum with the provided sysexCommandByte
-     * @param sysexCommandByte int representing the Firmata protocol sysex command byte
+     * Construct enum with the provided sysexCommandByte.
+     *
+     * @param sysexCommandByte int representing the Firmata protocol sysex command byte.
      */
     SysexCommandBytes(int sysexCommandByte) {
         this.sysexCommandByte = (byte) sysexCommandByte;
@@ -43,6 +44,8 @@ public enum SysexCommandBytes {
 
     /**
      * Sysex Command Byte representing the SysexCommandBytes enum value
+     *
+     * @return Byte representing the SysexCommandBytes enum value.
      */
     public byte getSysexCommandByte() {
         return sysexCommandByte;

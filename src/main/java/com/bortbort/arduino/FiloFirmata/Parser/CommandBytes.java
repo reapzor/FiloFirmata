@@ -16,20 +16,23 @@ public enum CommandBytes {
     END_SYSEX           (0xF7); // End of SYSEX packet. Used by SysexCommandParser.
 
     /**
-     * Command Byte representing the CommandBytes enum value
+     * Command Byte representing the CommandBytes enum value.
      */
     byte commandByte;
 
     /**
-     * Construct enum with the provided commandByte
-     * @param commandByte int representing the Firmata protocol command byte
+     * Construct enum with the provided commandByte.
+     *
+     * @param commandByte int representing the Firmata protocol command byte.
      */
     CommandBytes(int commandByte) {
         this.commandByte = (byte) commandByte;
     }
 
     /**
-     * Command Byte representing the CommandBytes enum value
+     * Command Byte representing the CommandBytes enum value.
+     *
+     * @return Byte representing the CommandBytes enum value.
      */
     public byte getCommandByte() {
         return commandByte;

@@ -188,7 +188,7 @@ public class Firmata extends SerialPortEventListener {
      *
      * @return True if the library has stopped. False if there was an error stopping the library.
      */
-    public synchronized  Boolean stop() {
+    public synchronized Boolean stop() {
         if (serialPort != null) {
             serialPort.removeEventListener(this);
         }
@@ -242,6 +242,7 @@ public class Firmata extends SerialPortEventListener {
 
     /**
      * Disconnect from the SerialPort object that we are communicating with over the Firmata protocol.
+     *
      * @return True if the SerialPort was closed. False if the port failed to close.
      */
     private Boolean removeSerialPort() {
@@ -260,6 +261,7 @@ public class Firmata extends SerialPortEventListener {
      * Handle events from the SerialPort object. When DATA_AVAILABLE is sent, handleDataAvailable() and build a message
      * object that can be passed up to the client for interpretation and handling.
      * Note: Currently only handling DATA_AVAILABLE.
+     *
      * @param event SerialPortEvent indicating the type of event that was raised from the SerialPort object.
      */
     @Override
@@ -297,7 +299,9 @@ public class Firmata extends SerialPortEventListener {
      * It seems the unchecked warning suppression is necessary, since this is the only part of the
      * design where we need to translate from generics to implementations, and the only objects
      * that know what Message implementation this is are the MessageListener implementations, which
-     * we are also generic here.
+     * are also generic here.
+     *
+     * @param message Firmata Message to be dispatched to the registered MessageListeners.
      */
     @SuppressWarnings("unchecked")
     public void dispatchMessage(Message message) {

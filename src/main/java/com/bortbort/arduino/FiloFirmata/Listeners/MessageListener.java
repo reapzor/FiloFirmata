@@ -35,6 +35,8 @@ public abstract class MessageListener<T extends Message> {
     /**
      * Holds the message type that this listener fires for. When a message is received, it will be be of the type
      * provided when implementing this class.
+     *
+     * @return Class representing the Message type this listener fires for.
      */
     public Class<T> getMessageType() {
         return messageType;

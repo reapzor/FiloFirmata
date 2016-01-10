@@ -21,6 +21,8 @@ public abstract class MessageBuilderBase {
 
     /**
      * CommandByte used to identify the Firmata message this builder is implemented for.
+     *
+     * @return Byte used to identify the Firmata message this builder is implemented for.
      */
     public byte getCommandByte() {
         return commandByte;

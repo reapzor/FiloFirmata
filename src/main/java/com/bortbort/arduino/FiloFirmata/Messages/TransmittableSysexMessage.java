@@ -63,6 +63,8 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
 
     /**
      * SysexCommandByte used to identify this sysex message over the SerialPort communications line.
+     *
+     * @return Byte representing the Firmata Sysex Command for this message
      */
     public Byte getSysexCommandByte() {
         return sysexCommandByte;

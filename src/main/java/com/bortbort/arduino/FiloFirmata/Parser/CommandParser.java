@@ -41,6 +41,7 @@ public class CommandParser {
 
     /**
      * Array input for addParser(MessageBuilder).
+     *
      * @param messageBuilderList Array of MessageBuilder objects that translate the byte message into a Message object.
      */
     public static void addParser(MessageBuilder... messageBuilderList) {
@@ -53,6 +54,7 @@ public class CommandParser {
      * Attempts to identify the corresponding Firmata Message object that responds to the given commandByte
      * If found, it will ask for the message to be built using given inputStream. The builder will take away
      * any bytes necessary to build the message and then return.
+     *
      * @param commandByte CommandByte representing the identify of a specific command Message packet.
      * @param inputStream InputStream representing the data following the command byte.
      * @return Message representing the Firmata Message that the SerialPort communications device sent.

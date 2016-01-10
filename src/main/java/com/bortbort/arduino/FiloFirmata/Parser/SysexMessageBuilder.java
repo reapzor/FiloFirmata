@@ -9,16 +9,20 @@ public abstract class SysexMessageBuilder extends MessageBuilderBase {
 
     /**
      * Construct a SysexMessageBuilder using the given SysexCommandByte.
+     *
+     * @param sysexCommandByte SysexCommandBytes enum value representing a Firmata sysex command byte.
      */
-    public SysexMessageBuilder(SysexCommandBytes commandByte) {
-        super(commandByte.getSysexCommandByte());
+    public SysexMessageBuilder(SysexCommandBytes sysexCommandByte) {
+        super(sysexCommandByte.getSysexCommandByte());
     }
 
     /**
      * Construct a SysexMessageBuilder using the given sysexCommandByte.
+     *
+     * @param sysexCommandByte Byte value representing a Firmata sysex command byte.
      */
-    public SysexMessageBuilder(byte commandByte) {
-        super(commandByte);
+    public SysexMessageBuilder(byte sysexCommandByte) {
+        super(sysexCommandByte);
     }
 
     /**

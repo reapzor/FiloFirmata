@@ -58,6 +58,8 @@ public abstract class TransmittableMessage extends Message {
 
     /**
      * CommandByte used to identify this message over the SerialPort communications line.
+     *
+     * @return Byte representing the Firmata Command for this message.
      */
     public Byte getCommandByte() {
         return commandByte;

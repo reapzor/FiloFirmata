@@ -47,6 +47,7 @@ public class SysexCommandParser extends MessageBuilder {
 
     /**
      * Array input for addParser(SysexMessageBuilder).
+     *
      * @param sysexMessageBuilders Array of SysexMessageBuilder objects that translate
      *                             the byte message into a sysex Message object.
      */

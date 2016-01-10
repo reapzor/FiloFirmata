@@ -31,6 +31,8 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
 
     /**
      * Firmata Major version (x.y or 2.5) where x or 2 is "major".
+     *
+     * @return int representing the Firmata device's library "Major" version.
      */
     public int getMajorVersion() {
         return majorVersion;
@@ -38,6 +40,8 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
 
     /**
      * Firmata Minor version (x.y or 2.5) where y or 5 is "minor".
+     *
+     * @return int representing the Firmata device's library "Minor" version.
      */
     public int getMinorVersion() {
         return minorVersion;
@@ -45,6 +49,8 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
 
     /**
      * Firmata Firmare Name. (For Arduino, is generally the name of the .ino Arduino Processing file)
+     *
+     * @return String representing the Firmata device's firmware library name.
      */
     public String getFirmwareName() {
         return firmwareName;
@@ -54,6 +60,7 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
      * When transmitting the request for a SysexReportFirmware message, we need no body data, only the command
      * to be sent, which is handled by the parent class. Treat the implementation as a no-op and return
      * no body. This will ensure the output is {0xF9 0x79 0xF7} (start_sysex, report_firmware, end_sysex).
+     *
      * @return null.
      */
     @Override
