@@ -73,14 +73,15 @@ public class SysexCommandParser extends MessageBuilder {
      * identified sysexCommandByte. If found, it will ask for the sysex message to be built using
      * the identified bytes between the sysexCommandByte and the END_SYSEX commandByte later in the input stream.
      *
+     * @param channelByte channelByte indicating the pin/port to perform the command against.
      * @param inputStream InputStream representing the data following the START_SYSEX command byte.
      * @return Message representing the Firmata Sysex Message that the SerialPort communications device sent.
      */
     @Override
-    public Message buildMessage(InputStream inputStream) {
-        byte commandByte;
+    public Message buildMessage(Byte channelByte, InputStream inputStream) {
+        byte sysexCommandByte;
         try {
-            commandByte = (byte) inputStream.read();
+            sysexCommandByte = (byte) inputStream.read();
         } catch (IOException e) {
             log.error("Error reading Sysex command byte.");
             return null;
@@ -97,7 +98,7 @@ public class SysexCommandParser extends MessageBuilder {
             }
         } catch (IOException e) {
             log.error("Error reading Sysex message body for command {}.",
-                    DataTypeHelpers.bytesToHexString(commandByte));
+                    DataTypeHelpers.bytesToHexString(sysexCommandByte));
             return null;
         }
 
@@ -109,10 +110,10 @@ public class SysexCommandParser extends MessageBuilder {
             log.error("Programming error. Cannot close our byte buffer.");
         }
 
-        SysexMessageBuilder messageBuilder = messageBuilderMap.get(commandByte);
+        SysexMessageBuilder messageBuilder = messageBuilderMap.get(sysexCommandByte);
         if (messageBuilder == null) {
             log.error("There is no Sysex message parser registered for command {}. Body: {}",
-                    DataTypeHelpers.bytesToHexString(commandByte),
+                    DataTypeHelpers.bytesToHexString(sysexCommandByte),
                     DataTypeHelpers.bytesToHexString(messageBodyBuilder.toByteArray()));
             return null;
         }

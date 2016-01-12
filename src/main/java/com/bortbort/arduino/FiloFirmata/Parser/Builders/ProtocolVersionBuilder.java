@@ -20,7 +20,7 @@ public class ProtocolVersionBuilder extends MessageBuilder {
     }
 
     @Override
-    public Message buildMessage(InputStream inputStream) {
+    public Message buildMessage(Byte pinByte, InputStream inputStream) {
         byte[] versionBytes = new byte[2];
 
         try {

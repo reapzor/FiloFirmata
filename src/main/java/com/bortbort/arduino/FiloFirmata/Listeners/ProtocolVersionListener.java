@@ -11,6 +11,4 @@ public abstract class ProtocolVersionListener extends MessageListener<ProtocolVe
         super(ProtocolVersionMessage.class);
     }
 
-    @Override
-    public abstract void messageReceived(ProtocolVersionMessage message);
 }

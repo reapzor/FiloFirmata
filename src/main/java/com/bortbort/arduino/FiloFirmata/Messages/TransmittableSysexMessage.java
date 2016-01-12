@@ -38,7 +38,7 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
      *
      * @return byte[] array representing the full TransmittableSysexMessage data packet.
      */
-    public abstract byte[] serializeSysex();
+    protected abstract byte[] serialize();
 
     /**
      * Combine the SysexCommandByte and the serialized sysex message packet together to form a Firmata supported
@@ -47,15 +47,16 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
      * @return byte[] array representing the full Firmata sysex command packet to be sent to the Firmata device.
      */
     @Override
-    public byte[] serialize() {
-        byte[] messageBytes = serializeSysex();
+    public byte[] toByteArray() {
+        byte[] messageBytes = serialize();
 
         if (messageBytes == null) {
-            return new byte[] {sysexCommandByte};
+            return new byte[] { commandByte, sysexCommandByte, CommandBytes.END_SYSEX.getCommandByte() };
         }
 
-        byte[] outputBytes = new byte[messageBytes.length + 2];
-        outputBytes[0] = sysexCommandByte;
+        byte[] outputBytes = new byte[messageBytes.length + 3];
+        outputBytes[0] = commandByte;
+        outputBytes[1] = sysexCommandByte;
         System.arraycopy(messageBytes, 0, outputBytes, 1, messageBytes.length);
         outputBytes[outputBytes.length-1] = CommandBytes.END_SYSEX.getCommandByte();
         return outputBytes;

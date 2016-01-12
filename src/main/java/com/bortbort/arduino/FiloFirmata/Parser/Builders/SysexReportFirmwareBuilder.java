@@ -59,8 +59,8 @@ public class SysexReportFirmwareBuilder extends SysexMessageBuilder {
         }
 
         return new SysexReportFirmwareMessage(
-                messageBody[0],
-                messageBody[1],
+                (int) messageBody[0],
+                (int) messageBody[1],
                 firmwareName
         );
     }

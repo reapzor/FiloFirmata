@@ -31,9 +31,10 @@ public abstract class MessageBuilder extends MessageBuilderBase {
      * Firmata Message, which it then returns for eventing out to the client. The inputStream will
      * then be deferred back to the main parser automatically for scanning for new command bytes.
      *
+     * @param channelByte channelByte indicating the pin/port to perform the command against.
      * @param inputStream SerialPort InputStream containing the serialized byte data representing the message.
      * @return Firmata Message object representing the data obtained from the bytes in the InputStream.
      */
-    public abstract Message buildMessage(InputStream inputStream);
+    public abstract Message buildMessage(Byte channelByte, InputStream inputStream);
 
 }

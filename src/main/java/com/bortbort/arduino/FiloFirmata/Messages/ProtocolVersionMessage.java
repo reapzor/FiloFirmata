@@ -24,7 +24,7 @@ public class ProtocolVersionMessage extends TransmittableMessage {
     }
 
     @Override
-    public byte[] serialize() {
+    protected byte[] serialize() {
         return null;
     }
 }

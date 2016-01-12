@@ -22,7 +22,11 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
      */
     private String firmwareName;
 
-    public SysexReportFirmwareMessage(int majorVersion, int minorVersion, String firmwareName) {
+    public SysexReportFirmwareMessage() {
+        this(null, null, null);
+    }
+
+    public SysexReportFirmwareMessage(Integer majorVersion, Integer minorVersion, String firmwareName) {
         super(SysexCommandBytes.REPORT_FIRMWARE);
         this.majorVersion = majorVersion;
         this.minorVersion = minorVersion;
@@ -64,7 +68,7 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
      * @return null.
      */
     @Override
-    public byte[] serializeSysex() {
+    protected byte[] serialize() {
         return null;
     }
 }

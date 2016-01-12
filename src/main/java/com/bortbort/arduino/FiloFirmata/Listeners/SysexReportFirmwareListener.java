@@ -16,13 +16,4 @@ public abstract class SysexReportFirmwareListener extends MessageListener<SysexR
         super(SysexReportFirmwareMessage.class);
     }
 
-    /**
-     * Handler for messageReceived() events. Whenever a SysexReportFirmare Message is received from the SerialPort
-     * this event will fire to any corresponding listener that wants to handle it.
-     *
-     * @param message SysexReportFirmwareMessage implementation containing data about the
-     *                Firmata command sent from the SerialPort.
-     */
-    @Override
-    public abstract void messageReceived(SysexReportFirmwareMessage message);
 }

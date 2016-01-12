@@ -5,11 +5,11 @@ import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 /**
  * Transmittable Message used to represent a set of Java data that can be serialized into a Firmata data packet.
  */
-public abstract class TransmittableMessage extends Message {
+public abstract class TransmittableMessage implements Message {
     /**
      * CommandByte used to identify this message over the SerialPort communications line.
      */
-    Byte commandByte;
+    byte commandByte;
 
     /**
      * Construct a new TransmittableMessage using a pre-defined Firmata CommandByte.
@@ -35,7 +35,7 @@ public abstract class TransmittableMessage extends Message {
      *
      * @return byte[] array representing the data in the TransmittableMessage implementation.
      */
-    public abstract byte[] serialize();
+    protected abstract byte[] serialize();
 
     /**
      * Combine the CommandByte and the serialized message packet together to form a Firmata supported
@@ -47,7 +47,7 @@ public abstract class TransmittableMessage extends Message {
         byte[] messageBytes = serialize();
 
         if (messageBytes == null) {
-            return new byte[] {commandByte};
+            return new byte[] { commandByte };
         }
 
         byte[] outputBytes = new byte[messageBytes.length + 1];

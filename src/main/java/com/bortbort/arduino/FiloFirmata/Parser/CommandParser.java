@@ -1,10 +1,14 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
+import com.bortbort.arduino.FiloFirmata.Parser.Builders.AnalogMessageBuilder;
+import com.bortbort.arduino.FiloFirmata.Parser.Builders.DigitalPortBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.ProtocolVersionBuilder;
 import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.crypto.Data;
 import java.io.InputStream;
 import java.util.HashMap;
 
@@ -28,7 +32,11 @@ public class CommandParser {
                 // Support Sysex commands
                 new SysexCommandParser(),
                 // Support Protocol Version command
-                new ProtocolVersionBuilder()
+                new ProtocolVersionBuilder(),
+                // Analog command
+                new AnalogMessageBuilder(),
+                // Digital Port command
+                new DigitalPortBuilder()
         );
     }
 
@@ -56,16 +64,24 @@ public class CommandParser {
     /**
      * Attempts to identify the corresponding Firmata Message object that responds to the given commandByte
      * If found, it will ask for the message to be built using given inputStream. The builder will take away
-     * any bytes necessary to build the message and then return.
+     * any bytes necessary to build the message and then return. To attempt to identify the correct message
+     * we must mask the incoming byte against 0xF0 if the byte is less than 0xF0, as commands below 0xF0 are
+     * only legal within this mask, due to potential data padding in the same byte, per the Firmata spec.
      *
      * @param commandByte CommandByte representing the identify of a specific command Message packet.
      * @param inputStream InputStream representing the data following the command byte.
      * @return Message representing the Firmata Message that the SerialPort communications device sent.
      */
     public static Message handleByte(byte commandByte, InputStream inputStream) {
-        MessageBuilder messageBuilder = messageBuilderMap.get(commandByte);
+        // Firmata command bytes are limited to a 0xF0 mask, or bytes 0xF0-0xFF
+        //   The extra data in the byte is for routing the command to various 'midi channels'
+        //   or in our case Firmata device pins.
+        byte firmataCommandByte = commandByte < (byte) 0xF0 ? (byte) (commandByte & 0xF0) : commandByte;
+        MessageBuilder messageBuilder = messageBuilderMap.get(firmataCommandByte);
         if (messageBuilder != null) {
-            Message message = messageBuilder.buildMessage(inputStream);
+            // Pull out the pin identifier bits that were padded into the byte (if any)
+            byte channelByte = (byte) (commandByte & 0x0F);
+            Message message = messageBuilder.buildMessage(channelByte, inputStream);
             if (message == null) {
                 log.error("Error building Firmata messageBuilder for command byte {}.",
                         DataTypeHelpers.bytesToHexString(commandByte));

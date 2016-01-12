@@ -23,10 +23,9 @@ public class FirmataTest {
         firmata.addMessageListener(firmwareListener);
         firmata.start();
         // Report Firmware
-        firmata.sendRaw((byte) 0xf0, (byte) 0x79, (byte) 0xf7);
+        firmata.sendMessage(new SysexReportFirmwareMessage());
 
-
-        Thread.sleep(20000);
+        Thread.sleep(2000);
         firmata.stop();
     }
 
