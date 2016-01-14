@@ -26,7 +26,7 @@ public class DigitalPortMessageTest {
         firmata.addMessageListener(messageListener);
         firmata.start();
         // Report Digital
-        firmata.sendRaw((byte) 0xD1, (byte) 0x7f);
+        firmata.sendRaw((byte) 0xD1, (byte) 0x7);
 
         Thread.sleep(2000);
         firmata.stop();

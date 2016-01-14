@@ -125,7 +125,8 @@ public class Firmata extends SerialPortEventListener {
      */
     public Boolean sendMessage(TransmittableMessage message) {
         try {
-            log.info(DataTypeHelpers.bytesToHexString(message.toByteArray()));
+            log.info("Transmitting message {}. Bytes: {}", message.getClass().getName(),
+                    DataTypeHelpers.bytesToHexString(message.toByteArray()));
             serialPort.getOutputStream().write(message.toByteArray());
             return true;
         } catch (IOException e) {
