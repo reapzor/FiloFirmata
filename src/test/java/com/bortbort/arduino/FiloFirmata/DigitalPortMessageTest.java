@@ -19,7 +19,7 @@ public class DigitalPortMessageTest {
         DigitalPortMessageListener messageListener = new DigitalPortMessageListener() {
             @Override
             public void messageReceived(DigitalPortMessage message) {
-                System.out.println(DataTypeHelpers.bytesToHexString(message.getChannelByte()));
+
             }
         };
 

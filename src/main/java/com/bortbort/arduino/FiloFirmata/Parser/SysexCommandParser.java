@@ -1,6 +1,7 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
+import com.bortbort.arduino.FiloFirmata.Parser.Builders.SysexCapabilityResponseBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.SysexReportFirmwareBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.SysexStringDataBuilder;
 import com.bortbort.helpers.DataTypeHelpers;
@@ -33,7 +34,9 @@ public class SysexCommandParser extends MessageBuilder {
                 // Support Sysex Report Firmware
                 new SysexReportFirmwareBuilder(),
                 // Support Sysex String Data
-                new SysexStringDataBuilder()
+                new SysexStringDataBuilder(),
+                // Support Sysex Capability Response
+                new SysexCapabilityResponseBuilder()
         );
     }
 
@@ -118,7 +121,11 @@ public class SysexCommandParser extends MessageBuilder {
             return null;
         }
 
-        return messageBuilder.buildMessage(messageBodyBytes);
+        Message message = messageBuilder.buildMessage(messageBodyBytes);
+
+        log.info(":LSFJKHN");
+
+        return message;
     }
 
 }
