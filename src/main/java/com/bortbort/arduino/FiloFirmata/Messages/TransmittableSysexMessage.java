@@ -57,7 +57,7 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
         byte[] outputBytes = new byte[messageBytes.length + 3];
         outputBytes[0] = commandByte;
         outputBytes[1] = sysexCommandByte;
-        System.arraycopy(messageBytes, 0, outputBytes, 1, messageBytes.length);
+        System.arraycopy(messageBytes, 0, outputBytes, 2, messageBytes.length);
         outputBytes[outputBytes.length-1] = CommandBytes.END_SYSEX.getCommandByte();
         return outputBytes;
     }

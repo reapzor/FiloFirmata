@@ -5,8 +5,6 @@ import com.bortbort.arduino.FiloFirmata.Messages.PinCapabilities;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexCapabilityResponseMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
-import com.bortbort.helpers.DataTypeHelpers;
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
