@@ -282,7 +282,14 @@ public class Firmata extends SerialPortEventListener {
         try {
             while (inputStream.available() > 0) {
                 byte inputByte = (byte) inputStream.read();
+
+                if (inputByte == -1) {
+                    log.error("Reached end of stream trying to read serial port.");
+                    stop();
+                }
+
                 Message message = CommandParser.handleByte(inputByte, inputStream);
+
                 if (message != null) {
                     log.info("Dispatching message {}", message.getClass().getName());
                     dispatchMessage(message);

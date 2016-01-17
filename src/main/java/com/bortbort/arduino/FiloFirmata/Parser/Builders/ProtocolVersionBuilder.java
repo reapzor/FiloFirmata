@@ -4,6 +4,7 @@ import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Messages.ProtocolVersionMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
+import com.bortbort.helpers.InputStreamHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -21,17 +22,14 @@ public class ProtocolVersionBuilder extends MessageBuilder {
 
     @Override
     public Message buildMessage(Byte pinByte, InputStream inputStream) {
-        byte[] versionBytes = new byte[2];
-
         try {
-            int bytesRead = inputStream.read(versionBytes, 0, 2);
-
-            if (bytesRead != 2) {
-                log.error("Unable to parse Protocol Version command from SerialPort.");
-                return null;
+            byte[] versionBytes = new byte[2];
+            if (InputStreamHelpers.fastReadBytesWithTimeout(inputStream, versionBytes, 2000)) {
+                return new ProtocolVersionMessage((int) versionBytes[0], (int) versionBytes[1]);
             }
-
-            return new ProtocolVersionMessage((int) versionBytes[0], (int) versionBytes[1]);
+            else {
+                log.error("Unable to parse Protocol Version command from SerialPort.");
+            }
         } catch (IOException e) {
             log.error("Unable to read Serial Port.");
         }

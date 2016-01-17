@@ -11,7 +11,11 @@ public class AnalogMessage extends ChannelMessage {
         this.analogValue = analogValue;
     }
 
-    public byte getAnalogValue() {
+    public Integer getMaskedAnalogValue() {
+        return analogValue & 0xff;
+    }
+
+    public Byte getAnalogValueByte() {
         return analogValue;
     }
 }

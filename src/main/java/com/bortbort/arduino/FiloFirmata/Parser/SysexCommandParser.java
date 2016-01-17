@@ -93,7 +93,7 @@ public class SysexCommandParser extends MessageBuilder {
             return null;
         }
 
-        ByteArrayOutputStream messageBodyBuilder = new ByteArrayOutputStream();
+        ByteArrayOutputStream messageBodyBuilder = new ByteArrayOutputStream(16);
         try {
             int messagePiece;
             while ((messagePiece = inputStream.read()) != -1) {

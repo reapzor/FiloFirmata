@@ -17,7 +17,7 @@ public class ReportAnalogTest {
         AnalogMessageListener analogListener = new AnalogMessageListener() {
             @Override
             public void messageReceived(AnalogMessage message) {
-                System.out.println(DataTypeHelpers.bytesToHexString(message.getAnalogValue()));
+                System.out.println(message.getMaskedAnalogValue());
                 System.out.println(message.getChannelByte());
             }
         };
