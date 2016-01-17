@@ -28,6 +28,12 @@ public class FirmataConfiguration {
     private Integer serialPortBaudRate = 57600;
 
     /**
+     * Try to talk to the board and verify that it is responding in a Firmata protocol.
+     * Do this by requesting protocol version and checking the response.
+     */
+    private Boolean testProtocolCommunication = true;
+
+    /**
      * Serial Port DataBits configuration (generally 8).
      */
     private SerialPortDataBits serialPortDataBits = SerialPortDataBits.DATABITS_8;
@@ -102,6 +108,7 @@ public class FirmataConfiguration {
         serialPortStopBits = configuration.serialPortStopBits;
         serialPortParity = configuration.serialPortParity;
         serialPortAdapterClass = configuration.serialPortAdapterClass;
+        testProtocolCommunication = configuration.testProtocolCommunication;
     }
 
     /**
@@ -146,6 +153,24 @@ public class FirmataConfiguration {
      */
     public void setSerialPortBaudRate(Integer serialPortBaudRate) {
         this.serialPortBaudRate = serialPortBaudRate;
+    }
+
+    /**
+     * Try to talk to the board and verify that it is responding in a Firmata protocol.
+     * Do this by requesting protocol version and checking the response.
+     */
+    public Boolean getTestProtocolCommunication() {
+        return testProtocolCommunication;
+    }
+
+    /**
+     * Try to talk to the board and verify that it is responding in a Firmata protocol.
+     * Do this by requesting protocol version and checking the response.
+     *
+     * @param testProtocolCommunication Boolean true to run the test on start. False to disable the test.
+     */
+    public void setTestProtocolCommunication(Boolean testProtocolCommunication) {
+        this.testProtocolCommunication = testProtocolCommunication;
     }
 
     /**
@@ -234,7 +259,7 @@ public class FirmataConfiguration {
 
 
     /**
-     * Convert the cofiguration to a string, for loggers, etc.
+     * Convert the configuration to a string, for loggers, etc.
      *
       * @return String representing the configuration object.
      */
@@ -243,6 +268,7 @@ public class FirmataConfiguration {
         return "FirmataConfiguration{" +
                 "serialPortID='" + serialPortID + '\'' +
                 ", serialPortBaudRate=" + serialPortBaudRate +
+                ", testProtocolCommunication=" + testProtocolCommunication +
                 ", serialPortDataBits=" + serialPortDataBits +
                 ", serialPortStopBits=" + serialPortStopBits +
                 ", serialPortParity=" + serialPortParity +

@@ -1,7 +1,10 @@
 package com.bortbort.arduino.FiloFirmata;
 
 import com.bortbort.arduino.FiloFirmata.Listeners.MessageListener;
+import com.bortbort.arduino.FiloFirmata.Listeners.ProtocolVersionListener;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
+import com.bortbort.arduino.FiloFirmata.Messages.ProtocolVersionMessage;
+import com.bortbort.arduino.FiloFirmata.Messages.RequestProtocolVersion;
 import com.bortbort.arduino.FiloFirmata.Messages.TransmittableMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandParser;
 import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
@@ -25,6 +28,8 @@ import java.util.HashMap;
  */
 public class Firmata extends SerialPortEventListener {
     private static final Logger log = LoggerFactory.getLogger(Firmata.class);
+    private static final Integer MIN_SUPPORTED_VERSION_MAJOR = 2;
+    private static final Integer MIN_SUPPORTED_VERSION_MINOR = 5;
 
     /**
      * Map of listener objects registered to respond to specific message events.
@@ -45,6 +50,35 @@ public class Firmata extends SerialPortEventListener {
      * Flag identifying if the Firmata library (and serial port) is started.
      */
     private Boolean started = false;
+
+    /**
+     * Protocol Version lock object. used to synchronously wait for a response when testing communications.
+     */
+    private final Object protocolVersionLock = new Object();
+
+    /**
+     * Protocol Version Listener used to verify we can communicate with the Firmata device.
+     * Warn the user if the library if too old for this library, but do not treat it like a fatal event, in the
+     * hopes that it may work.
+     */
+    private final ProtocolVersionListener versionListener = new ProtocolVersionListener() {
+        @Override
+        public void messageReceived(ProtocolVersionMessage message) {
+            log.info("Detected Firmata device protocol version: {}.{}",
+                    message.getMajorVersion(), message.getMinorVersion());
+            if (message.getMajorVersion() < MIN_SUPPORTED_VERSION_MAJOR ||
+                    (message.getMinorVersion() < MIN_SUPPORTED_VERSION_MINOR &&
+                            message.getMajorVersion() >= MIN_SUPPORTED_VERSION_MAJOR)) {
+                log.warn("Firmata device protocol version is too old for this library." +
+                                " Some functionality may not work. Library min supported version: {}.{}",
+                        MIN_SUPPORTED_VERSION_MAJOR, MIN_SUPPORTED_VERSION_MINOR);
+            }
+            removeMessageListener(versionListener);
+            synchronized (protocolVersionLock) {
+                protocolVersionLock.notify();
+            }
+        }
+    };
 
 
     /**
@@ -125,7 +159,7 @@ public class Firmata extends SerialPortEventListener {
      */
     public Boolean sendMessage(TransmittableMessage message) {
         try {
-            log.info("Transmitting message {}. Bytes: {}", message.getClass().getName(),
+            log.debug("Transmitting message {}. Bytes: {}", message.getClass().getSimpleName(),
                     DataTypeHelpers.bytesToHexString(message.toByteArray()));
             serialPort.getOutputStream().write(message.toByteArray());
             return true;
@@ -178,6 +212,13 @@ public class Firmata extends SerialPortEventListener {
             log.error("Configuration is {}", configuration);
             stop();
             return false;
+        }
+
+        if (configuration.getTestProtocolCommunication()) {
+            if (!testProtocolCommunication()) {
+                stop();
+                return false;
+            }
         }
 
         started = true;
@@ -258,6 +299,31 @@ public class Firmata extends SerialPortEventListener {
         return ret;
     }
 
+    /**
+     * Test if Firmata Protocol communication is possible over the serial port. Done by sending a ProtocolVersion
+     * request to the device. If the device supports Firmata, it should reply with a ProtocolVersionMessage.
+     * Listen for this message while sending the request, and if it is not received within 5 seconds, consider
+     * the device unsupported.
+     *
+     * @return true if communications were successful. False if there was a timeout or the data could not be
+     * interpreted within 5 seconds.
+     */
+    synchronized private Boolean testProtocolCommunication() {
+        Boolean protocolTestPassed = true;
+        addMessageListener(versionListener);
+        sendMessage(new RequestProtocolVersion());
+        synchronized (protocolVersionLock) {
+            try {
+                protocolVersionLock.wait(5000);
+            } catch (InterruptedException e) {
+                log.error("Timed out waiting for Firmata protocol response. Device may not be supported " +
+                "or may not be communicating over the Firmata protocol.");
+                protocolTestPassed = false;
+            }
+        }
+        removeMessageListener(versionListener);
+        return protocolTestPassed;
+    }
 
     /**
      * Handle events from the SerialPort object. When DATA_AVAILABLE is sent, handleDataAvailable() and build a message
@@ -291,7 +357,7 @@ public class Firmata extends SerialPortEventListener {
                 Message message = CommandParser.handleByte(inputByte, inputStream);
 
                 if (message != null) {
-                    log.info("Dispatching message {}", message.getClass().getName());
+                    log.debug("Dispatching message {}", message.getClass().getSimpleName());
                     dispatchMessage(message);
                 }
             }

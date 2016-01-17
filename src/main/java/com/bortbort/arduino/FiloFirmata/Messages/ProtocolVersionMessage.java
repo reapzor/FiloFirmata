@@ -7,12 +7,11 @@ import java.io.ByteArrayOutputStream;
 /**
  * Created by chuck on 1/9/2016.
  */
-public class ProtocolVersionMessage extends TransmittableMessage {
+public class ProtocolVersionMessage implements Message {
     Integer majorVersion;
     Integer minorVersion;
 
     public ProtocolVersionMessage(Integer majorVersion, Integer minorVersion) {
-        super(CommandBytes.PROTOCOL_VERSION);
         this.majorVersion = majorVersion;
         this.minorVersion = minorVersion;
     }
@@ -23,11 +22,6 @@ public class ProtocolVersionMessage extends TransmittableMessage {
 
     public Integer getMinorVersion() {
         return minorVersion;
-    }
-
-    @Override
-    protected Boolean serialize(ByteArrayOutputStream outputStream) {
-        return true;
     }
 
 }
