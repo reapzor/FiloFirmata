@@ -30,7 +30,7 @@ public class DigitalPortBuilder extends MessageBuilder {
             byte[] valueByteBody = new byte[2];
             if (inputStream.read(valueByteBody, 0, 2) != -1) {
                 byte valueByte = DataTypeHelpers.decodeTwoSevenBitByteSequence(valueByteBody[0], valueByteBody[1]);
-                int pin = channelByte * 3;
+                int pin = channelByte * 8;
                 ArrayList<Integer> pinValues = new ArrayList<>();
                 HashMap<Integer, Integer> pinMappedValues = new HashMap<>();
                 for (int x = 0; x < 8; x++) {

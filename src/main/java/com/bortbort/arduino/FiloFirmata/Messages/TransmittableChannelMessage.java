@@ -2,15 +2,17 @@ package com.bortbort.arduino.FiloFirmata.Messages;
 
 import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 
+import java.io.ByteArrayOutputStream;
+
 /**
  * Created by chuck on 1/11/2016.
  */
 public abstract class TransmittableChannelMessage extends TransmittableMessage {
     private byte channelByte;
 
-    public TransmittableChannelMessage(CommandBytes commandByte, byte channelByte) {
+    public TransmittableChannelMessage(CommandBytes commandByte, int channelByte) {
         super(commandByte);
-        this.channelByte = channelByte;
+        this.channelByte = (byte) channelByte;
     }
 
     public byte getChannelByte() {
@@ -26,17 +28,15 @@ public abstract class TransmittableChannelMessage extends TransmittableMessage {
      */
     @Override
     public byte[] toByteArray() {
-        byte[] messageBytes = serialize();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(32);
 
-        byte portPaddedCommandByte = (byte) (commandByte + (channelByte & 0x0F));
-        if (messageBytes == null) {
-            return new byte[] { portPaddedCommandByte };
+        outputStream.write((byte) (commandByte + (channelByte & 0x0F)));
+
+        if (serialize(outputStream)) {
+            return outputStream.toByteArray();
         }
 
-        byte[] outputBytes = new byte[messageBytes.length + 1];
-        outputBytes[0] = commandByte;
-        System.arraycopy(messageBytes, 0, outputBytes, 1, messageBytes.length);
-        return outputBytes;
+        return null;
     }
 
 }

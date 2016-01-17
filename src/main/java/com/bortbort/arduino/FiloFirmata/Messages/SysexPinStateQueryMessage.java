@@ -2,6 +2,8 @@ package com.bortbort.arduino.FiloFirmata.Messages;
 
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 
+import java.io.ByteArrayOutputStream;
+
 /**
  * Created by chuck on 1/14/2016.
  */
@@ -18,8 +20,9 @@ public class SysexPinStateQueryMessage extends TransmittableSysexMessage {
     }
 
     @Override
-    protected byte[] serialize() {
-        return new byte[] { (byte) pinIdentifier };
+    protected Boolean serialize(ByteArrayOutputStream outputStream) {
+        outputStream.write(pinIdentifier);
+        return true;
     }
 
 }

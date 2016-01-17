@@ -2,6 +2,8 @@ package com.bortbort.arduino.FiloFirmata.Messages;
 
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 
+import java.io.ByteArrayOutputStream;
+
 /**
  * SysexReportFirmwareMessage packet.
  * https://github.com/firmata/protocol/blob/master/protocol.md
@@ -65,10 +67,11 @@ public class SysexReportFirmwareMessage extends TransmittableSysexMessage {
      * to be sent, which is handled by the parent class. Treat the implementation as a no-op and return
      * no body. This will ensure the output is {0xF9 0x79 0xF7} (start_sysex, report_firmware, end_sysex).
      *
-     * @return null.
+     * @return true.
      */
     @Override
-    protected byte[] serialize() {
-        return null;
+    protected Boolean serialize(ByteArrayOutputStream outputStream) {
+        return true;
     }
+
 }

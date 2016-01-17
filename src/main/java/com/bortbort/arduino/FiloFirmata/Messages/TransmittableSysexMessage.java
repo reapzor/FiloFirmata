@@ -3,6 +3,8 @@ package com.bortbort.arduino.FiloFirmata.Messages;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 
+import java.io.ByteArrayOutputStream;
+
 /**
  * Transmittable SysexMessage used to represent a set of Java data that can be serialized into a Firmata data packet.
  */
@@ -36,9 +38,10 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
      * Serialize a SysexMessage object into an array of bytes to be sent over the SerialPort to the Firmata supported
      * communications device.
      *
-     * @return byte[] array representing the full TransmittableSysexMessage data packet.
+     * @param outputStream ByteArrayOutputStream to build message in.
+     * @return true if no errors building message
      */
-    protected abstract byte[] serialize();
+    protected abstract Boolean serialize(ByteArrayOutputStream outputStream);
 
     /**
      * Combine the SysexCommandByte and the serialized sysex message packet together to form a Firmata supported
@@ -48,18 +51,17 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
      */
     @Override
     public byte[] toByteArray() {
-        byte[] messageBytes = serialize();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(32);
 
-        if (messageBytes == null) {
-            return new byte[] { commandByte, sysexCommandByte, CommandBytes.END_SYSEX.getCommandByte() };
+        outputStream.write(commandByte);
+        outputStream.write(sysexCommandByte);
+
+        if (serialize(outputStream)) {
+            outputStream.write(CommandBytes.END_SYSEX.getCommandByte());
+            return outputStream.toByteArray();
         }
 
-        byte[] outputBytes = new byte[messageBytes.length + 3];
-        outputBytes[0] = commandByte;
-        outputBytes[1] = sysexCommandByte;
-        System.arraycopy(messageBytes, 0, outputBytes, 2, messageBytes.length);
-        outputBytes[outputBytes.length-1] = CommandBytes.END_SYSEX.getCommandByte();
-        return outputBytes;
+        return null;
     }
 
     /**

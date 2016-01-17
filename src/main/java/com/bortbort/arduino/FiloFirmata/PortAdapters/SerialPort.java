@@ -180,8 +180,10 @@ public abstract class SerialPort {
     public Boolean disconnect() {
         Boolean ret = closePort();
 
-        executor.shutdown();
-        executor = null;
+        if (executor != null) {
+            executor.shutdown();
+            executor = null;
+        }
 
         /* Uncomment and fix bugs if/when used.
         if (useAdapterOutputStream) {

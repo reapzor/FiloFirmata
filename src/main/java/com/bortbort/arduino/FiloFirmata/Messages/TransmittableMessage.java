@@ -2,6 +2,8 @@ package com.bortbort.arduino.FiloFirmata.Messages;
 
 import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 
+import java.io.ByteArrayOutputStream;
+
 /**
  * Transmittable Message used to represent a set of Java data that can be serialized into a Firmata data packet.
  */
@@ -33,27 +35,27 @@ public abstract class TransmittableMessage implements Message {
      * Serialize a Message object into an array of bytes to be sent over the SerialPort to the Firmata supported
      * communications device.
      *
+     * @param outputStream ByteArrayOutputStream to build message in.
      * @return byte[] array representing the data in the TransmittableMessage implementation.
      */
-    protected abstract byte[] serialize();
+    protected abstract Boolean serialize(ByteArrayOutputStream outputStream);
 
     /**
      * Combine the CommandByte and the serialized message packet together to form a Firmata supported
      * byte packet to be sent over the SerialPort.
      *
-     * @return byte[] array representing the full Firmata command packet to be sent to the Firmata device.
+     * @return true if no errors building message
      */
     public byte[] toByteArray() {
-        byte[] messageBytes = serialize();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(32);
 
-        if (messageBytes == null) {
-            return new byte[] { commandByte };
+        outputStream.write(commandByte);
+
+        if (serialize(outputStream)) {
+            return outputStream.toByteArray();
         }
 
-        byte[] outputBytes = new byte[messageBytes.length + 1];
-        outputBytes[0] = commandByte;
-        System.arraycopy(messageBytes, 0, outputBytes, 1, messageBytes.length);
-        return outputBytes;
+        return null;
     }
 
     /**
