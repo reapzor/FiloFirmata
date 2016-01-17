@@ -11,6 +11,10 @@ public abstract class TransmittableChannelMessage extends TransmittableMessage {
     private byte channelByte;
 
     public TransmittableChannelMessage(CommandBytes commandByte, int channelByte) {
+        this(commandByte.getCommandByte(), channelByte);
+    }
+
+    public TransmittableChannelMessage(byte commandByte, int channelByte) {
         super(commandByte);
         this.channelByte = (byte) channelByte;
     }

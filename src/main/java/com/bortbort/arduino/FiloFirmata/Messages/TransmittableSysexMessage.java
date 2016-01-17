@@ -35,15 +35,6 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
     }
 
     /**
-     * Serialize a SysexMessage object into an array of bytes to be sent over the SerialPort to the Firmata supported
-     * communications device.
-     *
-     * @param outputStream ByteArrayOutputStream to build message in.
-     * @return true if no errors building message
-     */
-    protected abstract Boolean serialize(ByteArrayOutputStream outputStream);
-
-    /**
      * Combine the SysexCommandByte and the serialized sysex message packet together to form a Firmata supported
      * sysex byte packet to be sent over the SerialPort.
      *
@@ -51,7 +42,7 @@ public abstract class TransmittableSysexMessage extends TransmittableMessage {
      */
     @Override
     public byte[] toByteArray() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(32);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(16);
 
         outputStream.write(commandByte);
         outputStream.write(sysexCommandByte);
