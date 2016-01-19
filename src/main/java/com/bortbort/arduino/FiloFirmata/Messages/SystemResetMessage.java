@@ -5,7 +5,8 @@ import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Created by chuck on 1/9/2016.
+ * System Reset Message
+ * Asks the Firmata device to reboot/reset
  */
 public class SystemResetMessage extends TransmittableMessage {
 

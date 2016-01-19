@@ -5,7 +5,8 @@ import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 import java.io.ByteArrayOutputStream;
 
 /**
- * SysexReportFirmwareMessage packet.
+ * Sysex Report Firmware Message
+ * Asks the Firmata device to reply with its protocol version and firmware/file title/name
  * https://github.com/firmata/protocol/blob/master/protocol.md
  */
 public class SysexReportFirmwareMessage extends TransmittableSysexMessage {

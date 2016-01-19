@@ -5,7 +5,9 @@ import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Transmittable Message used to represent a set of Java data that can be serialized into a Firmata data packet.
+ * Transmittable Message
+ * Enables transmitting of a Firmata command.
+ * Supplies a system for serializing the message into a byte array to be sent over the wire.
  */
 public abstract class TransmittableMessage implements Message {
     /**

@@ -1,11 +1,9 @@
 package com.bortbort.arduino.FiloFirmata.Messages;
 
-import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
-
-import java.io.ByteArrayOutputStream;
 
 /**
- * Created by chuck on 1/9/2016.
+ * Protocol Version Message
+ * Holds details on the firmware version the Firmata device is running.
  */
 public class ProtocolVersionMessage implements Message {
     Integer majorVersion;
@@ -16,10 +14,18 @@ public class ProtocolVersionMessage implements Message {
         this.minorVersion = minorVersion;
     }
 
+    /**
+     * Get Major Version
+     * @return the whole version value from the firmware version (Eg: 2.5, Major is "2")
+     */
     public Integer getMajorVersion() {
         return majorVersion;
     }
 
+    /**
+     * Get Minor Version
+     * @return the partial version value from the firmware version (Eg: 2.5, Minor is "5")
+     */
     public Integer getMinorVersion() {
         return minorVersion;
     }

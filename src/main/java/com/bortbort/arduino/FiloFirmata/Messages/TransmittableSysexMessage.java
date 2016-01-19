@@ -6,7 +6,10 @@ import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Transmittable SysexMessage used to represent a set of Java data that can be serialized into a Firmata data packet.
+ * Transmittable Sysex Message
+ * Enables transmitting of a Firmata Sysex command. Handles serialization of the root command byte for Sysex,
+ * and the Sysex command byte that the message is for.
+ * Supplies a system for serializing the Sysex message into a byte array to be sent over the wire.
  */
 public abstract class TransmittableSysexMessage extends TransmittableMessage {
     /**

@@ -4,7 +4,7 @@ import com.bortbort.arduino.FiloFirmata.Listeners.MessageListener;
 import com.bortbort.arduino.FiloFirmata.Listeners.ProtocolVersionListener;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Messages.ProtocolVersionMessage;
-import com.bortbort.arduino.FiloFirmata.Messages.RequestProtocolVersion;
+import com.bortbort.arduino.FiloFirmata.Messages.RequestProtocolVersionMessage;
 import com.bortbort.arduino.FiloFirmata.Messages.TransmittableMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandParser;
 import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
@@ -311,7 +311,7 @@ public class Firmata extends SerialPortEventListener {
     synchronized private Boolean testProtocolCommunication() {
         Boolean protocolTestPassed = true;
         addMessageListener(versionListener);
-        sendMessage(new RequestProtocolVersion());
+        sendMessage(new RequestProtocolVersionMessage());
         synchronized (protocolVersionLock) {
             try {
                 protocolVersionLock.wait(5000);

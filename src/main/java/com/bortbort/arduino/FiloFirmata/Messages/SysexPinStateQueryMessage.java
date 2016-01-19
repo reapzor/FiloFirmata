@@ -5,11 +5,16 @@ import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Created by chuck on 1/14/2016.
+ * Sysex Pin State Query Message
+ * Asks the Firmata device to respond with the current state/mode/value of a given pin index.
  */
 public class SysexPinStateQueryMessage extends TransmittableSysexMessage {
     int pinIdentifier;
 
+    /**
+     * Sysex Pin State Query Messae
+     * @param pinIdentifier Integer index of pin to get state for.
+     */
     public SysexPinStateQueryMessage(Integer pinIdentifier) {
         super(SysexCommandBytes.PIN_STATE_QUERY);
         this.pinIdentifier = pinIdentifier;
@@ -21,6 +26,7 @@ public class SysexPinStateQueryMessage extends TransmittableSysexMessage {
 
     @Override
     protected Boolean serialize(ByteArrayOutputStream outputStream) {
+        // Output the pin index as its own byte while building the message.
         outputStream.write(pinIdentifier);
         return true;
     }

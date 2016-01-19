@@ -3,7 +3,7 @@ package com.bortbort.arduino.FiloFirmata.Listeners;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareMessage;
 
 /**
- * Sysex Report Firmware Listener.
+ * Sysex Report Firmware Message Listener.
  * Abstract class definition for a listener that can be registered to fire when a SysexReportFirmwareMessage is
  * received over the SerialPort.
  */

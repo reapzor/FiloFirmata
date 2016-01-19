@@ -3,7 +3,8 @@ package com.bortbort.arduino.FiloFirmata.Messages;
 import java.util.ArrayList;
 
 /**
- * Created by chuck on 1/14/2016.
+ * Firmata Pin Capabilities.
+ * Holds the byte values representing various Pin Modes that a Firmata device pin could support.
  */
 public enum PinCapabilities {
     INPUT          (0x00), // defined in Arduino.h

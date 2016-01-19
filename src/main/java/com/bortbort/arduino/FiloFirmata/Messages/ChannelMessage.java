@@ -1,7 +1,9 @@
 package com.bortbort.arduino.FiloFirmata.Messages;
 
 /**
- * Created by chuck on 1/11/2016.
+ * Abstract Channel Message
+ * Defines a base Message that supports "Midi Channels" or in our case, "Firmata Pins".
+ * Handles identification and access of the Channel Byte which was masked with the Command Byte.
  */
 public abstract class ChannelMessage implements Message {
     private byte channelByte;
@@ -10,6 +12,10 @@ public abstract class ChannelMessage implements Message {
         this.channelByte = channelByte;
     }
 
+    /**
+     * Get Channel Byte
+     * @return Byte representing the Channel or Firmata Pin that the Command Byte applies to.
+     */
     public byte getChannelByte() {
         return channelByte;
     }

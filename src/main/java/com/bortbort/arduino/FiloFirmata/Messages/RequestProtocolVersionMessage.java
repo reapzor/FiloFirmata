@@ -5,11 +5,12 @@ import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Created by chuck on 1/17/2016.
+ * Request Protocol Version Message
+ * Asks the Firmata device to respond with its Firmware protocol version
  */
-public class RequestProtocolVersion extends TransmittableMessage {
+public class RequestProtocolVersionMessage extends TransmittableMessage {
 
-    public RequestProtocolVersion() {
+    public RequestProtocolVersionMessage() {
         super(CommandBytes.PROTOCOL_VERSION);
     }
 

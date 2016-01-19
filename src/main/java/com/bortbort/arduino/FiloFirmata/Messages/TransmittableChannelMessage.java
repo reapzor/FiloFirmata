@@ -5,7 +5,10 @@ import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Created by chuck on 1/11/2016.
+ * Transmittable Channel Message
+ * Enables transmitting of a Firmata command that is bit-masked with a channel port identifier byte (0-16)
+ * Handles the masking of the two bytes into one, so that implementations only need focus on the two values
+ * being sent down. Supplies a system for serializing the message into a byte array to be sent over the wire.
  */
 public abstract class TransmittableChannelMessage extends TransmittableMessage {
     private byte channelByte;
