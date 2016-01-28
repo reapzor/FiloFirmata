@@ -36,11 +36,12 @@ Please note that FiloFirmata creates a copy of the configuration fed to instanti
 Firmata firmata = new Firmata();
 ```
 ```java
-// Configuration for an OSX arduino device.
+// Configuration for an arduino device running on an Apple computer.
 Firmata firmata = new Firmata("/dev/tty.usbmodemXXXXXX");
 ```
 ```java
-// Custom configuration for an OSX arduino device that needs to communicate slower than default.
+// Configuration for an arduino device running on an Apple computer
+//   that needs to communicate slower than default.
 FirmataConfiguration firmataConfiguration = new FirmataConfiguration("/dev/tty.usbmodemXXXXXX");
 // We want to communicate slower than the StandardFirmata default. Set that here.
 firmataConfiguration.setSerialPortBaudRate(9600);
@@ -91,10 +92,10 @@ firmata.stop();
 ## Sending Messages
 Any message that implements the abstract TransmittableMessage class can be transmitted through the serial port. This base class supports the serialization methods needed to convert your data message into a byte stream. For the base Firmata Protocol, these messages have been predefined for you.
 ```java
-// Ask the project board to start eventing the analog (adc) values of analog pin 3.
-firmata.sendMessage(new ReportAnalogPinMessage(3, true));
-// Ask the project board to stop eventing the analog (adc) values of analog pin 3.
-firmata.sendMessage(new ReportAnalogPinMessage(3, false));
+// Ask the project board to start eventing the analog (adc) values of analog pin 3. (0 indexed)
+firmata.sendMessage(new ReportAnalogPinMessage(2, true));
+// Ask the project board to stop eventing the analog (adc) values of analog pin 3. (0 indexed)
+firmata.sendMessage(new ReportAnalogPinMessage(2, false));
 // Ask the project board to reboot.
 firmata.sendMessage(new SystemResetMessage());
 ```
