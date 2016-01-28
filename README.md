@@ -1,7 +1,22 @@
 # FiloFirmata Library
 Filo Firmata is a Java library designed to interact with the Firmata protocol. At heart Firmata is a duplication of the standard MIDI protocol that has been adapted to work with hardware project boards such as Arduino for controlling and reading values from sensors or custom code embedded within the project board.
 
+#### Firmata Protocol
 The Firmata project is an attempt to standardize and expand the capibilities of an Arduino or similar device by allowing you to do deeper processing from another device, operating system, and programming language, such as a Raspberry Pi or a laptop. The library has some standard support for reading pins, writing to pins, reading analog sensors, etc, but also allows for you to integrate custom commands so that you can implement the library to suit your communication needs. FiloFirmata is a client for this idea, supporting the base command structure within Firmata, with a design pattern that allows you to quickly define custom commands and data that can communicate with your Firmata library implementation within your project board.
+
+#### Firmata Messages
+Firmata messages are a simple object that contains values, indexes, and other sets of data that was passed either to or from your project board. Messages that get sent to the project board get serialized into a stream of bytes and are then sent to the project board over a serial communications port. Messages that come from the project board are parsed as a byte stream from the serial port, and built into a message object representing the data that the message contained as a series of Java values or objects for reading and handling within your Java application.
+```java
+// Example listener that reads protocol version values from a Firmata Message that was sent by the project board.
+private final ProtocolVersionListener versionListener = new ProtocolVersionListener() {
+    @Override
+    public void messageReceived(ProtocolVersionMessage message) {
+        // Log the major and minor firmata firmware version reported to us by the Arduino / project board.
+        log.info("Detected Firmata device protocol version: {}.{}",
+              message.getMajorVersion(), message.getMinorVersion());
+    }
+};
+```
 
 FiloFirmata is an event driven library. Every message passed up or down the Arduino device counts as an event.
 
@@ -33,21 +48,6 @@ firmataConfiguration.setSerialPortBaudRate(9600);
 Firmata firmata = new Firmata(firmataConfiguration);
 // This change ignored by the implemented Firmata library above.
 firmataConfiguration.setSerialPortBaudRate(57600);
-```
-
-
-## Firmata Messages
-Firmata messages are a simple object that contains values, indexes, and other sets of data that was passed either to or from your project board. Messages that get sent to the project board get serialized into a stream of bytes and are then sent to the project board over a serial communications port. Messages that come from the project board are parsed as a byte stream from the serial port, and built into a message object representing the data that the message contained as a series of Java values or objects for reading and handling within your Java application.
-```java
-// Example listener that reads protocol version values from a Firmata Message that was sent by the project board.
-private final ProtocolVersionListener versionListener = new ProtocolVersionListener() {
-    @Override
-    public void messageReceived(ProtocolVersionMessage message) {
-        // Log the major and minor firmata firmware version reported to us by the Arduino / project board.
-        log.info("Detected Firmata device protocol version: {}.{}",
-              message.getMajorVersion(), message.getMinorVersion());
-    }
-};
 ```
 
 
@@ -166,7 +166,7 @@ To implement a handler and custom message that is coming from your Arduino or pr
 
 For the example, we will use the same Two String Message command above, however now we will be reading two strings from the project board, instead of sending them.
 
-Define a TwoStringReceieve message that represents two string values sent by the project board.
+* Define a TwoStringReceieve message that represents two string values sent by the project board.
 ```java
 public class TwoStringReceiveMessage implements Message {
     private String string1;
@@ -187,7 +187,7 @@ public class TwoStringReceiveMessage implements Message {
 }
 ```
 
-Define a message listener supporting the TwoStringReceiveMessage type
+* Define a message listener supporting the TwoStringReceiveMessage type
 ```java
 public abstract class TwoStringReceiveListener extends MessageListener<TwoStringReceiveMessage> {
 
@@ -200,7 +200,7 @@ public abstract class TwoStringReceiveListener extends MessageListener<TwoString
 }
 ```
 
-Create a MessageBuilder that will be called whenever the the command byte (0x20) for the message is identified by the FiloFirmata library.
+* Create a MessageBuilder that will be called whenever the the command byte (0x20) for the message is identified by the FiloFirmata library.
 ```java
 public class TwoStringReceiveBuilder extends MessageBuilder {
 
@@ -261,7 +261,7 @@ public class TwoStringReceiveBuilder extends MessageBuilder {
 }
 ```
 
-Register the TwoStringReceieve message builder statically in our project (or anywhere you wish)
+* Register the TwoStringReceieve message builder statically in our project (or anywhere you wish)
 ```java
 static {
     Firmata.addCustomCommandParser(new TwoStringReceiveBuilder());
