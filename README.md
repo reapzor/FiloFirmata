@@ -127,7 +127,7 @@ public class TwoStringTransmitMessage extends TransmittableMessage {
     private String string1;
     private String string2;
 
-    public TwoStringMessage(String string1, String string2) {
+    public TwoStringTransmitMessage(String string1, String string2) {
         // Tell the FiloFirmata library that our custom message is using Firmata command byte "0x20"
         super((byte) 0x20);
         this.string1 = string1;
@@ -155,7 +155,7 @@ public class TwoStringTransmitMessage extends TransmittableMessage {
 }
 
 // Send a Two String Message to our project board
-firmata.sendMessage(new TwoStringMessage("This is String 1", "This is String 2"));
+firmata.sendMessage(new TwoStringTransmitMessage("This is String 1", "This is String 2"));
 ```
 
 ## Receiving Custom Messages
