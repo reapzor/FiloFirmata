@@ -3,7 +3,7 @@ package com.bortbort.arduino.FiloFirmata;
 import com.bortbort.arduino.FiloFirmata.Listeners.SysexCapabilityResponseListener;
 import com.bortbort.arduino.FiloFirmata.Messages.PinCapabilities;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexCapabilityQueryMessage;
-import com.bortbort.arduino.FiloFirmata.Messages.SysexCapabilityResponseMessage;
+import com.bortbort.arduino.FiloFirmata.Messages.SysexCapabilityMessage;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class CapabilityMessageTest {
     public void testCapabilityMessage() throws Exception {
         SysexCapabilityResponseListener responseListener = new SysexCapabilityResponseListener() {
             @Override
-            public void messageReceived(SysexCapabilityResponseMessage message) {
+            public void messageReceived(SysexCapabilityMessage message) {
                 for (ArrayList<PinCapabilities> pinCapabilities : message.getPinCapabilities()) {
                     System.out.println(pinCapabilities);
                 }

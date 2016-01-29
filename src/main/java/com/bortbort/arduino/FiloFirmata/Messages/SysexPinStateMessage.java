@@ -7,12 +7,12 @@ package com.bortbort.arduino.FiloFirmata.Messages;
  * value (High/Low) that was set by the user or PinMode (Pullup has pinValue or logic HIGH always since
  * it is enabling internal pullup).
  */
-public class SysexPinStateResponseMessage implements Message {
+public class SysexPinStateMessage implements Message {
     private Integer pinIdentifier;
     private PinCapabilities currentPinMode;
     private Integer pinValue;
 
-    public SysexPinStateResponseMessage(Integer pinIdentifier, PinCapabilities currentPinMode, Integer pinValue) {
+    public SysexPinStateMessage(Integer pinIdentifier, PinCapabilities currentPinMode, Integer pinValue) {
         this.pinIdentifier = pinIdentifier;
         this.currentPinMode = currentPinMode;
         this.pinValue = pinValue;

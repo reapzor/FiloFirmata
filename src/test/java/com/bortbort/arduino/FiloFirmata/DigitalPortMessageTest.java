@@ -1,11 +1,7 @@
 package com.bortbort.arduino.FiloFirmata;
 
-import com.bortbort.arduino.FiloFirmata.Firmata;
 import com.bortbort.arduino.FiloFirmata.Listeners.DigitalPortMessageListener;
-import com.bortbort.arduino.FiloFirmata.Listeners.SysexReportFirmwareListener;
 import com.bortbort.arduino.FiloFirmata.Messages.DigitalPortMessage;
-import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareMessage;
-import com.bortbort.helpers.DataTypeHelpers;
 import org.junit.Test;
 
 /**

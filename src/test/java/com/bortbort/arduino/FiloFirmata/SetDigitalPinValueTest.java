@@ -15,7 +15,7 @@ public class SetDigitalPinValueTest {
 //        Firmata firmata = new Firmata();
 //        SysexPinStateResponseListener pinStateListener = new SysexPinStateResponseListener() {
 //            @Override
-//            public void messageReceived(SysexPinStateResponseMessage message) {
+//            public void messageReceived(SysexPinStateMessage message) {
 //                System.out.println(message.getPinIdentifier());
 //                System.out.println(message.getCurrentPinMode());
 //                System.out.println(message.getPinValue());
@@ -56,7 +56,7 @@ public class SetDigitalPinValueTest {
         Firmata firmata = new Firmata();
         SysexPinStateResponseListener pinStateListener = new SysexPinStateResponseListener() {
             @Override
-            public void messageReceived(SysexPinStateResponseMessage message) {
+            public void messageReceived(SysexPinStateMessage message) {
                 System.out.println(message.getPinIdentifier());
                 System.out.println(message.getCurrentPinMode());
                 System.out.println(message.getPinValue());

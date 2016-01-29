@@ -407,7 +407,7 @@ public class Firmata extends SerialPortEventListener {
         Boolean protocolTestPassed = true;
         addMessageListener(versionListener);
         try {
-            serialPort.getOutputStream().write(new RequestProtocolVersionMessage().toByteArray());
+            serialPort.getOutputStream().write(new ProtocolVersionQueryMessage().toByteArray());
         } catch (IOException e) {
             log.error("Unable to test protocol communications. Serial port error.");
             return false;

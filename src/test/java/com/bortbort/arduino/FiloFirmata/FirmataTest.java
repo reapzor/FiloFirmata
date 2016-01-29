@@ -3,7 +3,6 @@ package com.bortbort.arduino.FiloFirmata;
 import com.bortbort.arduino.FiloFirmata.Listeners.SysexReportFirmwareListener;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareMessage;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Created by chuck on 1/4/2016.

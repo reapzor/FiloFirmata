@@ -6,10 +6,10 @@ import java.util.ArrayList;
  * Sysex Capability Response Message
  * Responds with a map of Firmata device pins and the capabilities supported on each of them.
  */
-public class SysexCapabilityResponseMessage implements Message {
+public class SysexCapabilityMessage implements Message {
     ArrayList<ArrayList<PinCapabilities>> pinCapabilities = new ArrayList<>();
 
-    public SysexCapabilityResponseMessage(ArrayList<byte[]> pinCapabilitiesBytes) {
+    public SysexCapabilityMessage(ArrayList<byte[]> pinCapabilitiesBytes) {
         for (byte[] identifierBytes : pinCapabilitiesBytes) {
             pinCapabilities.add(PinCapabilities.getCapabilities(identifierBytes));
         }
