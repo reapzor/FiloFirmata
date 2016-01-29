@@ -22,15 +22,28 @@ public class ReportAnalogTest {
             }
         };
 
+
         firmata.addMessageListener(analogListener);
         firmata.start();
 
         firmata.sendMessage(new ReportAnalogPinMessage(2, true));
 
-        Thread.sleep(2000);
+        Thread.sleep(4000);
+
+        System.out.println("Binding listener to pin 2");
+        firmata.removeMessageListener(analogListener);
+        firmata.addMessageListener(2, analogListener);
+        Thread.sleep(4000);
+
+        System.out.println("Binding listener to pin 3");
+        firmata.removeMessageListener(2,analogListener);
+        firmata.addMessageListener(3, analogListener);
+        Thread.sleep(4000);
 
         firmata.sendMessage(new ReportAnalogPinMessage(2, false));
 
         firmata.stop();
+
+        System.out.println("done");
     }
 }

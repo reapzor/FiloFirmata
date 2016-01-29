@@ -92,9 +92,9 @@ firmata.stop();
 ## Sending Messages
 Any message that implements the abstract TransmittableMessage class can be transmitted through the serial port. This base class supports the serialization methods needed to convert your data message into a byte stream. For the base Firmata Protocol, these messages have been predefined for you.
 ```java
-// Ask the project board to start eventing the analog (adc) values of analog pin 3. (0 indexed)
+// Ask the project board to start eventing the analog (adc) values of analog pin 2. (0 indexed)
 firmata.sendMessage(new ReportAnalogPinMessage(2, true));
-// Ask the project board to stop eventing the analog (adc) values of analog pin 3. (0 indexed)
+// Ask the project board to stop eventing the analog (adc) values of analog pin 2. (0 indexed)
 firmata.sendMessage(new ReportAnalogPinMessage(2, false));
 // Ask the project board to reboot.
 firmata.sendMessage(new SystemResetMessage());
@@ -105,7 +105,7 @@ FiloFirmata has a parsing system that builds message objects up from a byte stre
 
 Some messages use a 'Channel' byte to identify the pin the message represents (See the analog/digital pin reporting mechanism in the Firmata protocol). To listen to messages for a specific channel, add your listener with an identifier indicating witch pin or port you want the listener to handle. To listen to messages from all channels that the message type supports, do not provide an identifier.
 ```java
-// Handle analog messages from pin 3 evented to us from the project board (pin 3 request is handled below);
+// Handle analog messages from pin 2 evented to us from the project board (pin 2 request is handled below);
 AnalogMessageListener analogListener = new AnalogMessageListener() {
     @Override
     public void messageReceived(AnalogMessage message) {
@@ -117,7 +117,7 @@ AnalogMessageListener analogListener = new AnalogMessageListener() {
     }
 };
 
-// Only listen to analog message events that correspond to analog pin/channel 3 on the project board (0 indexed).
+// Only listen to analog message events that correspond to analog pin/channel 2 on the project board (0 indexed).
 firmata.addMessageListener(2, analogListener);
 ```
 

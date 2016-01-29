@@ -19,4 +19,10 @@ public abstract class ChannelMessage implements Message {
     public byte getChannelByte() {
         return channelByte;
     }
+
+    /**
+     * Get Channel Int
+     * @return Int representing the Channel or Firmata Pin that the Command byte applies to.
+     */
+    public int getChannelInt() { return (int) channelByte; }
 }
