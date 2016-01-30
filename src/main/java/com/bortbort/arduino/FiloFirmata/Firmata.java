@@ -490,7 +490,7 @@ public class Firmata extends SerialPortEventListener {
                 Message message = CommandParser.handleByte(inputByte, inputStream);
 
                 if (message != null) {
-                    log.debug("Dispatching message {}", message.getClass().getSimpleName());
+                    log.debug("Routing message {}", message.getClass().getSimpleName());
                     routeMessage(message);
                 }
             }
@@ -512,19 +512,17 @@ public class Firmata extends SerialPortEventListener {
 
         // Dispatch message to all specific listeners for the message class type
         if (messageListenerMap.containsKey(messageClass)) {
-            HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageClass);
-            dispatchMessage(listenerMap, message);
+            dispatchMessage(messageListenerMap.get(messageClass), message);
         }
 
         // Dispatch message to all generic listeners
         if (messageListenerMap.containsKey(Message.class)) {
-            HashMap<Integer, ArrayList<MessageListener>> listHashMap = messageListenerMap.get(Message.class);
-            dispatchMessage(listHashMap, message);
+            dispatchMessage(messageListenerMap.get(Message.class), message);
         }
     }
 
     /**
-     * Dispatch a listener to the corresponding listener arrays in the listener map
+     * Dispatch a message to the corresponding listener arrays in the listener map
      * @param listenerMap HashMap of listener arrays to dispatch the message to
      * @param message Message to be dispatched to the listeners
      */
