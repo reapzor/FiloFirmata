@@ -6,18 +6,6 @@ Firmata is a duplication of the standard MIDI protocol that has been adapted to 
 
 #### Firmata Messages
 Firmata messages are a simple object that contains values, indexes, and other sets of data that was passed either to or from your project board. Messages that get sent to the project board get serialized into a stream of bytes and are then sent to the project board over a serial communications port. Messages that come from the project board are parsed as a byte stream from the serial port, and built into a message object representing the data that the message contained as a series of Java values or objects for reading and handling within your Java application.
-```java
-// Example listener that reads protocol version values from a Firmata Message that was sent by the project board.
-private final MessageListener<ProtocolVersionMessage> versionListener = new MessageListener<ProtocolVersionMessage>() {
-    @Override
-    public void messageReceived(ProtocolVersionMessage message) {
-        // Log the major and minor firmata firmware version reported to us by the Arduino / project board.
-        log.info("Detected Firmata device protocol version: {}.{}",
-              message.getMajorVersion(), message.getMinorVersion());
-    }
-};
-```
-
 FiloFirmata is an event driven library. Every message passed up or down the Arduino device counts as an event.
 
 For more information on the Firmata Protocol and its use on an Ardiuno project board, see https://github.com/firmata/protocol and https://github.com/firmata/arduino
@@ -103,6 +91,20 @@ firmata.sendMessage(new SystemResetMessage());
 
 ## Receiving Messages
 FiloFirmata has a parsing system that builds message objects up from a byte stream sent by the serial port. When a message is identified and built up, there is a system in place to then route this message to any bit of code that is interested in reading and handling its data. This is done through an event listening design. To handle a message sent up by the project board, add an event listener implementation for the message. The listener can be added and removed as necessary.
+```java
+// Example listener that reads protocol version values from a Firmata Message that was sent by the project board.
+private final MessageListener<ProtocolVersionMessage> versionListener = new MessageListener<ProtocolVersionMessage>() {
+    @Override
+    public void messageReceived(ProtocolVersionMessage message) {
+        // Log the major and minor firmata firmware version reported to us by the Arduino / project board.
+        log.info("Detected Firmata device protocol version: {}.{}",
+              message.getMajorVersion(), message.getMinorVersion());
+    }
+};
+
+// Register the ProtocolVersionMessage listener so it will pick up all ProtocolVersion messages.
+firmata.addMessageListener(versionListener);
+```
 
 Some messages use a 'Channel' byte to identify the pin the message represents (See the analog/digital pin reporting mechanism in the Firmata protocol). To listen to messages for a specific channel, add your listener with an identifier indicating witch pin or port you want the listener to handle. To listen to messages from all channels that the message type supports, do not provide an identifier.
 ```java
@@ -110,10 +112,9 @@ Some messages use a 'Channel' byte to identify the pin the message represents (S
 MessageListener<AnalogMessage> analogListener = MessageListener<AnalogMessage>() {
     @Override
     public void messageReceived(AnalogMessage message) {
-        //  Only deal with messages when the analog reading is higher than 100 (between 100-255 max analog adc value)
-        //     Example would be some sensor that maybe doesn't send analog values below 100 or values below 100 are considered noise, etc.
+        assertTrue(message.getChannelInt() == 2);
         if (message.getAnalogValue() > 100) {
-            System.out.println("Pin ADC value is greater than 100");
+            System.out.println("Pin ADC value is greater than 100!");
         }
     }
 };
@@ -121,7 +122,8 @@ MessageListener<AnalogMessage> analogListener = MessageListener<AnalogMessage>()
 // Only listen to analog message events that correspond to analog pin/channel 2 on the project board (0 indexed).
 firmata.addMessageListener(2, analogListener);
 ```
-If you want to listen to all or any messages, you can implement a GenericMessageListener instead of a specific message listener.
+
+If you want to listen to all or any messages, you can implement a generic message listener.
 ```java
 // Create a generic listener that will fire whenever any message is received.
 MessageListener<Message> messageListener = MessageListener<Message>() {
@@ -138,8 +140,13 @@ firmata.addMessageListener(messageListener);
 firmata.addMessageListener(2, messageListener);
 
 // OR Register the listener for a few specific message types
+// All sysex report firmaware types
 firmata.addMessageListener(SysexReportFirmwareMessage.class, messageListener);
+// All protocol version types
 firmata.addMessageListener(ProtocolVersionMessage.class, messageListener);
+// All ports of a digital port message type
+firmata.addMessageListener(DigitalPortMessage.class, messageListener);
+// Only port 2 of an analog message type
 firmata.addMessageListener(2, AnalogMessage.class, messageListener);
 ```
 
