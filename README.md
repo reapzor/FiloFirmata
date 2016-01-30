@@ -6,6 +6,7 @@ Firmata is a duplication of the standard MIDI protocol that has been adapted to 
 
 #### Firmata Messages
 Firmata messages are a simple object that contains values, indexes, and other sets of data that was passed either to or from your project board. Messages that get sent to the project board get serialized into a stream of bytes and are then sent to the project board over a serial communications port. Messages that come from the project board are parsed as a byte stream from the serial port, and built into a message object representing the data that the message contained as a series of Java values or objects for reading and handling within your Java application.
+
 FiloFirmata is an event driven library. Every message passed up or down the Arduino device counts as an event.
 
 For more information on the Firmata Protocol and its use on an Ardiuno project board, see https://github.com/firmata/protocol and https://github.com/firmata/arduino
