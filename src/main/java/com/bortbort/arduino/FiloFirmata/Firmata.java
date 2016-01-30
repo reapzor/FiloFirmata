@@ -341,6 +341,22 @@ public class Firmata extends SerialPortEventListener {
         return true;
     }
 
+    /**
+     * Remove all registered listeners from the Firmata library regardless of class and channel.
+     */
+    public void removeAllListeners() {
+        globalListenerArray.clear();
+        for (HashMap<Integer, ArrayList<MessageListener>> channelMap : messageListenerMap.values()) {
+            // Java 8 fun
+            //channelMap.values().stream().filter(listenerArray -> listenerArray != null).forEach(ArrayList::clear);
+            for (ArrayList<MessageListener> listenerArray : channelMap.values()) {
+                if (listenerArray != null) {
+                    listenerArray.clear();
+                }
+            }
+        }
+    }
+
 
     /**
      * Generate the SerialPort object using the SerialPort adapter class provided in the FirmataConfiguration

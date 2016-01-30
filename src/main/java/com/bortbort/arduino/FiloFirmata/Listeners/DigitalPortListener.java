@@ -7,9 +7,9 @@ import com.bortbort.arduino.FiloFirmata.Messages.DigitalPortMessage;
  * Abstract class definition for a listener that can be registered to fire when a DigitalPortMessage is
  * received over the SerialPort.
  */
-public abstract class DigitalPortMessageListener extends MessageListener<DigitalPortMessage> {
+public abstract class DigitalPortListener extends MessageListener<DigitalPortMessage> {
 
-    public DigitalPortMessageListener() {
+    public DigitalPortListener() {
         super(DigitalPortMessage.class);
     }
 

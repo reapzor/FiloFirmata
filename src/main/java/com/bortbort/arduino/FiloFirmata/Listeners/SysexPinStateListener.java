@@ -7,9 +7,9 @@ import com.bortbort.arduino.FiloFirmata.Messages.SysexPinStateMessage;
  * Abstract class definition for a listener that can be registered to fire when a SysexPinStateMessage is
  * received over the SerialPort.
  */
-public abstract class SysexPinStateResponseListener extends MessageListener<SysexPinStateMessage> {
+public abstract class SysexPinStateListener extends MessageListener<SysexPinStateMessage> {
 
-    public SysexPinStateResponseListener() {
+    public SysexPinStateListener() {
         super(SysexPinStateMessage.class);
     }
 

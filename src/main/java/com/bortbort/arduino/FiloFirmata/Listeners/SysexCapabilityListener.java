@@ -7,9 +7,9 @@ import com.bortbort.arduino.FiloFirmata.Messages.SysexCapabilityMessage;
  * Abstract class definition for a listener that can be registered to fire when a SysexCapabilityMessage is
  * received over the SerialPort.
  */
-public abstract class SysexCapabilityResponseListener extends MessageListener<SysexCapabilityMessage> {
+public abstract class SysexCapabilityListener extends MessageListener<SysexCapabilityMessage> {
 
-    public SysexCapabilityResponseListener() {
+    public SysexCapabilityListener() {
         super(SysexCapabilityMessage.class);
     }
 

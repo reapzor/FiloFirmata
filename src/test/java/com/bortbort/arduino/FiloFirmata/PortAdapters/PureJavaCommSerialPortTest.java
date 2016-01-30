@@ -1,5 +1,8 @@
 package com.bortbort.arduino.FiloFirmata.PortAdapters;
 
+import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareMessage;
+import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareQueryMessage;
+import com.bortbort.arduino.FiloFirmata.Messages.SystemResetMessage;
 import com.bortbort.helpers.DataTypeHelpers;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -24,13 +27,16 @@ public class PureJavaCommSerialPortTest {
         assertTrue("Unable to connect serial port!",
                 serialPort.connect());
 
+        // Reset
+        serialPort.getOutputStream().write(new SystemResetMessage().toByteArray());
+
         // Clear out the buffer if there's anything in it
         while (serialPort.getInputStream().available() != 0) {
             serialPort.getInputStream().read();
         }
 
         // Report Firmware
-        serialPort.getOutputStream().write(new byte[] {(byte) 0xf0, (byte) 0x79, (byte) 0xf7});
+        serialPort.getOutputStream().write(new SysexReportFirmwareQueryMessage().toByteArray());
 
         // Sleep a small amount of time to get reply through
         Thread.sleep(500);

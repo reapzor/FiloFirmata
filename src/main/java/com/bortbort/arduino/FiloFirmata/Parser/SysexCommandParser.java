@@ -124,8 +124,6 @@ public class SysexCommandParser extends MessageBuilder {
             return null;
         }
 
-        log.info(DataTypeHelpers.bytesToHexString(messageBodyBytes));
-
         return messageBuilder.buildMessage(messageBodyBytes);
     }
 

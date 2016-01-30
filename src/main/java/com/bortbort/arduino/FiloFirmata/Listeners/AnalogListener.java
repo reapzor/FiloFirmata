@@ -8,9 +8,9 @@ import com.bortbort.arduino.FiloFirmata.Messages.ProtocolVersionMessage;
  * Abstract class definition for a listener that can be registered to fire when an AnalogMessage is
  * received over the SerialPort.
  */
-public abstract class AnalogMessageListener extends MessageListener<AnalogMessage> {
+public abstract class AnalogListener extends MessageListener<AnalogMessage> {
 
-    public AnalogMessageListener() {
+    public AnalogListener() {
         super(AnalogMessage.class);
     }
 
