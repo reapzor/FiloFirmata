@@ -257,7 +257,7 @@ public class Firmata extends SerialPortEventListener {
      * @param message TransmittableMessage object used to translate a series of bytes to the SerialPort.
      * @return True if the Message sent. False if the Message was not sent.
      */
-    public Boolean sendMessage(TransmittableMessage message) {
+    public synchronized Boolean sendMessage(TransmittableMessage message) {
         if (!started) {
             log.error("Firmata library is not connected / started! Cannot send message {}",
                     message.getClass().getSimpleName());
@@ -283,7 +283,7 @@ public class Firmata extends SerialPortEventListener {
      * @param rawBytes byte array to be sent over the SerialPort OutputStream.
      * @return True if the bytes were sent. False if the bytes were not sent.
      */
-    public Boolean sendRaw(byte... rawBytes) {
+    public synchronized Boolean sendRaw(byte... rawBytes) {
         if (!started) {
             log.error("Firmata library is not connected / started! Cannot send bytes {}",
                     DataTypeHelpers.bytesToHexString(rawBytes));
@@ -435,7 +435,7 @@ public class Firmata extends SerialPortEventListener {
      * @return true if communications were successful. False if there was a timeout or the data could not be
      * interpreted within 5 seconds.
      */
-    synchronized private Boolean testProtocolCommunication() {
+    private Boolean testProtocolCommunication() {
         Boolean protocolTestPassed = true;
         addMessageListener(versionListener);
         try {

@@ -19,7 +19,7 @@ public abstract class MessageListener<T extends Message> {
     /**
      * Construct a new message listener for the given Message messageType classes.
      */
-    //@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public MessageListener() {
         Class<?>[] typeArguments = TypeResolver.resolveRawArguments(MessageListener.class, getClass());
         this.messageType = (Class<T>) typeArguments[0];
