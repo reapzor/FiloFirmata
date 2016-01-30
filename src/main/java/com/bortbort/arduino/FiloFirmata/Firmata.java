@@ -1,8 +1,5 @@
 package com.bortbort.arduino.FiloFirmata;
 
-import com.bortbort.arduino.FiloFirmata.Listeners.GlobalMessageListener;
-import com.bortbort.arduino.FiloFirmata.Listeners.MessageListener;
-import com.bortbort.arduino.FiloFirmata.Listeners.ProtocolVersionListener;
 import com.bortbort.arduino.FiloFirmata.Messages.*;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandParser;
 import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
@@ -34,10 +31,6 @@ public class Firmata extends SerialPortEventListener {
      */
     private final HashMap<Class, HashMap<Integer, ArrayList<MessageListener>>> messageListenerMap = new HashMap<>();
 
-    /**
-     * Arraylist of global listener objects registered to respond to any message event.
-     */
-    private final ArrayList<GlobalMessageListener> globalListenerArray = new ArrayList<>();
 
     /**
      * Serial port adapter reference.
@@ -64,7 +57,8 @@ public class Firmata extends SerialPortEventListener {
      * Warn the user if the library if too old for this library, but do not treat it like a fatal event, in the
      * hopes that it may work.
      */
-    private final ProtocolVersionListener versionListener = new ProtocolVersionListener() {
+    private final MessageListener<ProtocolVersionMessage> versionListener =
+            new MessageListener<ProtocolVersionMessage>() {
         @Override
         public void messageReceived(ProtocolVersionMessage message) {
             log.info("Detected Firmata device protocol version: {}.{}",
@@ -139,26 +133,75 @@ public class Firmata extends SerialPortEventListener {
     }
 
 
+
     /**
-     * Add a GlobalMessageListener to the Firmta object which will fire whenever any message is received
-     * over the SerialPort.
+     * Add a messageListener to the Firmta object which will fire whenever a matching message is received
+     * over the SerialPort that corresponds to the given channel. If the channel is null, the listener
+     * will fire regardless of which channel (pin) the message is coming from.
      *
-     * @param messageListener GlobalMessageListener object to handle a received Message event over the SerialPort.
+     * @param channel Integer indicating the specific channel or pin to listen on, or null to listen to
+     *                all messages regardless of channel/pin.
+     * @param messageClass Class indicating the message type to listen to.
+     * @param messageListener (Generic)MessageListener object to handle a received Message event over the SerialPort.
      */
-    public void addGlobalMessageListener(GlobalMessageListener messageListener) {
-        if (!globalListenerArray.contains(messageListener)) {
-            globalListenerArray.add(messageListener);
+    public void addMessageListener(Integer channel, Class<? extends Message> messageClass,
+                                   MessageListener messageListener) {
+        // Build up the empty class listener map if not already there
+        if (!messageListenerMap.containsKey(messageClass)) {
+            messageListenerMap.put(messageClass, new HashMap<>());
+        }
+
+        // Get the message listener map for the given class
+        HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageClass);
+
+        // Builds up the empty channel listener array if not already there
+        if (!listenerMap.containsKey(channel)) {
+            listenerMap.put(channel, new ArrayList<>());
+        }
+
+        // Get the message listener array for the given channel
+        ArrayList<MessageListener> messageListeners = listenerMap.get(channel);
+        if (!messageListeners.contains(messageListener)) {
+            messageListeners.add(messageListener);
         }
     }
 
     /**
-     * Remove a GlobalMessageListener from the Firmata object which will stop the listener from responding to message
+     * Remove a messageListener from the Firmata object which will stop the listener from responding to message
      * received events over the SerialPort.
      *
-     * @param messageListener GlobalMessageListener object to remove.
+     * @param channel Integer channel to remove the listener from.
+     * @param messageClass Class indicating the message type to listen to.
+     * @param messageListener (Generic)MessageListener to be removed.
      */
-    public void removeGlobalMessageListener(GlobalMessageListener messageListener) {
-        globalListenerArray.remove(messageListener);
+    public void removeMessageListener(Integer channel, Class<? extends Message> messageClass,
+                                      MessageListener messageListener) {
+        if (messageListenerMap.containsKey(messageClass)) {
+            HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageClass);
+            if (listenerMap.containsKey(channel)) {
+                ArrayList<MessageListener> messageListeners = listenerMap.get(channel);
+                messageListeners.remove(messageListener);
+            }
+        }
+    }
+
+    /**
+     * Add a generic message listener to listen for a specific type of message. Useful if you want to combine
+     * several or more message handlers into one bucket.
+     * @param messageClass Message class to listen to from the project board.
+     * @param messageListener Listener that will fire whenever the message type is received.
+     */
+    public void addMessageListener(Class<? extends Message> messageClass, MessageListener<Message> messageListener) {
+        addMessageListener(null, messageClass, messageListener);
+    }
+
+    /**
+     * Remove a generic message listener from listening to a specific type of message.
+     * @param messageClass Message class to stop listening to.
+     * @param messageListener Listener to remove from the listener list for the given messageClass.
+     */
+    public void removeMessageListener(Class<? extends Message> messageClass, MessageListener<Message> messageListener) {
+        removeMessageListener(null, messageClass, messageListener);
     }
 
     /**
@@ -170,28 +213,8 @@ public class Firmata extends SerialPortEventListener {
      *                all messages regardless of channel/pin.
      * @param messageListener MessageListener object to handle a received Message event over the SerialPort.
      */
-    public void addMessageListener(Integer channel, MessageListener messageListener) {
-        Class messageListenerClass = messageListener.getMessageType();
-
-        // Build up the empty class listener map if not already there
-        if (!messageListenerMap.containsKey(messageListenerClass)) {
-            messageListenerMap.put(messageListenerClass, new HashMap<>());
-        }
-
-        // Get the message listener map for the given class
-        HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageListenerClass);
-
-        // Builds up the empty channel listener array if not already there
-        if (!listenerMap.containsKey(channel)) {
-            listenerMap.put(channel, new ArrayList<>());
-        }
-
-        // Get the message listener array for the given channel
-        ArrayList<MessageListener> messageListeners = listenerMap.get(channel);
-
-        if (!messageListeners.contains(messageListener)) {
-            messageListeners.add(messageListener);
-        }
+    public void addMessageListener(Integer channel, MessageListener<? extends Message> messageListener) {
+        addMessageListener(channel, messageListener.getMessageType(), messageListener);
     }
 
     /**
@@ -201,15 +224,8 @@ public class Firmata extends SerialPortEventListener {
      * @param channel Integer channel to remove the listener from.
      * @param messageListener MessageListener to be removed.
      */
-    public void removeMessageListener(Integer channel, MessageListener messageListener) {
-        Class messageListenerClass = messageListener.getMessageType();
-        if (messageListenerMap.containsKey(messageListenerClass)) {
-            HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageListenerClass);
-            if (listenerMap.containsKey(channel)) {
-                ArrayList<MessageListener> messageListeners = listenerMap.get(channel);
-                messageListeners.remove(messageListener);
-            }
-        }
+    public void removeMessageListener(Integer channel, MessageListener<? extends Message> messageListener) {
+        removeMessageListener(channel, messageListener.getMessageType(), messageListener);
     }
 
     /**
@@ -219,8 +235,8 @@ public class Firmata extends SerialPortEventListener {
      *
      * @param messageListener MessageListener object to handle a received Message event over the SerialPort.
      */
-    public void addMessageListener(MessageListener messageListener) {
-       addMessageListener(null, messageListener);
+    public void addMessageListener(MessageListener<? extends Message> messageListener) {
+        addMessageListener(null, messageListener.getMessageType(), messageListener);
     }
 
     /**
@@ -229,9 +245,10 @@ public class Firmata extends SerialPortEventListener {
      *
      * @param messageListener MessageListener object to remove.
      */
-    public void removeMessageListener(MessageListener messageListener) {
-        removeMessageListener(null, messageListener);
+    public void removeMessageListener(MessageListener<? extends Message> messageListener) {
+        removeMessageListener(null, messageListener.getMessageType(), messageListener);
     }
+
 
 
     /**
@@ -345,7 +362,6 @@ public class Firmata extends SerialPortEventListener {
      * Remove all registered listeners from the Firmata library regardless of class and channel.
      */
     public void removeAllListeners() {
-        globalListenerArray.clear();
         for (HashMap<Integer, ArrayList<MessageListener>> channelMap : messageListenerMap.values()) {
             // Java 8 fun
             //channelMap.values().stream().filter(listenerArray -> listenerArray != null).forEach(ArrayList::clear);
@@ -475,10 +491,7 @@ public class Firmata extends SerialPortEventListener {
 
                 if (message != null) {
                     log.debug("Dispatching message {}", message.getClass().getSimpleName());
-                    // Primary listeners first
-                    dispatchMessageToPrimaryListeners(message);
-                    // Global listeners last
-                    dispatchMessageToGlobalListeners(message);
+                    routeMessage(message);
                 }
             }
         } catch (IOException e) {
@@ -489,50 +502,53 @@ public class Firmata extends SerialPortEventListener {
     }
 
     /**
-     * Dispatch a Message object built from data over the SerialPort communication line to a corresponding
-     * MessageListener class designed to handle and interpret the object for processing in the client code.
-     * It seems the unchecked warning suppression is necessary, since this is the only part of the
-     * design where we need to translate from generics to implementations, and the only objects
-     * that know what Message implementation this is are the MessageListener implementations, which
-     * are also generic here.
+     * Route a Message object built from data over the SerialPort communication line to a corresponding
+     * MessageListener array designed to handle and interpret the object for processing in the client code.
      *
-     * @param message Firmata Message to be dispatched to the registered listeners.
+     * @param message Firmata Message to be routed to the registered listeners.
      */
-    @SuppressWarnings("unchecked")
-    private void dispatchMessageToPrimaryListeners(Message message) {
+    private void routeMessage(Message message) {
         Class messageClass = message.getClass();
+
+        // Dispatch message to all specific listeners for the message class type
         if (messageListenerMap.containsKey(messageClass)) {
             HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageClass);
-            ArrayList<MessageListener> messageListeners;
+            dispatchMessage(listenerMap, message);
+        }
 
-            // If the message is a Channel Message, hit the channel based listeners first.
-            if (message instanceof ChannelMessage) {
-                messageListeners = listenerMap.get(((ChannelMessage) message).getChannelInt());
-                if (messageListeners != null) {
-                    for (MessageListener listener : messageListeners) {
-                        listener.messageReceived(message);
-                    }
-                }
-            }
+        // Dispatch message to all generic listeners
+        if (messageListenerMap.containsKey(Message.class)) {
+            HashMap<Integer, ArrayList<MessageListener>> listHashMap = messageListenerMap.get(Message.class);
+            dispatchMessage(listHashMap, message);
+        }
+    }
 
-            // Then send the message to any listeners registered to all channels
-            //   Or to listeners for messages that do not support channels.
-            messageListeners = listenerMap.get(null);
+    /**
+     * Dispatch a listener to the corresponding listener arrays in the listener map
+     * @param listenerMap HashMap of listener arrays to dispatch the message to
+     * @param message Message to be dispatched to the listeners
+     */
+    @SuppressWarnings("unchecked")
+    private void dispatchMessage(HashMap<Integer, ArrayList<MessageListener>> listenerMap, Message message) {
+        ArrayList<MessageListener> messageListeners;
+
+        // If the message is a Channel Message, hit the channel based listeners first.
+        if (message instanceof ChannelMessage) {
+            messageListeners = listenerMap.get(((ChannelMessage) message).getChannelInt());
             if (messageListeners != null) {
                 for (MessageListener listener : messageListeners) {
                     listener.messageReceived(message);
                 }
             }
         }
-    }
 
-    /**
-     * Dispatch a Message object to the list of global message listeners.
-     * @param message Firmata Message to be dispatched to the registered listeners.
-     */
-    private void dispatchMessageToGlobalListeners(Message message) {
-        for (GlobalMessageListener listener : globalListenerArray) {
-            listener.messageReceived(message);
+        // Then send the message to any listeners registered to all channels
+        //   or to listeners for messages that do not support channels.
+        messageListeners = listenerMap.get(null);
+        if (messageListeners != null) {
+            for (MessageListener listener : messageListeners) {
+                listener.messageReceived(message);
+            }
         }
     }
 }

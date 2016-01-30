@@ -1,6 +1,7 @@
-package com.bortbort.arduino.FiloFirmata.Listeners;
+package com.bortbort.arduino.FiloFirmata;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
+import net.jodah.typetools.TypeResolver;
 
 /**
  * MessageListener.
@@ -17,11 +18,11 @@ public abstract class MessageListener<T extends Message> {
 
     /**
      * Construct a new message listener for the given Message messageType classes.
-     *
-     * @param messageType Message class representing the Message to listen to and handle events from.
      */
-    public MessageListener(Class<T> messageType) {
-        this.messageType = messageType;
+    //@SuppressWarnings("unchecked")
+    public MessageListener() {
+        Class<?>[] typeArguments = TypeResolver.resolveRawArguments(MessageListener.class, getClass());
+        this.messageType = (Class<T>) typeArguments[0];
     }
 
     /**

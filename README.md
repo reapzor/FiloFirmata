@@ -8,7 +8,7 @@ Firmata is a duplication of the standard MIDI protocol that has been adapted to 
 Firmata messages are a simple object that contains values, indexes, and other sets of data that was passed either to or from your project board. Messages that get sent to the project board get serialized into a stream of bytes and are then sent to the project board over a serial communications port. Messages that come from the project board are parsed as a byte stream from the serial port, and built into a message object representing the data that the message contained as a series of Java values or objects for reading and handling within your Java application.
 ```java
 // Example listener that reads protocol version values from a Firmata Message that was sent by the project board.
-private final ProtocolVersionListener versionListener = new ProtocolVersionListener() {
+private final MessageListener<ProtocolVersionMessage> versionListener = new MessageListener<ProtocolVersionMessage>() {
     @Override
     public void messageReceived(ProtocolVersionMessage message) {
         // Log the major and minor firmata firmware version reported to us by the Arduino / project board.
@@ -62,7 +62,8 @@ firmata.start();
 
 // You want to print out to console the firmware name and version of your project board whenever it is sent up
 //   So you create a listener that will fire every time a the specific message is received.
-SysexReportFirmwareListener firmwareListener = new SysexReportFirmwareListener() {
+MessageListener<SysexReportFirmwareMessage> firmwareListener =
+        new MessageListener<SysexReportFirmwareMessage>() {
     @Override
     public void messageReceived(SysexReportFirmwareMessage message) {
         System.out.println(message.getFirmwareName());
@@ -78,7 +79,7 @@ firmata.addMessageListener(firmwareListener);
 // Somewhere in your application you ask the project board to send its firmware name and version to us.
 //   You do this by sending a ReportFirmware 'sysex' firmata message to the board.
 //   Its response will be handled by your new listener above.
-firmata.sendMessage(new SysexReportFirmwareMessage());
+firmata.sendMessage(new SysexReportFirmwareQueryMessage());
 
 // At some point you do not care to respond to or handle firmware name messages being passed by the project board.
 //   So you remove your listener to tell the library you wish to ignore these messages now.
@@ -106,7 +107,7 @@ FiloFirmata has a parsing system that builds message objects up from a byte stre
 Some messages use a 'Channel' byte to identify the pin the message represents (See the analog/digital pin reporting mechanism in the Firmata protocol). To listen to messages for a specific channel, add your listener with an identifier indicating witch pin or port you want the listener to handle. To listen to messages from all channels that the message type supports, do not provide an identifier.
 ```java
 // Handle analog messages from pin 2 evented to us from the project board (pin 2 request is handled below);
-AnalogMessageListener analogListener = new AnalogMessageListener() {
+MessageListener<AnalogMessage> analogListener = MessageListener<AnalogMessage>() {
     @Override
     public void messageReceived(AnalogMessage message) {
         //  Only deal with messages when the analog reading is higher than 100 (between 100-255 max analog adc value)
@@ -119,6 +120,27 @@ AnalogMessageListener analogListener = new AnalogMessageListener() {
 
 // Only listen to analog message events that correspond to analog pin/channel 2 on the project board (0 indexed).
 firmata.addMessageListener(2, analogListener);
+```
+If you want to listen to all or any messages, you can implement a GenericMessageListener instead of a specific message listener.
+```java
+// Create a generic listener that will fire whenever any message is received.
+MessageListener<Message> messageListener = MessageListener<Message>() {
+    @Override
+    public void messageReceived(Message message) {
+        System.out.println(message.getClass().getSimpleName());
+    }
+};
+
+// Register the listener for all messages coming in from the board.
+firmata.addMessageListener(messageListener);
+
+// OR Register the listener for all messages coming in for "Channel 2" (Pin or port depending on command) (0 indexed)
+firmata.addMessageListener(2, messageListener);
+
+// OR Register the listener for a few specific message types
+firmata.addMessageListener(SysexReportFirmwareMessage.class, messageListener);
+firmata.addMessageListener(ProtocolVersionMessage.class, messageListener);
+firmata.addMessageListener(2, AnalogMessage.class, messageListener);
 ```
 
 ## Transmitting Custom Messages
@@ -162,7 +184,7 @@ firmata.sendMessage(new TwoStringTransmitMessage("This is String 1", "This is St
 ```
 
 ## Receiving Custom Messages
-To implement a handler and custom message that is coming from your Arduino or project board, several classes must be built up and then registered within the FiloFirmata library. Whenever a registered command byte is identified over the serial port, a message builder for the command will be called which will parse the stream into a Message object. To handle, parse, and pass a custom message from the board, you will need to write 3 classes: a Message containing the data that was parsed from the custom command, a Builder to parse the message up from the serial port byte stream, and a Listener to handle processing of the message in your application once it has been received and built up. The builder class must be registered with the corresponding command byte to let the FiloFirmata library know that any message passed up from the project board with your custom command byte needs to be parsed by your custom message parser.
+To implement a handler and custom message that is coming from your Arduino or project board, several classes must be built up and then registered within the FiloFirmata library. Whenever a registered command byte is identified over the serial port, a message builder for the command will be called which will parse the stream into a Message object. To handle, parse, and pass a custom message from the board, you will need to write 2 classes: a Message containing the data that was parsed from the custom command, and a Builder to parse the message up from the serial port byte stream. The builder class must be registered with the corresponding command byte to let the FiloFirmata library know that any message passed up from the project board with your custom command byte needs to be parsed by your custom message parser.
 
 
 For the example, we will use the same Two String Message command above, however now we will be reading two strings from the project board, instead of sending them.
@@ -185,19 +207,6 @@ public class TwoStringReceiveMessage implements Message {
     public String getString2() {
         return string2;
     }
-}
-```
-
-* Define a message listener supporting the TwoStringReceiveMessage type
-```java
-public abstract class TwoStringReceiveListener extends MessageListener<TwoStringReceiveMessage> {
-
-    // For translating the message dynamically, also support the
-    //   TwoStringReceieveMessage class type in a runtime parameter. (For internal library workings)
-    public TwoStringReceiveListener() {
-        super(TwoStringReceiveMessage.class);
-    }
-
 }
 ```
 
