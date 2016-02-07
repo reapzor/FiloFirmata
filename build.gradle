@@ -15,9 +15,10 @@ dependencies {
     testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: '1.7.0'
 }
 
+
 group 'com.bortbort.arduino'
 archivesBaseName = "filo-firmata"
-version '0.1.0-SNAPSHOT'
+version '0.1.0'
 sourceCompatibility = 1.8
 
 
@@ -32,9 +33,7 @@ sourceSets {
 }
 
 
-tasks.withType(JavaCompile) {
-    options.compilerArgs << '-Xlint:deprecation'
-}
+
 
 
 task javadocJar(type: Jar) {
@@ -47,6 +46,7 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
+
 artifacts {
     archives javadocJar, sourcesJar
 }
@@ -57,42 +57,48 @@ signing {
     sign configurations.archives
 }
 
-//uploadArchives {
-//    repositories {
-//        mavenDeployer {
-//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-//
-//            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-//                authentication(userName: sonatypeUsername, password: sonatypePassword)
-//            }
-//
-//            pom.project {
-//                name 'FiloFirmata'
-//                packaging 'jar'
-//                description 'FiloFirmata is a client library for the Firmata protocol used with hardware project boards.'
-//                url 'https://github.com/reapzor/FiloFirmata'
-//
-//                scm {
-//                    url 'scm:git@github.com:reapzor/FiloFirmata.git'
-//                    connection 'scm:git@github.com:reapzor/FiloFirmata.git'
-//                    developerConnection 'scm:git@github.com:reapzor/FiloFirmata.git'
-//                }
-//
-//                licenses {
-//                    license {
-//                        name 'The MIT License (MIT)'
-//                        url 'https://github.com/reapzor/FiloFirmata/blob/master/LICENSE'
-//                        distribution 'repo'
-//                    }
-//                }
-//
-//                developers {
-//                    developer {
-//                        id 'reapzor'
-//                        name 'Chuck Benson'
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom {
+                project {
+                    name 'FiloFirmata'
+                    packaging 'jar'
+                    description 'FiloFirmata is a client library for the Firmata protocol used with hardware project boards.'
+                    url 'https://github.com/reapzor/FiloFirmata'
+
+                    scm {
+                        url 'scm:git@github.com:reapzor/FiloFirmata.git'
+                        connection 'scm:git@github.com:reapzor/FiloFirmata.git'
+                        developerConnection 'scm:git@github.com:reapzor/FiloFirmata.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The MIT License (MIT)'
+                            url 'https://github.com/reapzor/FiloFirmata/blob/master/LICENSE'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'reapzor'
+                            name 'Chuck Benson'
+                        }
+                    }
+                }
+            }.writeTo("pom.xml")
+        }
+    }
+}
