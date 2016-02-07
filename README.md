@@ -29,12 +29,17 @@ Firmata firmata = new Firmata();
 Firmata firmata = new Firmata("/dev/tty.usbmodemXXXXXX");
 ```
 ```java
-// Configuration for an arduino device running on an Apple computer
-//   that needs to communicate slower than default.
+//Configuration for an arduino device running on an Apple computer with a non default baudrate.
+Firmata firmata = new Firmata("/dev/tty.usbmodemXXXXXX", 9600);
+```
+```java
+// Configuration for an arduino device running on an Apple computer that disables
+//   the communications to to see if the serial connected device supports our firmata protocol.
 FirmataConfiguration firmataConfiguration = new FirmataConfiguration("/dev/tty.usbmodemXXXXXX");
-// We want to communicate slower than the StandardFirmata default. Set that here.
-firmataConfiguration.setSerialPortBaudRate(9600);
-// Create a new firmata instance using the custom configuration. (A copy of the configuration will be generated and used by the library)
+// We dont want to test communications, because we always know this port has a firmata device. 
+firmataConfiguration.setTestProtocolCommunication(false);
+// Create a new firmata instance using the custom configuration.
+//   (A copy of the configuration will be generated and used by the library)
 Firmata firmata = new Firmata(firmataConfiguration);
 // This change ignored by the implemented Firmata library above.
 firmataConfiguration.setSerialPortBaudRate(57600);
