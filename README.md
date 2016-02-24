@@ -11,6 +11,16 @@ FiloFirmata is an event driven library. Every message passed up or down the Ardu
 
 For more information on the Firmata Protocol and its use on an Ardiuno project board, see https://github.com/firmata/protocol and https://github.com/firmata/arduino
 
+## Installation
+Maven:
+<dependency>
+    <groupId>com.bortbort.arduino</groupId>
+    <artifactId>filo-firmata</artifactId>
+    <version>0.1.0</version>
+</dependency>
+
+Gradle:
+compile 'com.bortbort.arduino:filo-firmata:0.1.0'
 
 ## Integrating With Your Project
 The core of this library uses a pure java serial port communications driver. You do not need to install any platform specific software to run this library. See https://github.com/nyholku/purejavacomm for details on the serial port interface. 
