@@ -47,36 +47,6 @@ public class Firmata extends SerialPortEventListener {
      */
     private Boolean started = false;
 
-    /**
-     * Protocol Version lock object. used to synchronously wait for a response when testing communications.
-     */
-    private final Object protocolVersionLock = new Object();
-
-    /**
-     * Protocol Version Listener used to verify we can communicate with the Firmata device.
-     * Warn the user if the library if too old for this library, but do not treat it like a fatal event, in the
-     * hopes that it may work.
-     */
-    private final MessageListener<ProtocolVersionMessage> versionListener =
-            new MessageListener<ProtocolVersionMessage>() {
-        @Override
-        public void messageReceived(ProtocolVersionMessage message) {
-            log.info("Detected Firmata device protocol version: {}.{}",
-                    message.getMajorVersion(), message.getMinorVersion());
-            if (message.getMajorVersion() < MIN_SUPPORTED_VERSION_MAJOR ||
-                    (message.getMinorVersion() < MIN_SUPPORTED_VERSION_MINOR &&
-                            message.getMajorVersion() >= MIN_SUPPORTED_VERSION_MAJOR)) {
-                log.warn("Firmata device protocol version is too old for this library." +
-                                " Some functionality may not work. Library min supported version: {}.{}",
-                        MIN_SUPPORTED_VERSION_MAJOR, MIN_SUPPORTED_VERSION_MINOR);
-            }
-            removeMessageListener(versionListener);
-            synchronized (protocolVersionLock) {
-                protocolVersionLock.notify();
-            }
-        }
-    };
-
 
     /**
      * Add a custom parser to the Firmata library. When the command byte for the parser is received, the parser
@@ -277,27 +247,28 @@ public class Firmata extends SerialPortEventListener {
         return false;
     }
 
-    private class SynchronousMessageListener<T extends Message> extends MessageListener<T> {
-        private T message;
-        private
+    /**
+     * Send a Message over the serial port and block/wait for the message response.
+     * In cases where you do not need ASync behavior, or just want to send a single message and
+     * handle a single response, where the async design may be a bit too verbose, use this instead.
+     * By sending a message and dictacting the type of response, you will get the response message as the return
+     * value, or null if the message was not received within the timeout blocking period.
+     * @param message TransmittableMessage to be sent over the serial port
+     * @param <T> Message type that you are expecting as a reply to the message being transmitted.
+     * @return T message object if the project board sends a reply. null if no reply was sent in time.
+     */
+    public <T extends Message> T sendMessageSynchronous(TransmittableMessage message) {
+        T responseMessage = null;
+        SynchronousMessageListener<T> messageListener = new SynchronousMessageListener<>();
+        addMessageListener(messageListener);
 
-        @Override
-        public void messageReceived(T message) {
-            this.message = message;
+        if (sendMessage(message)) {
+            responseMessage = messageListener.getResponseMessage();
         }
 
+        removeMessageListener(messageListener);
 
-    }
-
-    public <T extends Message> T sendMessageSynchronous(TransmittableMessage message) {
-        T responseMessage;
-
-        MessageListener<T> messageListener = new MessageListener<T>() {
-            @Override
-            public void messageReceived(T message) {
-                responseMessage = message;
-            }
-        };
+        return responseMessage;
     }
 
     /**
@@ -459,25 +430,34 @@ public class Firmata extends SerialPortEventListener {
      * interpreted within 5 seconds.
      */
     private Boolean testProtocolCommunication() {
-        Boolean protocolTestPassed = true;
+        SynchronousMessageListener<ProtocolVersionMessage> versionListener = new SynchronousMessageListener<>();
         addMessageListener(versionListener);
+
         try {
             serialPort.getOutputStream().write(new ProtocolVersionQueryMessage().toByteArray());
         } catch (IOException e) {
             log.error("Unable to test protocol communications. Serial port error.");
+            removeMessageListener(versionListener);
             return false;
         }
-        synchronized (protocolVersionLock) {
-            try {
-                protocolVersionLock.wait(5000);
-            } catch (InterruptedException e) {
-                log.error("Timed out waiting for Firmata protocol response. Device may not be supported " +
-                "or may not be communicating over the Firmata protocol.");
-                protocolTestPassed = false;
-            }
-        }
+
+        ProtocolVersionMessage message = versionListener.getResponseMessage();
         removeMessageListener(versionListener);
-        return protocolTestPassed;
+
+        if (message != null) {
+            log.info("Detected Firmata device protocol version: {}.{}",
+                    message.getMajorVersion(), message.getMinorVersion());
+            if (message.getMajorVersion() < MIN_SUPPORTED_VERSION_MAJOR ||
+                    (message.getMinorVersion() < MIN_SUPPORTED_VERSION_MINOR &&
+                            message.getMajorVersion() >= MIN_SUPPORTED_VERSION_MAJOR)) {
+                log.warn("Firmata device protocol version is too old for this library." +
+                                " Some functionality may not work. Library min supported version: {}.{}",
+                        MIN_SUPPORTED_VERSION_MAJOR, MIN_SUPPORTED_VERSION_MINOR);
+            }
+            return true;
+        }
+
+        return false;
     }
 
     /**
