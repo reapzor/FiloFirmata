@@ -277,6 +277,29 @@ public class Firmata extends SerialPortEventListener {
         return false;
     }
 
+    private class SynchronousMessageListener<T extends Message> extends MessageListener<T> {
+        private T message;
+        private
+
+        @Override
+        public void messageReceived(T message) {
+            this.message = message;
+        }
+
+
+    }
+
+    public <T extends Message> T sendMessageSynchronous(TransmittableMessage message) {
+        T responseMessage;
+
+        MessageListener<T> messageListener = new MessageListener<T>() {
+            @Override
+            public void messageReceived(T message) {
+                responseMessage = message;
+            }
+        };
+    }
+
     /**
      * Send a series of raw bytes over the serial port to a Firmata supported device.
      *
@@ -548,5 +571,13 @@ public class Firmata extends SerialPortEventListener {
                 listener.messageReceived(message);
             }
         }
+    }
+
+    /**
+     * Inform if the firmata serial connection is established and running
+     * @return True if connected, false if not.
+     */
+    public Boolean getStarted() {
+        return started;
     }
 }
