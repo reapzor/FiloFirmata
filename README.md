@@ -184,9 +184,13 @@ firmata.addMessageListener(2, AnalogMessage.class, messageListener);
 ## Synchronous Messages
 Some parts of the Firmata library use a simple request / reply pattern where if you send a message, you will get a specific response corresponding to the request in the message you send. For these types of message, using the asynchronous listener pattern may be a little overkill. A method has been created that will allow you to specific the transmission message as well as the expected message type to be returned and defined, all within one line. You must supply the expected message response type in the method.
 ```java
+// We want to send a firmware query request to the project board. Send the query message synchronously.
+//   The board will reply with its firmware details immediately to this request (or, at least, we expect it to)
+//   Wait for the expected reply message, then return the response message, populating the firmwareMessage parameter.
 SysexReportFirmwareMessage firmwareMessage =
     firmata.sendMessageSynchronous<SysexReportFirmwareMessage>(new SysexReportFirmwareQueryMessage());
 
+// We can now identify the firmware details that the project board sent up from our request.
 System.out.println(firmwareMessage.getFirmwareName());
 ```
 
