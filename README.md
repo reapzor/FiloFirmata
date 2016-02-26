@@ -186,6 +186,8 @@ Some parts of the Firmata library use a simple request / reply pattern where if 
 ```java
 // We want to send a firmware query request to the project board. Send the query message synchronously.
 //   The board will reply with its firmware details immediately to this request (or, at least, we expect it to)
+//   Since the response will be a SysexReportFirmwareMessage object, tell the method this is the class we are
+//     expecting to receive as a response.
 //   Wait for the expected reply message, then return the response message, populating the firmwareMessage parameter.
 SysexReportFirmwareMessage firmwareMessage =
     firmata.sendMessageSynchronous<SysexReportFirmwareMessage>(new SysexReportFirmwareQueryMessage());
