@@ -179,6 +179,15 @@ firmata.addMessageListener(DigitalPortMessage.class, messageListener);
 firmata.addMessageListener(2, AnalogMessage.class, messageListener);
 ```
 
+## Synchronous Messages
+Some parts of the Firmata library use a simple request / reply pattern where if you send a message, you will get a specific response corresponding to the request in the message you send. For these types of message, using the asynchronous listener pattern may be a little overkill. A method has been created that will allow you to specific the transmission message as well as the expected message type to be returned and defined, all within one line. You must supply the expected message response type in the method.
+```java
+SysexReportFirmwareMessage firmwareMessage =
+    firmata.sendMessageSynchronous<SysexReportFirmwareMessage>(new SysexReportFirmwareQueryMessage());
+
+System.out.println(firmwareMessage.getFirmwareName());
+```
+
 ## Transmitting Custom Messages
 Implementing your own custom Firmata messages into the FiloFirmata library is quite simple, and desired! Simply pick the base class you need for your type of message and implement the serialize callback to translate your message into a byte stream.
 
