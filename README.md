@@ -66,6 +66,15 @@ Firmata firmata = new Firmata();
 // Somewhere in your application you start up the library and begin communications through the serial port.
 firmata.start();
 
+
+/* SYNCHRONOUS (Send with expected instant reply)*/
+SysexReportFirmwareMessage firmwareMessage =
+    firmata.sendMessageSynchronous<SysexReportFirmwareMessage>(new SysexReportFirmwareQueryMessage());
+System.out.println(firmwareMessage.getFirmwareName());
+System.out.println(firmwareMessage.getMajorVersion());
+System.out.println(firmwareMessage.getMinorVersion());
+
+/* ASYNCHRONOUS (Send with no expected reply, or potentially many replies) */
 // You want to print out to console the firmware name and version of your project board whenever it is sent up
 //   So you create a listener that will fire every time a the specific message is received.
 MessageListener<SysexReportFirmwareMessage> firmwareListener =
@@ -90,6 +99,8 @@ firmata.sendMessage(new SysexReportFirmwareQueryMessage());
 // At some point you do not care to respond to or handle firmware name messages being passed by the project board.
 //   So you remove your listener to tell the library you wish to ignore these messages now.
 firmata.removeMessageListener(firmwareListener);
+
+
 
 // At some point you are done talking over the serial port, so you decide to shut down the Firmata library.
 firmata.stop();
