@@ -68,6 +68,8 @@ firmata.start();
 
 
 /* SYNCHRONOUS (Send with expected instant reply)*/
+// You want to ask the project board what firmware it is running. Send a firmware query and populate
+//    the firmwareResponse parameter with the firmware response message.
 SysexReportFirmwareMessage firmwareMessage =
     firmata.sendMessageSynchronous<SysexReportFirmwareMessage>(new SysexReportFirmwareQueryMessage());
 System.out.println(firmwareMessage.getFirmwareName());
