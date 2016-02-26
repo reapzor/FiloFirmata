@@ -182,7 +182,7 @@ firmata.addMessageListener(2, AnalogMessage.class, messageListener);
 ```
 
 ## Synchronous Messages
-Some parts of the Firmata library use a simple request & response pattern where if you send a message, you will get a specific response about your request. For these types of message, using the asynchronous listener pattern may be a little overkill. A method has been created that will allow you to specific the transmission message as well as the expected message type to be returned and defined, all within one line. You must supply the expected message response type in the method.
+Some parts of the Firmata library use a simple request & response pattern where if you send a query message, you will get a response message answering the details of your query. For these types of message, using the asynchronous listener pattern may be a little overkill. A method has been created that will allow you to specific the transmission message as well as the expected message type to be returned and defined, all within one line. You must supply the expected message response type in the method.
 ```java
 // We want to send a firmware query request to the project board. Send the query message synchronously.
 //   The board will reply with its firmware details immediately to this request (or, at least, we expect it to)
