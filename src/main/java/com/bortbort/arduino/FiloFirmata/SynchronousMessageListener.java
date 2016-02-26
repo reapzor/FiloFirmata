@@ -38,11 +38,11 @@ abstract class SynchronousMessageListener<T extends Message> extends MessageList
     }
 
     public Boolean waitForResponse() {
+        if (responseReceived != null) {
+            return responseReceived;
+        }
+        
         synchronized (lock) {
-            if (responseReceived != null) {
-                return responseReceived;
-            }
-
             try {
                 lock.wait(RESPONSE_WAIT_TIME);
             } catch (InterruptedException e) {
