@@ -34,7 +34,7 @@ public class FirmataTest {
 
     @Before
     public void before() throws Exception {
-        firmata = new Firmata();
+        firmata = new Firmata("COM4");
         assertTrue(firmata.start());
         assertTrue(firmata.sendMessage(new SystemResetMessage()));
     }
@@ -61,7 +61,7 @@ public class FirmataTest {
         firmata.addMessageListener(capabilityListener);
         assertTrue(firmata.sendMessage(new SysexCapabilityQueryMessage()));
 
-        // Verify the listener recieves the capabilities message.
+        // Verify the listener receives the capabilities message.
         waitForCallback();
 
         assertTrue(firmata.sendMessage(new SysexReportFirmwareQueryMessage()));
@@ -146,6 +146,15 @@ public class FirmataTest {
 
         firmata.removeMessageListener(2, digitalListener);
         assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(1, false)));
+    }
+
+
+    @Test
+    public void testSynchronousCommunication() throws Exception {
+        SysexCapabilityMessage message = firmata.sendMessageSynchronous(new SysexCapabilityQueryMessage());
+
+        assertNotNull(message);
+        assertNotNull(message.getPinCapabilities());
     }
 
 

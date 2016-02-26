@@ -1,13 +1,16 @@
 package com.bortbort.arduino.FiloFirmata;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
+import net.jodah.typetools.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by Charles.Benson on 2/25/2016.
+ * SynchronousMessageListener
+ * Turns an async design for listening and sending messages into a synchronous design allowing
+ * a message to be sent with the return value being the response message.
  */
-class SynchronousMessageListener<T extends Message> extends MessageListener<T> {
+abstract class SynchronousMessageListener<T extends Message> extends MessageListener<T> {
     private static final Logger log = LoggerFactory.getLogger(SynchronousMessageListener.class);
     private static final int RESPONSE_WAIT_TIME = 5000;
     private T responseMessage;
@@ -16,8 +19,8 @@ class SynchronousMessageListener<T extends Message> extends MessageListener<T> {
 
     @Override
     public void messageReceived(T message) {
-        if (responseReceived) {
-            log.warn("Receieved more than one synchronous message reply!");
+        if (responseReceived != null && responseReceived) {
+            log.warn("Received more than one synchronous message reply!");
         }
 
         if (responseReceived == null) {
@@ -35,11 +38,11 @@ class SynchronousMessageListener<T extends Message> extends MessageListener<T> {
     }
 
     public Boolean waitForResponse() {
-        if (responseReceived != null) {
-            return responseReceived;
-        }
-
         synchronized (lock) {
+            if (responseReceived != null) {
+                return responseReceived;
+            }
+
             try {
                 lock.wait(RESPONSE_WAIT_TIME);
             } catch (InterruptedException e) {
@@ -59,5 +62,6 @@ class SynchronousMessageListener<T extends Message> extends MessageListener<T> {
         waitForResponse();
         return responseMessage;
     }
+
 }
 

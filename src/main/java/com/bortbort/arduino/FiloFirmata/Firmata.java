@@ -259,7 +259,7 @@ public class Firmata extends SerialPortEventListener {
      */
     public <T extends Message> T sendMessageSynchronous(TransmittableMessage message) {
         T responseMessage = null;
-        SynchronousMessageListener<T> messageListener = new SynchronousMessageListener<>();
+        SynchronousMessageListener<T> messageListener = new SynchronousMessageListener<T>() {};
         addMessageListener(messageListener);
 
         if (sendMessage(message)) {
@@ -430,7 +430,9 @@ public class Firmata extends SerialPortEventListener {
      * interpreted within 5 seconds.
      */
     private Boolean testProtocolCommunication() {
-        SynchronousMessageListener<ProtocolVersionMessage> versionListener = new SynchronousMessageListener<>();
+        SynchronousMessageListener<ProtocolVersionMessage> versionListener =
+                new SynchronousMessageListener<ProtocolVersionMessage>() {};
+
         addMessageListener(versionListener);
 
         try {
