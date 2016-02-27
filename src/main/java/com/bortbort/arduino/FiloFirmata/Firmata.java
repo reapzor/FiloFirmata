@@ -257,13 +257,13 @@ public class Firmata extends SerialPortEventListener {
      * @param <T> Message type that you are expecting as a reply to the message being transmitted.
      * @return T message object if the project board sends a reply. null if no reply was sent in time.
      */
-    public <T extends Message> T sendMessageSynchronous(TransmittableMessage message) {
+    public <T extends Message> T sendMessageSynchronous(Class<T> responseType, TransmittableMessage message) {
         T responseMessage = null;
-        SynchronousMessageListener<T> messageListener = new SynchronousMessageListener<T>() {};
-        addMessageListener(messageListener);
+        SynchronousMessageListener messageListener = new SynchronousMessageListener();
+        addMessageListener(null, responseType, messageListener);
 
         if (sendMessage(message)) {
-            responseMessage = messageListener.getResponseMessage();
+            responseMessage = responseType.cast(messageListener.getResponseMessage());
         }
 
         removeMessageListener(messageListener);
@@ -430,10 +430,9 @@ public class Firmata extends SerialPortEventListener {
      * interpreted within 5 seconds.
      */
     private Boolean testProtocolCommunication() {
-        SynchronousMessageListener<ProtocolVersionMessage> versionListener =
-                new SynchronousMessageListener<ProtocolVersionMessage>() {};
+        SynchronousMessageListener versionListener = new SynchronousMessageListener();
 
-        addMessageListener(versionListener);
+        addMessageListener(null, ProtocolVersionMessage.class, versionListener);
 
         try {
             serialPort.getOutputStream().write(new ProtocolVersionQueryMessage().toByteArray());
@@ -443,7 +442,7 @@ public class Firmata extends SerialPortEventListener {
             return false;
         }
 
-        ProtocolVersionMessage message = versionListener.getResponseMessage();
+        ProtocolVersionMessage message = ProtocolVersionMessage.class.cast(versionListener.getResponseMessage());
         removeMessageListener(versionListener);
 
         if (message != null) {

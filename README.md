@@ -71,10 +71,13 @@ firmata.start();
 // You want to ask the project board what firmware it is running. Send a firmware query and populate
 //    the firmwareResponse parameter with the firmware response message.
 SysexReportFirmwareMessage firmwareMessage =
-    firmata.sendMessageSynchronous<SysexReportFirmwareMessage>(new SysexReportFirmwareQueryMessage());
+    firmata.sendMessageSynchronous(
+        SysexReportFirmwareMessage.class,
+        new SysexReportFirmwareQueryMessage());
 System.out.println(firmwareMessage.getFirmwareName());
 System.out.println(firmwareMessage.getMajorVersion());
 System.out.println(firmwareMessage.getMinorVersion());
+
 
 /* ASYNCHRONOUS (Send with no expected reply, or potentially many replies) */
 // You want to print out to console the firmware name and version of your project board whenever it is sent up
@@ -190,7 +193,9 @@ Some parts of the Firmata library use a simple request & response pattern where 
 //     expecting to receive as a response.
 //   Wait for the expected reply message, then return the response message, populating the firmwareMessage parameter.
 SysexReportFirmwareMessage firmwareMessage =
-    firmata.sendMessageSynchronous<SysexReportFirmwareMessage>(new SysexReportFirmwareQueryMessage());
+    firmata.sendMessageSynchronous(
+        SysexReportFirmwareMessage.class,
+        new SysexReportFirmwareQueryMessage());
 
 // We can now identify the firmware details that the project board sent up from our request.
 System.out.println(firmwareMessage.getFirmwareName());

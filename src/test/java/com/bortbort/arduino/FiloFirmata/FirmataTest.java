@@ -150,7 +150,9 @@ public class FirmataTest {
 
     @Test
     public void testSynchronousCommunication() throws Exception {
-        SysexCapabilityMessage message = firmata.sendMessageSynchronous(new SysexCapabilityQueryMessage());
+        SysexCapabilityMessage message = firmata.sendMessageSynchronous(
+                SysexCapabilityMessage.class,
+                new SysexCapabilityQueryMessage());
 
         assertNotNull(message);
         assertNotNull(message.getPinCapabilities());
