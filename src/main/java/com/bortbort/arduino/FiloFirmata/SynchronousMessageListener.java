@@ -16,6 +16,11 @@ class SynchronousMessageListener extends MessageListener<Message> {
     private Boolean responseReceived = null;
     private final Object lock = new Object();
 
+    public SynchronousMessageListener(Class messageType) {
+        super();
+        this.messageType = messageType;
+    }
+
     /**
      * When we get our expected message response. Save the message object, and notify the waiting thread
      * that the message is now available to be passed back.

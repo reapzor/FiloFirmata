@@ -115,7 +115,7 @@ public class Firmata extends SerialPortEventListener {
      * @param messageClass Class indicating the message type to listen to.
      * @param messageListener (Generic)MessageListener object to handle a received Message event over the SerialPort.
      */
-    public void addMessageListener(Integer channel, Class<? extends Message> messageClass,
+    public void addMessageListener(Integer channel, Class messageClass,
                                    MessageListener messageListener) {
         // Build up the empty class listener map if not already there
         if (!messageListenerMap.containsKey(messageClass)) {
@@ -145,7 +145,7 @@ public class Firmata extends SerialPortEventListener {
      * @param messageClass Class indicating the message type to listen to.
      * @param messageListener (Generic)MessageListener to be removed.
      */
-    public void removeMessageListener(Integer channel, Class<? extends Message> messageClass,
+    public void removeMessageListener(Integer channel, Class messageClass,
                                       MessageListener messageListener) {
         if (messageListenerMap.containsKey(messageClass)) {
             HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageClass);
@@ -260,8 +260,9 @@ public class Firmata extends SerialPortEventListener {
      */
     public <T extends Message> T sendMessageSynchronous(Class<T> responseType, TransmittableMessage message) {
         T responseMessage = null;
-        SynchronousMessageListener messageListener = new SynchronousMessageListener();
-        addMessageListener(null, responseType, messageListener);
+        SynchronousMessageListener messageListener = new SynchronousMessageListener(responseType);
+
+        addMessageListener(messageListener);
 
         if (sendMessage(message)) {
             responseMessage = responseType.cast(messageListener.getResponseMessage());
@@ -431,9 +432,9 @@ public class Firmata extends SerialPortEventListener {
      * interpreted within 5 seconds.
      */
     private Boolean testProtocolCommunication() {
-        SynchronousMessageListener versionListener = new SynchronousMessageListener();
+        SynchronousMessageListener versionListener = new SynchronousMessageListener(ProtocolVersionMessage.class);
 
-        addMessageListener(null, ProtocolVersionMessage.class, versionListener);
+        addMessageListener(versionListener);
 
         try {
             serialPort.getOutputStream().write(new ProtocolVersionQueryMessage().toByteArray());
