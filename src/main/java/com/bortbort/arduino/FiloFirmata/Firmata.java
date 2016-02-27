@@ -7,6 +7,7 @@ import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandParser;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.*;
 import com.bortbort.helpers.DataTypeHelpers;
+import net.jodah.typetools.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
