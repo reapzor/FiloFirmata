@@ -34,8 +34,7 @@ public class FirmataTest {
 
     @Before
     public void before() throws Exception {
-        firmata = new Firmata("COM4");
-        assertTrue(firmata.start());
+        firmata = new Firmata("COM3");
         assertTrue(firmata.sendMessage(new SystemResetMessage()));
     }
 

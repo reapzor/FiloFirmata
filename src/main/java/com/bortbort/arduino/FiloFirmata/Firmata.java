@@ -228,7 +228,7 @@ public class Firmata extends SerialPortEventListener {
      * @return True if the Message sent. False if the Message was not sent.
      */
     public synchronized Boolean sendMessage(TransmittableMessage message) {
-        if (!started) {
+        if (!start()) {
             log.error("Firmata library is not connected / started! Cannot send message {}",
                     message.getClass().getSimpleName());
             return false;
@@ -278,7 +278,7 @@ public class Firmata extends SerialPortEventListener {
      * @return True if the bytes were sent. False if the bytes were not sent.
      */
     public synchronized Boolean sendRaw(byte... rawBytes) {
-        if (!started) {
+        if (!start()) {
             log.error("Firmata library is not connected / started! Cannot send bytes {}",
                     DataTypeHelpers.bytesToHexString(rawBytes));
             return false;
