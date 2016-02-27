@@ -265,7 +265,9 @@ public class Firmata extends SerialPortEventListener {
         addMessageListener(messageListener);
 
         if (sendMessage(message)) {
-            responseMessage = responseType.cast(messageListener.getResponseMessage());
+            if (messageListener.waitForResponse()) {
+                responseMessage = responseType.cast(messageListener.getResponseMessage());
+            }
         }
 
         removeMessageListener(messageListener);
@@ -444,7 +446,11 @@ public class Firmata extends SerialPortEventListener {
             return false;
         }
 
-        ProtocolVersionMessage message = ProtocolVersionMessage.class.cast(versionListener.getResponseMessage());
+        ProtocolVersionMessage message = null;
+        if (versionListener.waitForResponse()) {
+            message = ProtocolVersionMessage.class.cast(versionListener.getResponseMessage());
+        }
+
         removeMessageListener(versionListener);
 
         if (message != null) {
