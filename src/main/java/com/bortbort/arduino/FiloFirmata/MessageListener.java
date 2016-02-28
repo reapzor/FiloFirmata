@@ -37,7 +37,7 @@ public abstract class MessageListener<T extends Message> {
     public MessageListener(DigitalChannel channel) {
         this();
         this.channel = channel;
-        this.channelIdentifier = DigitalChannel.getChannelIdentifier(channel);
+        this.channelIdentifier = channel.getIdentifier();
     }
 
     /**
