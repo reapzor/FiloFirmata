@@ -48,7 +48,7 @@ public abstract class MessageListener<T extends Message> {
      * Construct a new message listener for the given message type
      * @param messageType type of message this listener is for
      */
-    public MessageListener(Class<? extends Message> messageType) {
+    protected MessageListener(Class<? extends Message> messageType) {
         this.messageType = messageType;
     }
 
