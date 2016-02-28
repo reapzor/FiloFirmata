@@ -14,7 +14,7 @@ public abstract class MessageListener<T extends Message> {
      * Holds the message type that this listener fires for. When a message is received, it will be be of the type
      * provided when implementing this class.
      */
-    protected Class messageType;
+    protected Class<? extends Message> messageType;
 
     /**
      * Holds the channel identifier for the listener, if provided during construction.
@@ -32,6 +32,7 @@ public abstract class MessageListener<T extends Message> {
     /**
      * Construct a new message listener for a given Message type
      */
+    @SuppressWarnings("unchecked")
     public MessageListener() {
         Class[] typeArguments = TypeResolver.resolveRawArguments(MessageListener.class, getClass());
         this.messageType = typeArguments[0];
@@ -51,8 +52,7 @@ public abstract class MessageListener<T extends Message> {
      *
      * @return Class representing the Message type this listener fires for.
      */
-    public Class getMessageType() {
-        System.out.println(messageType.getName());
+    public Class<? extends Message> getMessageType() {
         return messageType;
     }
 

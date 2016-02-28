@@ -20,7 +20,7 @@ class SynchronousMessageListener extends MessageListener<Message> {
      * Construct a synchronous message listener for a given message type.
      * @param messageType The Class type of message to listen for.
      */
-    public SynchronousMessageListener(Class messageType) {
+    public SynchronousMessageListener(Class<? extends Message> messageType) {
         super();
         this.messageType = messageType;
     }

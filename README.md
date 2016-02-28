@@ -17,13 +17,13 @@ Maven:
 <dependency>
     <groupId>com.bortbort.arduino</groupId>
     <artifactId>filo-firmata</artifactId>
-    <version>0.1.6</version>
+    <version>0.1.7</version>
 </dependency>
 ```
 
 Gradle:
 ```gradle
-compile 'com.bortbort.arduino:filo-firmata:0.1.6'
+compile 'com.bortbort.arduino:filo-firmata:0.1.7'
 ```
 
 ## Integrating With Your Project
@@ -170,6 +170,9 @@ MessageListener<Message> messageListener = MessageListener<Message>() {
 // Register the listener for all messages coming in from the board.
 firmata.addMessageListener(messageListener);
 
+// OR Register the listener for all messages coming in for "Channel 2" (Pin or port depending on command) (0 indexed)
+firmata.addMessageListener(2, messageListener);
+
 // OR Register the listener for a few specific message types
 // All sysex report firmaware types
 firmata.addMessageListener(SysexReportFirmwareMessage.class, messageListener);
@@ -177,6 +180,8 @@ firmata.addMessageListener(SysexReportFirmwareMessage.class, messageListener);
 firmata.addMessageListener(ProtocolVersionMessage.class, messageListener);
 // All ports of a digital port message type
 firmata.addMessageListener(DigitalPortMessage.class, messageListener);
+// Only port 2 of an analog message type
+firmata.addMessageListener(2, AnalogMessage.class, messageListener);
 ```
 
 ## Synchronous Messages

@@ -115,7 +115,7 @@ public class Firmata extends SerialPortEventListener {
      * @param messageClass Class indicating the message type to listen to.
      * @param messageListener (Generic)MessageListener object to handle a received Message event over the SerialPort.
      */
-    protected void addMessageListener(Integer channel, Class messageClass,
+    public void addMessageListener(Integer channel, Class<? extends Message> messageClass,
                                    MessageListener messageListener) {
         // Build up the empty class listener map if not already there
         if (!messageListenerMap.containsKey(messageClass)) {
@@ -145,7 +145,7 @@ public class Firmata extends SerialPortEventListener {
      * @param messageClass Class indicating the message type to listen to.
      * @param messageListener (Generic)MessageListener to be removed.
      */
-    protected void removeMessageListener(Integer channel, Class messageClass,
+    public void removeMessageListener(Integer channel, Class<? extends Message> messageClass,
                                       MessageListener messageListener) {
         if (messageListenerMap.containsKey(messageClass)) {
             HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageClass);
@@ -171,9 +171,32 @@ public class Firmata extends SerialPortEventListener {
      * @param messageClass Message class to stop listening to.
      * @param messageListener Listener to remove from the listener list for the given messageClass.
      */
-    public void removeMessageListener(Class<? extends Message> messageClass,
-                                      MessageListener<Message> messageListener) {
+    public void removeMessageListener(Class<? extends Message> messageClass, MessageListener<Message> messageListener) {
         removeMessageListener(messageListener.getChannelIdentifier(), messageClass, messageListener);
+    }
+
+    /**
+     * Add a messageListener to the Firmta object which will fire whenever a matching message is received
+     * over the SerialPort that corresponds to the given channel. If the channel is null, the listener
+     * will fire regardless of which channel (pin) the message is coming from.
+     *
+     * @param channel Integer indicating the specific channel or pin to listen on, or null to listen to
+     *                all messages regardless of channel/pin.
+     * @param messageListener MessageListener object to handle a received Message event over the SerialPort.
+     */
+    public void addMessageListener(Integer channel, MessageListener<? extends Message> messageListener) {
+        addMessageListener(channel, messageListener.getMessageType(), messageListener);
+    }
+
+    /**
+     * Remove a messageListener from the Firmata object which will stop the listener from responding to message
+     * received events over the SerialPort.
+     *
+     * @param channel Integer channel to remove the listener from.
+     * @param messageListener MessageListener to be removed.
+     */
+    public void removeMessageListener(Integer channel, MessageListener<? extends Message> messageListener) {
+        removeMessageListener(channel, messageListener.getMessageType(), messageListener);
     }
 
     /**
@@ -194,8 +217,7 @@ public class Firmata extends SerialPortEventListener {
      * @param messageListener MessageListener object to remove.
      */
     public void removeMessageListener(MessageListener<? extends Message> messageListener) {
-        removeMessageListener(messageListener.getChannelIdentifier(),
-                messageListener.getMessageType(), messageListener);
+        removeMessageListener(messageListener.getChannelIdentifier(), messageListener.getMessageType(), messageListener);
     }
 
 
