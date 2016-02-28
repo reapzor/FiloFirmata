@@ -171,7 +171,8 @@ public class Firmata extends SerialPortEventListener {
      * @param messageClass Message class to stop listening to.
      * @param messageListener Listener to remove from the listener list for the given messageClass.
      */
-    public void removeMessageListener(Class<? extends Message> messageClass, MessageListener<Message> messageListener) {
+    public void removeMessageListener(Class<? extends Message> messageClass,
+                                      MessageListener<Message> messageListener) {
         removeMessageListener(messageListener.getChannelIdentifier(), messageClass, messageListener);
     }
 
@@ -207,7 +208,8 @@ public class Firmata extends SerialPortEventListener {
      * @param messageListener MessageListener object to handle a received Message event over the SerialPort.
      */
     public void addMessageListener(MessageListener<? extends Message> messageListener) {
-        addMessageListener(messageListener.getChannelIdentifier(), messageListener.getMessageType(), messageListener);
+        addMessageListener(messageListener.getChannelIdentifier(),
+                messageListener.getMessageType(), messageListener);
     }
 
     /**
@@ -217,7 +219,8 @@ public class Firmata extends SerialPortEventListener {
      * @param messageListener MessageListener object to remove.
      */
     public void removeMessageListener(MessageListener<? extends Message> messageListener) {
-        removeMessageListener(messageListener.getChannelIdentifier(), messageListener.getMessageType(), messageListener);
+        removeMessageListener(messageListener.getChannelIdentifier(),
+                messageListener.getMessageType(), messageListener);
     }
 
 
