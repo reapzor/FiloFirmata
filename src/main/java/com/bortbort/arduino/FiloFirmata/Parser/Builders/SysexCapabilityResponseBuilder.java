@@ -1,10 +1,11 @@
 package com.bortbort.arduino.FiloFirmata.Parser.Builders;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
-import com.bortbort.arduino.FiloFirmata.Messages.PinCapabilities;
+import com.bortbort.arduino.FiloFirmata.PinCapability;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexCapabilityMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +42,7 @@ public class SysexCapabilityResponseBuilder extends SysexMessageBuilder {
 
     private ArrayList<byte[]> splitPinMessages (byte[] messageBody) {
         // Arbitrary buffer size. Each capability has an extra potentially used byte with it.
-        ByteBuffer byteBuffer = ByteBuffer.allocate(PinCapabilities.values().length * 2);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(PinCapability.values().length * 2);
         ArrayList<byte[]> pinCapabilities = new ArrayList<>();
         for (byte bodyChunk : messageBody) {
             if (bodyChunk == 0x7f) {

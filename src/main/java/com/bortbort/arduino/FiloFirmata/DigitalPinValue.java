@@ -1,16 +1,16 @@
-package com.bortbort.arduino.FiloFirmata.Messages;
+package com.bortbort.arduino.FiloFirmata;
 
 /**
  * Digital Pin Values
  * Simple ENUM defining the logic behind a digital communications rail.
  */
-public enum DigitalPinValues {
+public enum DigitalPinValue {
     LOW    (0x00), // Digital Low
     HIGH   (0x01); // Digital High
 
     private byte byteValue;
 
-    DigitalPinValues(int byteValue) {
+    DigitalPinValue(int byteValue) {
         this.byteValue = (byte) byteValue;
     }
 

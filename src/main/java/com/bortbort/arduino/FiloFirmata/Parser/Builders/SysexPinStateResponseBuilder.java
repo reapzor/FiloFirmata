@@ -1,7 +1,7 @@
 package com.bortbort.arduino.FiloFirmata.Parser.Builders;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
-import com.bortbort.arduino.FiloFirmata.Messages.PinCapabilities;
+import com.bortbort.arduino.FiloFirmata.PinCapability;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexPinStateMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
@@ -18,7 +18,7 @@ public class SysexPinStateResponseBuilder extends SysexMessageBuilder {
     @Override
     public Message buildMessage(byte[] messageBody) {
         Integer pinIdentifier = (int) messageBody[0];
-        PinCapabilities currentPinMode = PinCapabilities.getCapability(messageBody[1]);
+        PinCapability currentPinMode = PinCapability.getCapability(messageBody[1]);
         int value = 0;
         for (int x = 2; x < messageBody.length; x++) {
             value |= messageBody[x] << ((x - 2) * 7);

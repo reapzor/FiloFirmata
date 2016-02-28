@@ -1,5 +1,6 @@
 package com.bortbort.arduino.FiloFirmata.Messages;
 
+import com.bortbort.arduino.FiloFirmata.DigitalPinValue;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 
 import java.io.ByteArrayOutputStream;
@@ -11,14 +12,14 @@ import java.io.ByteArrayOutputStream;
  */
 public class SetDigitalPinValueMessage extends TransmittableMessage {
     private int pinIdentifier;
-    private DigitalPinValues pinValue;
+    private DigitalPinValue pinValue;
 
     /**
      * Set Digital Pin Value Message
      * @param pinIdentifier int Index representing the pin to set the value on.
-     * @param pinValue DigitalPinValues logic level high or low to set on the pin.
+     * @param pinValue DigitalPinValue logic level high or low to set on the pin.
      */
-    public SetDigitalPinValueMessage(int pinIdentifier, DigitalPinValues pinValue) {
+    public SetDigitalPinValueMessage(int pinIdentifier, DigitalPinValue pinValue) {
         super(CommandBytes.SET_DIGITAL_PIN_VALUE);
         this.pinIdentifier = pinIdentifier;
         this.pinValue = pinValue;

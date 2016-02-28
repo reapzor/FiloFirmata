@@ -1,4 +1,4 @@
-package com.bortbort.arduino.FiloFirmata.Messages;
+package com.bortbort.arduino.FiloFirmata;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Firmata Pin Capabilities.
  * Holds the byte values representing various Pin Modes that a Firmata device pin could support.
  */
-public enum PinCapabilities {
+public enum PinCapability {
     INPUT          (0x00), // defined in Arduino.h
     OUTPUT         (0x01), // defined in Arduino.h
     ANALOG         (0x02), // analog pin in analogInput mode
@@ -22,7 +22,7 @@ public enum PinCapabilities {
     IGNORE         (0x7F); // pin configured to be ignored by digitalWrite and capabilityResponse
 
     private byte identifierByte;
-    PinCapabilities(int identifierByte) {
+    PinCapability(int identifierByte) {
         this.identifierByte = (byte) identifierByte;
     }
 
@@ -30,10 +30,10 @@ public enum PinCapabilities {
         return identifierByte;
     }
 
-    public static ArrayList<PinCapabilities> getCapabilities(byte... identifierBytes) {
-        ArrayList<PinCapabilities> pinCapabilities = new ArrayList<>();
+    public static ArrayList<PinCapability> getCapabilities(byte... identifierBytes) {
+        ArrayList<PinCapability> pinCapabilities = new ArrayList<>();
         for (byte identifierByte : identifierBytes) {
-            PinCapabilities pinCapability = getCapability(identifierByte);
+            PinCapability pinCapability = getCapability(identifierByte);
             if (pinCapability != null) {
                 pinCapabilities.add(pinCapability);
             }
@@ -46,8 +46,8 @@ public enum PinCapabilities {
         return pinCapabilities;
     }
 
-    public static PinCapabilities getCapability(byte identifierByte) {
-        for (PinCapabilities pinCapability : PinCapabilities.values()) {
+    public static PinCapability getCapability(byte identifierByte) {
+        for (PinCapability pinCapability : PinCapability.values()) {
             if (pinCapability.getIdentifierByte() == identifierByte) {
                 return pinCapability;
             }

@@ -19,7 +19,7 @@ dependencies {
 
 group 'com.bortbort.arduino'
 archivesBaseName = "filo-firmata"
-version '0.1.7'
+version '0.1.8-SNAPSHOT'
 sourceCompatibility = 1.8
 
 

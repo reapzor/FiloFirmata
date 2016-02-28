@@ -22,11 +22,22 @@ public abstract class MessageListener<T extends Message> {
     protected Integer channelIdentifier = null;
 
     /**
+     * Holds the DigitalChannel for the listener, if provided during construction.
+     */
+    protected DigitalChannel channel;
+
+    /**
      * Construct a new message listener for a given channel and Message type
      */
     public MessageListener(Integer channelIdentifier) {
         this();
         this.channelIdentifier = channelIdentifier;
+    }
+
+    public MessageListener(DigitalChannel channel) {
+        this();
+        this.channel = channel;
+        this.channelIdentifier = DigitalChannel.getChannelIdentifier(channel);
     }
 
     /**
@@ -57,10 +68,18 @@ public abstract class MessageListener<T extends Message> {
     }
 
     /**
-     * Get the channel identifier this listener is listening to.
+     * Get the channel identifier this listener is listening to (If used).
      * @return Integer value of the channel this listener is for
      */
     public Integer getChannelIdentifier() {
         return channelIdentifier;
+    }
+
+    /**
+     * Get the channel this listener is listening to (If used).
+     * @return DigitalChannel this listener is for
+     */
+    public DigitalChannel getChannel() {
+        return channel;
     }
 }
