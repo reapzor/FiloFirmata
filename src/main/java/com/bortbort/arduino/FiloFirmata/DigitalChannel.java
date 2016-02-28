@@ -15,18 +15,35 @@ public enum DigitalChannel {
     Channel3 (21, 22, 23, 24, 25, 26, 27);
 
     // Collection of the pins mapped to the channel
-    ArrayList<Integer> channelPins;
+    ArrayList<Integer> pins;
 
-    DigitalChannel(Integer... channelPins) {
-        this.channelPins = new ArrayList<>(Arrays.asList(channelPins));
+    DigitalChannel(Integer... pins) {
+        this.pins = new ArrayList<>(Arrays.asList(pins));
     }
 
     /**
      * Get a list of arduino pins associated with this channel
      * @return ArrayList of 8 pins representing the channel
      */
-    public ArrayList<Integer> getChannelPins() {
-        return channelPins;
+    public ArrayList<Integer> getPins() {
+        return pins;
+    }
+
+    /**
+     * Get the identifier integer for this DigitanChannel
+     * @return Integer representing this DigitalChannel
+     */
+    public Integer getIdentifier() {
+        return DigitalChannel.getChannelIdentifier(this);
+    }
+
+    /**
+     * Check if this channel contains a specific Arduino pin within it.
+     * @param pin Integer value of the pin to check
+     * @return True if the channel contains the pin. False if not.
+     */
+    public Boolean containsPin(Integer pin) {
+        return pins.contains(pin);
     }
 
     /**
@@ -34,11 +51,11 @@ public enum DigitalChannel {
      * @param channelIdentifier Integer value representing the channel (0 for channel0)
      * @return ArrayList of 8 pins representing the channel
      */
-    public static ArrayList<Integer> getChannelPins(Integer channelIdentifier) {
+    public static ArrayList<Integer> getPins(Integer channelIdentifier) {
         DigitalChannel channel = getChannel(channelIdentifier);
 
         if (channel != null) {
-            return channel.getChannelPins();
+            return channel.getPins();
         }
 
         return null;
@@ -75,21 +92,21 @@ public enum DigitalChannel {
     /**
      * Check if a channel contains a specific Arduino pin within it.
      * @param channel DigitalChannel to be checked
-     * @param channelPin Integer value of the pin to check
+     * @param pin Integer value of the pin to check
      * @return True if the channel contains the pin. False if not.
      */
-    public static Boolean channelContainsPin(DigitalChannel channel, Integer channelPin) {
-        return channel.getChannelPins().contains(channelPin);
+    public static Boolean channelContainsPin(DigitalChannel channel, Integer pin) {
+        return channel.getPins().contains(pin);
     }
 
     /**
      * Gets the specific DigitalChannel that contains the requested Arduino pin
-     * @param channelPin Integer value of the pin that the desired channel should contain
-     * @return DigitalChannel that contains the given channelPin
+     * @param pin Integer value of the pin that the desired channel should contain
+     * @return DigitalChannel that contains the given pin
      */
-    public static DigitalChannel getChannelForPin(Integer channelPin) {
+    public static DigitalChannel getChannelForPin(Integer pin) {
         for (DigitalChannel digitalChannel : DigitalChannel.values()) {
-            if (digitalChannel.getChannelPins().contains(channelPin)) {
+            if (digitalChannel.getPins().contains(pin)) {
                 return digitalChannel;
             }
         }

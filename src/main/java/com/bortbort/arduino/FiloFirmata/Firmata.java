@@ -178,11 +178,9 @@ public class Firmata extends SerialPortEventListener {
 
     /**
      * Add a messageListener to the Firmta object which will fire whenever a matching message is received
-     * over the SerialPort that corresponds to the given channel. If the channel is null, the listener
-     * will fire regardless of which channel (pin) the message is coming from.
+     * over the SerialPort that corresponds to the given channel.
      *
-     * @param channel Integer indicating the specific channel or pin to listen on, or null to listen to
-     *                all messages regardless of channel/pin.
+     * @param channel Integer indicating the specific channel or pin to listen on
      * @param messageListener MessageListener object to handle a received Message event over the SerialPort.
      */
     public void addMessageListener(Integer channel, MessageListener<? extends Message> messageListener) {
@@ -198,6 +196,28 @@ public class Firmata extends SerialPortEventListener {
      */
     public void removeMessageListener(Integer channel, MessageListener<? extends Message> messageListener) {
         removeMessageListener(channel, messageListener.getMessageType(), messageListener);
+    }
+
+    /**
+     * Add a messageListener to the Firmata object which will fire whenever a matching message is received
+     * over the SerialPort that corresponds to the given DigitalChannel.
+     *
+     * @param channel DigitalChannel to listen on
+     * @param messageListener MessageListener object to handle a received Message event over the SerialPort.
+     */
+    public void addMessageListener(DigitalChannel channel, MessageListener<? extends Message> messageListener) {
+        addMessageListener(channel.getIdentifier(), messageListener.getMessageType(), messageListener);
+    }
+
+    /**
+     * Remove a messageListener from the Firmata object which will stop the listener from responding to message
+     * received events over the SerialPort.
+     *
+     * @param channel DigitalChannel to remove the listener from.
+     * @param messageListener MessageListener to be removed.
+     */
+    public void removeMessageListener(DigitalChannel channel, MessageListener<? extends Message> messageListener) {
+        removeMessageListener(channel.getIdentifier(), messageListener.getMessageType(), messageListener);
     }
 
     /**
