@@ -17,7 +17,20 @@ public abstract class MessageListener<T extends Message> {
     protected Class messageType;
 
     /**
-     * Construct a new message listener for the given Message messageType classes.
+     * Holds the channel identifier for the listener, if provided during construction.
+     */
+    protected Integer channelIdentifier = null;
+
+    /**
+     * Construct a new message listener for a given channel and Message type
+     */
+    public MessageListener(Integer channelIdentifier) {
+        this();
+        this.channelIdentifier = channelIdentifier;
+    }
+
+    /**
+     * Construct a new message listener for a given Message type
      */
     public MessageListener() {
         Class[] typeArguments = TypeResolver.resolveRawArguments(MessageListener.class, getClass());
@@ -41,5 +54,13 @@ public abstract class MessageListener<T extends Message> {
     public Class getMessageType() {
         System.out.println(messageType.getName());
         return messageType;
+    }
+
+    /**
+     * Get the channel identifier this listener is listening to.
+     * @return Integer value of the channel this listener is for
+     */
+    public Integer getChannelIdentifier() {
+        return channelIdentifier;
     }
 }

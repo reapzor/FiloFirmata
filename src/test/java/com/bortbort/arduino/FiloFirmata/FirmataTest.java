@@ -76,10 +76,10 @@ public class FirmataTest {
 
     @Test
     public void testAnalogMessage() throws Exception {
-        MessageListener<AnalogMessage> analogListener = new MessageListener<AnalogMessage>() {
+        MessageListener<AnalogMessage> analogListener = new MessageListener<AnalogMessage>(2) {
             @Override
             public void messageReceived(AnalogMessage message) {
-                assertTrue(message.getAnalogValue() >= 0);
+                assertTrue(message.getChannelInt() == 2);
                 received();
             }
         };
@@ -87,35 +87,21 @@ public class FirmataTest {
         firmata.addMessageListener(analogListener);
         assertTrue(firmata.sendMessage(new ReportAnalogPinMessage(2, true)));
 
-        // Verify we get a message response to channel global listening
+        // Verify we get a message response to specific channel listening
         waitForCallback();
 
         firmata.removeMessageListener(analogListener);
         reset();
-        firmata.addMessageListener(2, analogListener);
-
-        // Verify we get a message response to specific channel listening
-        waitForCallback();
-
-        firmata.removeMessageListener(2, analogListener);
-        reset();
-        firmata.addMessageListener(3, analogListener);
-        Thread.sleep(500);
-
-        // Verify we do NOT get a message response to listening to 'wrong/inactive' channel
-        assertFalse(receievedCallback);
-
-        firmata.removeMessageListener(3, analogListener);
         assertTrue(firmata.sendMessage(new ReportAnalogPinMessage(2, false)));
     }
 
 
     @Test
     public void testDigitalMessage() throws Exception {
-        MessageListener<DigitalPortMessage> digitalListener = new MessageListener<DigitalPortMessage>() {
+        MessageListener<DigitalPortMessage> digitalListener = new MessageListener<DigitalPortMessage>(1) {
             @Override
             public void messageReceived(DigitalPortMessage message) {
-                assertTrue(message.getChannelInt() >= 0);
+                assertTrue(message.getChannelInt() == 1);
                 received();
             }
         };
@@ -123,27 +109,11 @@ public class FirmataTest {
         firmata.addMessageListener(digitalListener);
         assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(1, true)));
 
-        // Verify we get a message response to channel global listening
+        // Verify we get a message response to specific channel listening
         waitForCallback();
 
         firmata.removeMessageListener(digitalListener);
         reset();
-        firmata.addMessageListener(1, digitalListener);
-        assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(1, true)));
-
-        // Verify we get a message response to specific channel listening
-        waitForCallback();
-
-        firmata.removeMessageListener(1, digitalListener);
-        reset();
-        firmata.addMessageListener(2, digitalListener);
-        assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(1, true)));
-        Thread.sleep(500);
-
-        // Verify we do NOT get a message response to listening to 'wrong/inactive' channel
-        assertFalse(receievedCallback);
-
-        firmata.removeMessageListener(2, digitalListener);
         assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(1, false)));
     }
 
@@ -169,6 +139,15 @@ public class FirmataTest {
             }
         };
 
+        MessageListener<Message> messageListenerChannel = new MessageListener<Message>(1) {
+            @Override
+            public void messageReceived(Message message) {
+                assertNotNull(message);
+                received();
+            }
+        };
+
+
         firmata.addMessageListener(messageListener);
         assertTrue(firmata.sendMessage(new SysexReportFirmwareQueryMessage()));
 
@@ -183,7 +162,7 @@ public class FirmataTest {
         assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(1, false)));
         firmata.removeMessageListener(messageListener);
         reset();
-        firmata.addMessageListener(1, messageListener);
+        firmata.addMessageListener(messageListenerChannel);
         assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(1, true)));
 
         // Verify we get any generic channel message send up from the board
@@ -198,7 +177,7 @@ public class FirmataTest {
 
         assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(1, false)));
         assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(2, false)));
-        firmata.removeMessageListener(1, messageListener);
+        firmata.removeMessageListener(messageListenerChannel);
         reset();
         firmata.addMessageListener(SysexReportFirmwareMessage.class, messageListener);
         assertTrue(firmata.sendMessage(new ReportDigitalPortMessage(1, true)));
