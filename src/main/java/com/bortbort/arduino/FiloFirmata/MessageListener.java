@@ -45,6 +45,14 @@ public abstract class MessageListener<T extends Message> {
     }
 
     /**
+     * Construct a new message listener for the given message type
+     * @param messageType type of message this listener is for
+     */
+    public MessageListener(Class<? extends Message> messageType) {
+        this.messageType = messageType;
+    }
+
+    /**
      * Construct a new message listener for a given Message type.
      */
     @SuppressWarnings("unchecked")
