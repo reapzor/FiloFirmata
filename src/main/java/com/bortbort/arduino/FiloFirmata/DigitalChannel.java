@@ -1,6 +1,5 @@
 package com.bortbort.arduino.FiloFirmata;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 

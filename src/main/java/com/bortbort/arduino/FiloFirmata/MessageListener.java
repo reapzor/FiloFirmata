@@ -27,13 +27,17 @@ public abstract class MessageListener<T extends Message> {
     protected DigitalChannel channel;
 
     /**
-     * Construct a new message listener for a given channel and Message type
+     * Construct a new message listener for a given channel identifier and Message type.
      */
     public MessageListener(Integer channelIdentifier) {
         this();
         this.channelIdentifier = channelIdentifier;
     }
 
+    /**
+     * Construct a new message listener for a given channel and message type.
+     * @param channel DigitalChannel to listen on.
+     */
     public MessageListener(DigitalChannel channel) {
         this();
         this.channel = channel;
@@ -41,7 +45,7 @@ public abstract class MessageListener<T extends Message> {
     }
 
     /**
-     * Construct a new message listener for a given Message type
+     * Construct a new message listener for a given Message type.
      */
     @SuppressWarnings("unchecked")
     public MessageListener() {
