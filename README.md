@@ -143,7 +143,7 @@ firmata.addMessageListener(versionListener);
 Some messages use a 'Channel' byte to identify the pin the message represents (See the analog/digital pin reporting mechanism in the Firmata protocol). To listen to messages for a specific channel, add your listener with an identifier indicating witch pin or port you want the listener to handle. To listen to messages from all channels that the message type supports, do not provide an identifier.
 ```java
 // Handle analog messages from pin 2 evented to us from the project board (pin 2 request is handled below);
-MessageListener<AnalogMessage> analogListener = MessageListener<AnalogMessage>() {
+MessageListener<AnalogMessage> analogListener = MessageListener<AnalogMessage>(2) {
     @Override
     public void messageReceived(AnalogMessage message) {
         assertTrue(message.getChannelInt() == 2);
@@ -154,7 +154,7 @@ MessageListener<AnalogMessage> analogListener = MessageListener<AnalogMessage>()
 };
 
 // Only listen to analog message events that correspond to analog pin/channel 2 on the project board (0 indexed).
-firmata.addMessageListener(2, analogListener);
+firmata.addMessageListener(analogListener);
 ```
 
 If you want to listen to all or any messages, you can implement a generic message listener.
@@ -170,9 +170,6 @@ MessageListener<Message> messageListener = MessageListener<Message>() {
 // Register the listener for all messages coming in from the board.
 firmata.addMessageListener(messageListener);
 
-// OR Register the listener for all messages coming in for "Channel 2" (Pin or port depending on command) (0 indexed)
-firmata.addMessageListener(2, messageListener);
-
 // OR Register the listener for a few specific message types
 // All sysex report firmaware types
 firmata.addMessageListener(SysexReportFirmwareMessage.class, messageListener);
@@ -180,8 +177,6 @@ firmata.addMessageListener(SysexReportFirmwareMessage.class, messageListener);
 firmata.addMessageListener(ProtocolVersionMessage.class, messageListener);
 // All ports of a digital port message type
 firmata.addMessageListener(DigitalPortMessage.class, messageListener);
-// Only port 2 of an analog message type
-firmata.addMessageListener(2, AnalogMessage.class, messageListener);
 ```
 
 ## Synchronous Messages
