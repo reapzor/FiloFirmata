@@ -47,7 +47,7 @@ public enum SysexCommandBytes {
      *
      * @return Byte representing the SysexCommandBytes enum value.
      */
-    public byte getSysexCommandByte() {
+    public Byte getSysexCommandByte() {
         return sysexCommandByte;
     }
 }

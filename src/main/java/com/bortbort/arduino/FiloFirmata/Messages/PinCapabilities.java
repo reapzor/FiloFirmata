@@ -26,7 +26,7 @@ public enum PinCapabilities {
         this.identifierByte = (byte) identifierByte;
     }
 
-    public byte getIdentifierByte() {
+    public Byte getIdentifierByte() {
         return identifierByte;
     }
 

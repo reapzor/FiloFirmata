@@ -18,7 +18,7 @@ public enum DigitalPinValues {
      * Get Byte Value
      * @return Byte representing the digital logic pin value.
      */
-    public byte getByteValue() {
+    public Byte getByteValue() {
         return byteValue;
     }
 }

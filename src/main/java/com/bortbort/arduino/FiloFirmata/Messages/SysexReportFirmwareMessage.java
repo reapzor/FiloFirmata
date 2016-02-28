@@ -39,7 +39,7 @@ public class SysexReportFirmwareMessage implements Message {
      *
      * @return int representing the Firmata device's library "Major" version.
      */
-    public int getMajorVersion() {
+    public Integer getMajorVersion() {
         return majorVersion;
     }
 
@@ -48,7 +48,7 @@ public class SysexReportFirmwareMessage implements Message {
      *
      * @return int representing the Firmata device's library "Minor" version.
      */
-    public int getMinorVersion() {
+    public Integer getMinorVersion() {
         return minorVersion;
     }
 

@@ -36,7 +36,7 @@ public enum CommandBytes {
      *
      * @return Byte representing the CommandBytes enum value.
      */
-    public byte getCommandByte() {
+    public Byte getCommandByte() {
         return commandByte;
     }
 }

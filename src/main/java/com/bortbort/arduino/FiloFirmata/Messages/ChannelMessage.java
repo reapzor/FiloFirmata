@@ -16,7 +16,7 @@ public abstract class ChannelMessage implements Message {
      * Get Channel Byte
      * @return Byte representing the Channel or Firmata Pin that the Command Byte applies to.
      */
-    public byte getChannelByte() {
+    public Byte getChannelByte() {
         return channelByte;
     }
 
@@ -24,5 +24,5 @@ public abstract class ChannelMessage implements Message {
      * Get Channel Int
      * @return Int representing the Channel or Firmata Pin that the Command byte applies to.
      */
-    public int getChannelInt() { return (int) channelByte; }
+    public Integer getChannelInt() { return (int) channelByte; }
 }
