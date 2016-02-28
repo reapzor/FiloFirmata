@@ -82,16 +82,6 @@ public enum DigitalChannel {
     }
 
     /**
-     * Check if a channel contains a specific Arduino pin within it.
-     * @param channel DigitalChannel to be checked
-     * @param pin Integer value of the pin to check
-     * @return True if the channel contains the pin. False if not.
-     */
-    public static Boolean channelContainsPin(DigitalChannel channel, Integer pin) {
-        return channel.getPins().contains(pin);
-    }
-
-    /**
      * Gets the specific DigitalChannel that contains the requested Arduino pin
      * @param pin Integer value of the pin that the desired channel should contain
      * @return DigitalChannel that contains the given pin
