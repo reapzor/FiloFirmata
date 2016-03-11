@@ -7,10 +7,10 @@ import java.util.ArrayList;
  * Holds the byte values representing various Pin Modes that a Firmata device pin could support.
  */
 public enum PinCapability {
-    INPUT          (0x00), // defined in Arduino.h
-    OUTPUT         (0x01), // defined in Arduino.h
-    ANALOG         (0x02), // analog pin in analogInput mode
-    PWM            (0x03), // digital pin in PWM output mode
+    INPUT          (0x00), // defined in Arduino.h DIGITAL IN LOW
+    OUTPUT         (0x01), // defined in Arduino.h DIGITAL OUT
+    ANALOG         (0x02), // ANALOG INPUT
+    PWM            (0x03), // digital pin in PWM output mode "ANALOG" OUTPUT
     SERVO          (0x04), // digital pin in Servo output mode
     SHIFT          (0x05), // shiftIn/shiftOut mode
     I2C            (0x06), // pin included in I2C setup
@@ -18,7 +18,7 @@ public enum PinCapability {
     STEPPER        (0x08), // pin configured for stepper motor
     ENCODER        (0x09), // pin configured for rotary encoders
     SERIAL         (0x0A), // pin configured for serial communication
-    INPUT_PULLUP   (0x0B), // enable internal pull-up resistor for pin
+    INPUT_PULLUP   (0x0B), // enable internal pull-up resistor for pin DIGITAL IN HIGH
     IGNORE         (0x7F); // pin configured to be ignored by digitalWrite and capabilityResponse
 
     private byte identifierByte;
