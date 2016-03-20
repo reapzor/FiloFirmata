@@ -17,13 +17,13 @@ Maven:
 <dependency>
     <groupId>com.bortbort.arduino</groupId>
     <artifactId>filo-firmata</artifactId>
-    <version>0.1.7</version>
+    <version>0.1.8</version>
 </dependency>
 ```
 
 Gradle:
 ```gradle
-compile 'com.bortbort.arduino:filo-firmata:0.1.7'
+compile 'com.bortbort.arduino:filo-firmata:0.1.8'
 ```
 
 ## Integrating With Your Project
@@ -91,6 +91,14 @@ MessageListener<SysexReportFirmwareMessage> firmwareListener =
         System.out.println(message.getMinorVersion());
     }
 };
+
+// As of 0.1.8
+/* Java 8 lambda wrapper */
+MessageListener<SysexReportFirmwareMessage> firmwareListener = MessageListener.from((message) -> {
+    System.out.println(message.getFirmwareName());
+    System.out.println(message.getMajorVersion());
+    System.out.println(message.getMinorVersion());
+}
 
 // Somewhere in your application you decide to tell the Firmata library that it should rout the firmware messages to your new listener.
 //   Listeners can be added or removed while the library is started or stopped.
