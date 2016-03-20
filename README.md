@@ -17,13 +17,13 @@ Maven:
 <dependency>
     <groupId>com.bortbort.arduino</groupId>
     <artifactId>filo-firmata</artifactId>
-    <version>0.1.8</version>
+    <version>0.1.9</version>
 </dependency>
 ```
 
 Gradle:
 ```gradle
-compile 'com.bortbort.arduino:filo-firmata:0.1.8'
+compile 'com.bortbort.arduino:filo-firmata:0.1.9'
 ```
 
 ## Integrating With Your Project
@@ -92,7 +92,6 @@ MessageListener<SysexReportFirmwareMessage> firmwareListener =
     }
 };
 
-// As of 0.1.8
 /* Java 8 lambda wrapper */
 MessageListener<SysexReportFirmwareMessage> firmwareListener = MessageListener.from((message) -> {
     System.out.println(message.getFirmwareName());

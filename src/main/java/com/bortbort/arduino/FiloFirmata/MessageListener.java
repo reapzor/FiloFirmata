@@ -53,6 +53,7 @@ public abstract class MessageListener<T extends Message> {
         this.messageType = messageType;
     }
 
+
     /**
      * Construct a new message listener for a given Message type.
      */
@@ -66,8 +67,36 @@ public abstract class MessageListener<T extends Message> {
     /**
      * Lambda support. Takes in a consumer and wraps it around a MessageListener object, since the message listener is
      * not a functional interface.
-     * @param consumer Lambda logic to be run against the receieved message
-     * @param <K> Message type to listen for
+     * @param channelIdentifier Integer identifier of the channel/pin to listen to.
+     * @param consumer Lambda logic to be run against the received message.
+     * @param <K> Message type to listen for.
+     * @return New MessageListener for the given type and logic.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K extends Message> MessageListener<K> from(Integer channelIdentifier, Consumer<K> consumer) {
+        Class typeArguments[] = TypeResolver.resolveRawArguments(Consumer.class, consumer.getClass());
+        return new ConsumerMessageListener<>(channelIdentifier, consumer, typeArguments[0]);
+    }
+
+    /**
+     * Lambda support. Takes in a consumer and wraps it around a MessageListener object, since the message listener is
+     * not a functional interface.
+     * @param channel DigitalChannel identifier of the channel to listen to.
+     * @param consumer Lambda logic to be run against the received message.
+     * @param <K> Message type to listen for.
+     * @return New MessageListener for the given type and logic.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K extends Message> MessageListener<K> from(DigitalChannel channel, Consumer<K> consumer) {
+        Class typeArguments[] = TypeResolver.resolveRawArguments(Consumer.class, consumer.getClass());
+        return new ConsumerMessageListener<>(channel, consumer, typeArguments[0]);
+    }
+
+    /**
+     * Lambda support. Takes in a consumer and wraps it around a MessageListener object, since the message listener is
+     * not a functional interface.
+     * @param consumer Lambda logic to be run against the received message.
+     * @param <K> Message type to listen for.
      * @return New MessageListener for the given type and logic.
      */
     @SuppressWarnings("unchecked")
