@@ -1,6 +1,8 @@
 package com.bortbort.arduino.FiloFirmata;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
+import net.jodah.typetools.TypeResolver;
+
 import java.util.function.Consumer;
 
 /**
@@ -15,11 +17,9 @@ class ConsumerMessageListener<K extends Message> extends MessageListener<K> {
      * Construct a MessageListener that wraps around a Java 8+ lambda to support quick and easy listener generation.
      * @param channelIdentifier DigitalChannel identifier of the channel to listen to.
      * @param consumer Lambda logic to be run against the received message.
-     * @param messageType Message type to listen for.
      */
-    public ConsumerMessageListener(Integer channelIdentifier, Consumer<K> consumer,
-                                     Class<K> messageType) {
-        this(consumer, messageType);
+    public ConsumerMessageListener(Integer channelIdentifier, Consumer<K> consumer) {
+        this(consumer);
         this.channelIdentifier = channelIdentifier;
     }
 
@@ -27,11 +27,9 @@ class ConsumerMessageListener<K extends Message> extends MessageListener<K> {
      * Construct a MessageListener that wraps around a Java 8+ lambda to support quick and easy listener generation.
      * @param channel DigitalChannel identifier of the channel to listen to.
      * @param consumer Lambda logic to be run against the received message.
-     * @param messageType Message type to listen for.
      */
-    public ConsumerMessageListener(DigitalChannel channel, Consumer<K> consumer,
-                                     Class<K> messageType) {
-        this(consumer, messageType);
+    public ConsumerMessageListener(DigitalChannel channel, Consumer<K> consumer) {
+        this(consumer);
         this.channel = channel;
         this.channelIdentifier = channel.getIdentifier();
     }
@@ -39,12 +37,12 @@ class ConsumerMessageListener<K extends Message> extends MessageListener<K> {
     /**
      * Construct a MessageListener that wraps around a Java 8+ lambda to support quick and easy listener generation.
      * @param consumer Lambda logic to be run against the received message.
-     * @param messageType Message type to listen for.
      */
-    public ConsumerMessageListener(Consumer<K> consumer, Class<K> messageType) {
+    @SuppressWarnings("unchecked")
+    public ConsumerMessageListener(Consumer<K> consumer) {
+        Class typeArguments[] = TypeResolver.resolveRawArguments(Consumer.class, consumer.getClass());
         this.consumer = consumer;
-        this.messageType = messageType;
-        this.messageType = messageType;
+        this.messageType = typeArguments[0];
     }
 
 

@@ -74,8 +74,7 @@ public abstract class MessageListener<T extends Message> {
      */
     @SuppressWarnings("unchecked")
     public static <K extends Message> MessageListener<K> from(Integer channelIdentifier, Consumer<K> consumer) {
-        Class typeArguments[] = TypeResolver.resolveRawArguments(Consumer.class, consumer.getClass());
-        return new ConsumerMessageListener<>(channelIdentifier, consumer, typeArguments[0]);
+        return new ConsumerMessageListener<>(channelIdentifier, consumer);
     }
 
     /**
@@ -88,8 +87,7 @@ public abstract class MessageListener<T extends Message> {
      */
     @SuppressWarnings("unchecked")
     public static <K extends Message> MessageListener<K> from(DigitalChannel channel, Consumer<K> consumer) {
-        Class typeArguments[] = TypeResolver.resolveRawArguments(Consumer.class, consumer.getClass());
-        return new ConsumerMessageListener<>(channel, consumer, typeArguments[0]);
+        return new ConsumerMessageListener<>(channel, consumer);
     }
 
     /**
@@ -101,8 +99,7 @@ public abstract class MessageListener<T extends Message> {
      */
     @SuppressWarnings("unchecked")
     public static <K extends Message> MessageListener<K> from(Consumer<K> consumer) {
-        Class typeArguments[] = TypeResolver.resolveRawArguments(Consumer.class, consumer.getClass());
-        return new ConsumerMessageListener<>(consumer, typeArguments[0]);
+        return new ConsumerMessageListener<>(consumer);
     }
 
 
