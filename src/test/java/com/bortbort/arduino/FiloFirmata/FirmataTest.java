@@ -84,6 +84,8 @@ public class FirmataTest {
             }
         };
 
+        assertTrue(analogListener.getMessageType().equals(AnalogMessage.class));
+
         firmata.addMessageListener(analogListener);
         assertTrue(firmata.sendMessage(new ReportAnalogPinMessage(2, true)));
 
@@ -214,6 +216,26 @@ public class FirmataTest {
         waitForCallback();
 
         firmata.removeMessageListener(SysexReportFirmwareMessage.class, messageListener);
+    }
+
+    @Test
+    public void testJava8Functions() throws Exception {
+        MessageListener<AnalogMessage> analogListener = MessageListener.from((message) -> {
+            assertTrue(message.getAnalogValue() >= 0);
+            received();
+        });
+
+        assertTrue(analogListener.getMessageType().equals(AnalogMessage.class));
+
+        firmata.addMessageListener(analogListener);
+        assertTrue(firmata.sendMessage(new ReportAnalogPinMessage(2, true)));
+
+        // Verify we get a message response to channel global listening
+        waitForCallback();
+
+        firmata.removeMessageListener(analogListener);
+        assertTrue(firmata.sendMessage(new ReportAnalogPinMessage(2, false)));
+        reset();
     }
 
 

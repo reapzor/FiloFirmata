@@ -2,6 +2,7 @@ package com.bortbort.arduino.FiloFirmata;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import net.jodah.typetools.TypeResolver;
+import java.util.function.Consumer;
 
 /**
  * MessageListener.
@@ -58,8 +59,23 @@ public abstract class MessageListener<T extends Message> {
     @SuppressWarnings("unchecked")
     public MessageListener() {
         Class[] typeArguments = TypeResolver.resolveRawArguments(MessageListener.class, getClass());
-        this.messageType = typeArguments[0];
+        messageType = typeArguments[0];
     }
+
+
+    /**
+     * Lambda support. Takes in a consumer and wraps it around a MessageListener object, since the message listener is
+     * not a functional interface.
+     * @param consumer Lambda logic to be run against the receieved message
+     * @param <K> Message type to listen for
+     * @return New MessageListener for the given type and logic.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K extends Message> MessageListener<K> from(Consumer<K> consumer) {
+        Class typeArguments[] = TypeResolver.resolveRawArguments(Consumer.class, consumer.getClass());
+        return new ConsumerMessageListener<>(consumer, typeArguments[0]);
+    }
+
 
     /**
      * Handler for messageReceived() events. Whenever a Firmata message from the SerialPort is received, this event
@@ -68,6 +84,7 @@ public abstract class MessageListener<T extends Message> {
      * @param message Message implementation containing data about the Firmata command sent from the SerialPort.
      */
     public abstract void messageReceived(T message);
+
 
     /**
      * Holds the message type that this listener fires for. When a message is received, it will be be of the type
@@ -94,4 +111,5 @@ public abstract class MessageListener<T extends Message> {
     public DigitalChannel getChannel() {
         return channel;
     }
+
 }
