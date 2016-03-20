@@ -72,7 +72,6 @@ public abstract class MessageListener<T extends Message> {
      * @param <K> Message type to listen for.
      * @return New MessageListener for the given type and logic.
      */
-    @SuppressWarnings("unchecked")
     public static <K extends Message> MessageListener<K> from(Integer channelIdentifier, Consumer<K> consumer) {
         return new ConsumerMessageListener<>(channelIdentifier, consumer);
     }
@@ -85,7 +84,6 @@ public abstract class MessageListener<T extends Message> {
      * @param <K> Message type to listen for.
      * @return New MessageListener for the given type and logic.
      */
-    @SuppressWarnings("unchecked")
     public static <K extends Message> MessageListener<K> from(DigitalChannel channel, Consumer<K> consumer) {
         return new ConsumerMessageListener<>(channel, consumer);
     }
@@ -97,7 +95,6 @@ public abstract class MessageListener<T extends Message> {
      * @param <K> Message type to listen for.
      * @return New MessageListener for the given type and logic.
      */
-    @SuppressWarnings("unchecked")
     public static <K extends Message> MessageListener<K> from(Consumer<K> consumer) {
         return new ConsumerMessageListener<>(consumer);
     }

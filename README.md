@@ -99,7 +99,7 @@ MessageListener<SysexReportFirmwareMessage> firmwareListener = MessageListener.f
     System.out.println(message.getMinorVersion());
 }
 
-// Somewhere in your application you decide to tell the Firmata library that it should rout the firmware messages to your new listener.
+// Somewhere in your application you decide to tell the Firmata library that it should route the firmware messages to your new listener.
 //   Listeners can be added or removed while the library is started or stopped.
 firmata.addMessageListener(firmwareListener);
 
