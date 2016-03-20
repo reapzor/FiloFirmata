@@ -65,7 +65,7 @@ public abstract class MessageListener<T extends Message> {
 
 
     /**
-     * Lambda support. Takes in a consumer and wraps wraps a MessageListener object around it, since the message listener is
+     * Lambda support. Takes in a consumer and wraps a MessageListener object around it, since the message listener is
      * not a functional interface.
      * @param channelIdentifier Integer identifier of the channel/pin to listen to.
      * @param consumer Lambda logic to be run against the received message.
