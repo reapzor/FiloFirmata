@@ -1,6 +1,7 @@
 package com.bortbort.arduino.FiloFirmata.Messages;
 
 
+import com.bortbort.arduino.FiloFirmata.DigitalPinValue;
 import com.bortbort.arduino.FiloFirmata.PinCapability;
 
 /**
@@ -13,11 +14,13 @@ public class SysexPinStateMessage implements Message {
     private Integer pinIdentifier;
     private PinCapability currentPinMode;
     private Integer pinValue;
+    private DigitalPinValue digitalPinValue;
 
     public SysexPinStateMessage(Integer pinIdentifier, PinCapability currentPinMode, Integer pinValue) {
         this.pinIdentifier = pinIdentifier;
         this.currentPinMode = currentPinMode;
         this.pinValue = pinValue;
+        digitalPinValue = DigitalPinValue.valueFromInt(pinValue);
     }
 
     /**
@@ -38,8 +41,7 @@ public class SysexPinStateMessage implements Message {
 
     /**
      * Get Pin Value
-     * Gets the pin value that was set on this pin. For pullup, this will be 1. For output, this could be 1 or 0.
-     * For input, this is always 0.
+     * Gets the pin value that was set on this pin.
      * Representing the logic level 'out' of the pin, either set by user or by PinCapability pin mode.
      * @return Integer value that has been set to the pin (NOT READ!)
      */
@@ -47,4 +49,13 @@ public class SysexPinStateMessage implements Message {
         return pinValue;
     }
 
+    /**
+     * Get Digital Pin Value
+     * Gets the pin value that was set on this pin, translated to digital HIGH/LOW enum values.
+     * @return DigitalPinValue representing the current Pin value. (Pullup or down, this does NOT represent
+     * what is being written to the digital pin if it is set as output.)
+     */
+    public DigitalPinValue getDigitalPinValue() {
+        return digitalPinValue;
+    }
 }
