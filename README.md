@@ -93,11 +93,11 @@ MessageListener<SysexReportFirmwareMessage> firmwareListener =
 };
 
 /* Java 8 lambda wrapper */
-MessageListener<SysexReportFirmwareMessage> firmwareListener = MessageListener.from((message) -> {
+MessageListener<SysexReportFirmwareMessage> firmwareListener = MessageListener.from(message -> {
     System.out.println(message.getFirmwareName());
     System.out.println(message.getMajorVersion());
     System.out.println(message.getMinorVersion());
-}
+});
 
 // Somewhere in your application you decide to tell the Firmata library that it should route the firmware messages to your new listener.
 //   Listeners can be added or removed while the library is started or stopped.
