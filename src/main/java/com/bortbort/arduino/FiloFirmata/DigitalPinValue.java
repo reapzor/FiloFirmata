@@ -44,7 +44,7 @@ public enum DigitalPinValue {
     /**
     * Translate to DigitalPinValue from a supplied Byte.
     * @param byteValue Byte representing the digital value.
-     * @return DigitalPinValue representing the byte (High/Low).
+    * @return DigitalPinValue representing the byte (High/Low).
     */
     public static DigitalPinValue valueFromByte(Byte byteValue) {
         return valueFromInt((int) byteValue);

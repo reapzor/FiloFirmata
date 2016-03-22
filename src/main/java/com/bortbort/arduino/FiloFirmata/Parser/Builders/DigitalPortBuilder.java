@@ -32,8 +32,8 @@ public class DigitalPortBuilder extends MessageBuilder {
             if (InputStreamHelpers.fastReadBytesWithTimeout(inputStream, valueByteBody, 2000)) {
                 byte valueByte = DataTypeHelpers.decodeTwoSevenBitByteSequence(valueByteBody[0], valueByteBody[1]);
                 int pin = channelByte * 8;
-                ArrayList<Integer> pinValues = new ArrayList<>();
-                HashMap<Integer, Integer> pinMappedValues = new HashMap<>();
+                ArrayList<Integer> pinValues = new ArrayList<>(8);
+                HashMap<Integer, Integer> pinMappedValues = new HashMap<>(8);
                 for (int x = 0; x < 8; x++) {
                     int pinValue = ((valueByte >>> x) & 0x01);
                     pinValues.add(pinValue);
