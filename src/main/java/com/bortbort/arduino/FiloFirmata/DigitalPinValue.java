@@ -8,10 +8,12 @@ public enum DigitalPinValue {
     LOW    (0x00), // Digital Low
     HIGH   (0x01); // Digital High
 
-    private byte byteValue;
+    private Byte byteValue;
+    private Integer intValue;
 
     DigitalPinValue(int byteValue) {
         this.byteValue = (byte) byteValue;
+        intValue = byteValue;
     }
 
     /**
@@ -20,6 +22,14 @@ public enum DigitalPinValue {
      */
     public Byte getByteValue() {
         return byteValue;
+    }
+
+    /**
+     * Get Integer Value.
+     * @return Integer representing the digital logic pin value.
+     */
+    public Integer getIntValue() {
+        return intValue;
     }
 
     /**
@@ -36,7 +46,7 @@ public enum DigitalPinValue {
     * @param byteValue Byte representing the digital value.
      * @return DigitalPinValue representing the byte (High/Low).
     */
-    public static DigitalPinValue valueFromByte(byte byteValue) {
+    public static DigitalPinValue valueFromByte(Byte byteValue) {
         return valueFromInt((int) byteValue);
     }
 }
