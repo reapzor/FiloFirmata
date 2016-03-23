@@ -1,8 +1,5 @@
 package com.bortbort.arduino.FiloFirmata.Messages;
 
-import com.bortbort.arduino.FiloFirmata.DigitalPinValue;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
