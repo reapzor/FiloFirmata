@@ -20,11 +20,11 @@ public class DigitalPortMessage extends ChannelMessage {
     }
 
     /**
-     * Get Pin Integer Values
+     * Get Pin Values
      * The keys will be 0-7 for channel 1, 8-15 for channel 2, 16-23 for channel 3.
      * @return HashMap containing a map of all pin values and their actual index in the Firmata device.
      */
-    public HashMap<Integer, Integer> getPinIntegerValues() {
+    public HashMap<Integer, Integer> getPinValues() {
          return pinValues;
     }
 
