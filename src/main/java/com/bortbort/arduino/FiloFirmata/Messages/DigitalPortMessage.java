@@ -1,5 +1,7 @@
 package com.bortbort.arduino.FiloFirmata.Messages;
 
+import com.bortbort.arduino.FiloFirmata.DigitalPinValue;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,27 +13,22 @@ import java.util.HashMap;
  * Channel 0 is pins 0-7. Channel 1 is pines 8-15.
  */
 public class DigitalPortMessage extends ChannelMessage {
-    private ArrayList<Integer> pinValues;
-    private HashMap<Integer, Integer> pinMappedValues;
+    private HashMap<Integer, Integer> pinValues;
     private Byte portByte;
 
-    public DigitalPortMessage(byte channelPort, ArrayList<Integer> pinValues,
-                              HashMap<Integer, Integer> pinMappedValues, Byte portByte) {
+    public DigitalPortMessage(byte channelPort, HashMap<Integer, Integer> pinValues, Byte portByte) {
         super(channelPort);
         this.pinValues = pinValues;
-        this.pinMappedValues = pinMappedValues;
         this.portByte = portByte;
     }
 
     /**
-     * Get Pin Values
-     * An ordered array of pin values where index 0 could be pin 0, pin 8, or pin 16, depending on the Channel.
-     * If you know the channel you will be able to identify the pins naturally, but if you are un-aware of the channel
-     * or don't want to handle any mapping of values to pin indexes, use getPortMappedValues().
-     * @return ArrayList of digital pin logic levels from pin 0-7 (c1), 8-15 (c2), 16-23 (c3)
+     * Get Pin Integer Values
+     * The keys will be 0-7 for channel 1, 8-15 for channel 2, 16-23 for channel 3.
+     * @return HashMap containing a map of all pin values and their actual index in the Firmata device.
      */
-    public ArrayList<Integer> getPinValues() {
-        return pinValues;
+    public HashMap<Integer, Integer> getPinIntegerValues() {
+         return pinValues;
     }
 
     /**
@@ -43,16 +40,6 @@ public class DigitalPortMessage extends ChannelMessage {
      */
     public Byte getPortByte() {
         return portByte;
-    }
-
-    /**
-     * Get Pin Mapped Values
-     * HashMap variant of getPinValues() array, however this maps all actual pin indexes to the captured values.
-     * The keys will be 0-7 for channel 1, 8-15 for channel 2, 16-23 for channel 3.
-     * @return HashMap containing a map of all pin values and their actual index in the Firmata device.
-     */
-    public HashMap<Integer, Integer> getPinMappedValues() {
-        return pinMappedValues;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.bortbort.arduino.FiloFirmata.Parser.Builders;
 
+import com.bortbort.arduino.FiloFirmata.DigitalPinValue;
 import com.bortbort.arduino.FiloFirmata.Messages.AnalogMessage;
 import com.bortbort.arduino.FiloFirmata.Messages.DigitalPortMessage;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
@@ -32,14 +33,12 @@ public class DigitalPortBuilder extends MessageBuilder {
             if (InputStreamHelpers.fastReadBytesWithTimeout(inputStream, valueByteBody, 2000)) {
                 byte valueByte = DataTypeHelpers.decodeTwoSevenBitByteSequence(valueByteBody[0], valueByteBody[1]);
                 int pin = channelByte * 8;
-                ArrayList<Integer> pinValues = new ArrayList<>(8);
-                HashMap<Integer, Integer> pinMappedValues = new HashMap<>(8);
+                HashMap<Integer, Integer> pinValues = new HashMap<>(8);
                 for (int x = 0; x < 8; x++) {
                     int pinValue = ((valueByte >>> x) & 0x01);
-                    pinValues.add(pinValue);
-                    pinMappedValues.put(pin + x, pinValue);
+                    pinValues.put(pin + x, pinValue);
                 }
-                return new DigitalPortMessage(channelByte, pinValues, pinMappedValues, valueByte);
+                return new DigitalPortMessage(channelByte, pinValues, valueByte);
             }
             else {
                 log.error("Unable to read digital port message value for channel {}", channelByte);
