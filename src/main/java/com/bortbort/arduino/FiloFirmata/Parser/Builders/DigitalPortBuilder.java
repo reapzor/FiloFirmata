@@ -34,11 +34,14 @@ public class DigitalPortBuilder extends MessageBuilder {
                 byte valueByte = DataTypeHelpers.decodeTwoSevenBitByteSequence(valueByteBody[0], valueByteBody[1]);
                 int pin = channelByte * 8;
                 HashMap<Integer, Integer> pinValues = new HashMap<>(8);
+                HashMap<Integer, DigitalPinValue> digitalPinValues = new HashMap<>(8);
                 for (int x = 0; x < 8; x++) {
                     int pinValue = ((valueByte >>> x) & 0x01);
-                    pinValues.put(pin + x, pinValue);
+                    int pinID = pin + x;
+                    pinValues.put(pinID, pinValue);
+                    digitalPinValues.put(pinID, DigitalPinValue.valueFromInt(pinValue));
                 }
-                return new DigitalPortMessage(channelByte, pinValues, valueByte);
+                return new DigitalPortMessage(channelByte, pinValues, digitalPinValues, valueByte);
             }
             else {
                 log.error("Unable to read digital port message value for channel {}", channelByte);

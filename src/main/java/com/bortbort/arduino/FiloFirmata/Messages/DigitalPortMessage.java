@@ -1,5 +1,7 @@
 package com.bortbort.arduino.FiloFirmata.Messages;
 
+import com.bortbort.arduino.FiloFirmata.DigitalPinValue;
+
 import java.util.HashMap;
 
 /**
@@ -11,18 +13,30 @@ import java.util.HashMap;
  */
 public class DigitalPortMessage extends ChannelMessage {
     private HashMap<Integer, Integer> pinValues;
+    private HashMap<Integer, DigitalPinValue> digitalPinValues;
     private Byte portByte;
 
-    public DigitalPortMessage(byte channelPort, HashMap<Integer, Integer> pinValues, Byte portByte) {
+    public DigitalPortMessage(byte channelPort, HashMap<Integer, Integer> pinValues,
+                              HashMap<Integer, DigitalPinValue> digitalPinValues, Byte portByte) {
         super(channelPort);
         this.pinValues = pinValues;
+        this.digitalPinValues = digitalPinValues;
         this.portByte = portByte;
+    }
+
+    /**
+     * Get Digital Pin Values
+     * The keys will be 0-7 for channel 1, 8-15 for channel 2, 16-23 for channel 3.
+     * @return HashMap containing a map of all pin identifiers and their DigitalPinValue (High/Low)
+     */
+    public HashMap<Integer, DigitalPinValue> getDigitalPinValues() {
+        return digitalPinValues;
     }
 
     /**
      * Get Pin Values
      * The keys will be 0-7 for channel 1, 8-15 for channel 2, 16-23 for channel 3.
-     * @return HashMap containing a map of all pin values and their actual index in the Firmata device.
+     * @return HashMap containing a map of all pin identifiers and their actual index in the Firmata device.
      */
     public HashMap<Integer, Integer> getPinValues() {
          return pinValues;
