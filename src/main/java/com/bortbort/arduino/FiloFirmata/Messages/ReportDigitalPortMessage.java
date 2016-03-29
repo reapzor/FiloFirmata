@@ -1,5 +1,6 @@
 package com.bortbort.arduino.FiloFirmata.Messages;
 
+import com.bortbort.arduino.FiloFirmata.DigitalChannel;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 
 import java.io.ByteArrayOutputStream;
@@ -13,11 +14,11 @@ public class ReportDigitalPortMessage extends TransmittableChannelMessage {
 
     /**
      * Report Digital Channel Message
-     * @param pinIdentifier int Index value for Firmata pin.
+     * @param digitalChannel DigitalChannel value for Firmata port.
      * @param enableReporting Boolean value to enable or disable reporting. (True = enable)
      */
-    public ReportDigitalPortMessage(int pinIdentifier, Boolean enableReporting) {
-        super(CommandBytes.REPORT_DIGITAL_PIN, pinIdentifier);
+    public ReportDigitalPortMessage(DigitalChannel digitalChannel, Boolean enableReporting) {
+        super(CommandBytes.REPORT_DIGITAL_PIN, digitalChannel.getIdentifier());
         this.enableReporting = enableReporting;
     }
 
