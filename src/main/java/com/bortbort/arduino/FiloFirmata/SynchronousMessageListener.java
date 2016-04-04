@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
  * Turns an async design for listening and sending messages into a synchronous design allowing
  * a message to be sent with the return value being the response message.
  */
-class SynchronousMessageListener extends MessageListener<Message> {
+class SynchronousMessageListener<T extends Message> extends MessageListener<T> {
     private static final Logger log = LoggerFactory.getLogger(SynchronousMessageListener.class);
     private static final int RESPONSE_WAIT_TIME = 5000;
-    private Message responseMessage;
+    private T responseMessage;
     private Boolean responseReceived = null;
     private final Object lock = new Object();
 
@@ -20,8 +20,8 @@ class SynchronousMessageListener extends MessageListener<Message> {
      * Construct a synchronous message listener for a given message type.
      * @param messageType The Class type of message to listen for.
      */
-    public SynchronousMessageListener(Class<? extends Message> messageType) {
-        super(messageType);
+    public SynchronousMessageListener(Class<T> messageType) {
+        this.messageType = messageType;
     }
 
 
@@ -33,7 +33,7 @@ class SynchronousMessageListener extends MessageListener<Message> {
      * @param message Message response from the project board that will be saved.
      */
     @Override
-    public void messageReceived(Message message) {
+    public void messageReceived(T message) {
         if (responseReceived != null) {
             if (responseReceived) {
                 log.warn("Received more than one synchronous message reply!");
@@ -92,7 +92,7 @@ class SynchronousMessageListener extends MessageListener<Message> {
      * class type that was used when implementing this class.
      * @return T Message type object holding the response message the client was waiting for.
      */
-    public Message getResponseMessage() {
+    public T getResponseMessage() {
         waitForResponse();
         return responseMessage;
     }

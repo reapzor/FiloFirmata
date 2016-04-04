@@ -15,7 +15,7 @@ public abstract class MessageListener<T extends Message> {
      * Holds the message type that this listener fires for. When a message is received, it will be be of the type
      * provided when implementing this class.
      */
-    protected Class<? extends Message> messageType;
+    protected Class<T> messageType;
 
     /**
      * Holds the channel identifier for the listener, if provided during construction.
@@ -26,6 +26,7 @@ public abstract class MessageListener<T extends Message> {
      * Holds the DigitalChannel for the listener, if provided during construction.
      */
     protected DigitalChannel channel;
+
 
     /**
      * Construct a new message listener for a given channel identifier and Message type.
@@ -44,15 +45,6 @@ public abstract class MessageListener<T extends Message> {
         this.channel = channel;
         this.channelIdentifier = channel.getIdentifier();
     }
-
-    /**
-     * Construct a new message listener for the given message type
-     * @param messageType type of message this listener is for
-     */
-    protected MessageListener(Class<? extends Message> messageType) {
-        this.messageType = messageType;
-    }
-
 
     /**
      * Construct a new message listener for a given Message type.
@@ -115,7 +107,7 @@ public abstract class MessageListener<T extends Message> {
      *
      * @return Class representing the Message type this listener fires for.
      */
-    public Class<? extends Message> getMessageType() {
+    public Class<T> getMessageType() {
         return messageType;
     }
 
