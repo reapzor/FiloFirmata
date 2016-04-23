@@ -7,14 +7,15 @@ import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandParser;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.*;
 import com.bortbort.helpers.DataTypeHelpers;
+import com.google.common.collect.ArrayListMultimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Implements the Firmata protocol with a Firmata supported device, using any number of custom commands. This library
@@ -26,10 +27,11 @@ public class Firmata extends SerialPortEventListener {
     private static final Integer MIN_SUPPORTED_VERSION_MAJOR = 2;
     private static final Integer MIN_SUPPORTED_VERSION_MINOR = 5;
 
+
     /**
      * Map of listener objects registered to respond to specific message events.
      */
-    private final HashMap<Class, HashMap<Integer, ArrayList<MessageListener>>> messageListenerMap = new HashMap<>();
+    private final HashMap<Class, ArrayListMultimap<Integer, MessageListener>> messageListenerMap = new HashMap<>();
 
     /**
      * Serial port adapter reference.
@@ -118,19 +120,14 @@ public class Firmata extends SerialPortEventListener {
     private void addListener(Integer channel, Class<? extends Message> messageClass, MessageListener messageListener) {
         // Build up the empty class listener map if not already there
         if (!messageListenerMap.containsKey(messageClass)) {
-            messageListenerMap.put(messageClass, new HashMap<>());
+           messageListenerMap.put(messageClass, ArrayListMultimap.create());
         }
 
         // Get the message listener map for the given class
-        HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageClass);
-
-        // Builds up the empty channel listener array if not already there
-        if (!listenerMap.containsKey(channel)) {
-            listenerMap.put(channel, new ArrayList<>());
-        }
+        ArrayListMultimap<Integer, MessageListener> listenerMap = messageListenerMap.get(messageClass);
 
         // Get the message listener array for the given channel
-        ArrayList<MessageListener> messageListeners = listenerMap.get(channel);
+        List<MessageListener> messageListeners = listenerMap.get(channel);
         if (!messageListeners.contains(messageListener)) {
             messageListeners.add(messageListener);
         }
@@ -147,9 +144,9 @@ public class Firmata extends SerialPortEventListener {
     private void removeListener(Integer channel, Class<? extends Message> messageClass,
                                       MessageListener messageListener) {
         if (messageListenerMap.containsKey(messageClass)) {
-            HashMap<Integer, ArrayList<MessageListener>> listenerMap = messageListenerMap.get(messageClass);
+            ArrayListMultimap<Integer, MessageListener> listenerMap = messageListenerMap.get(messageClass);
             if (listenerMap.containsKey(channel)) {
-                ArrayList<MessageListener> messageListeners = listenerMap.get(channel);
+                List<MessageListener> messageListeners = listenerMap.get(channel);
                 messageListeners.remove(messageListener);
             }
         }
@@ -304,14 +301,8 @@ public class Firmata extends SerialPortEventListener {
      * Remove all registered listeners from the Firmata library regardless of class and channel.
      */
     public void removeAllListeners() {
-        for (HashMap<Integer, ArrayList<MessageListener>> channelMap : messageListenerMap.values()) {
-            // Java 8 fun
-            //channelMap.values().stream().filter(listenerArray -> listenerArray != null).forEach(ArrayList::clear);
-            for (ArrayList<MessageListener> listenerArray : channelMap.values()) {
-                if (listenerArray != null) {
-                    listenerArray.clear();
-                }
-            }
+        for (ArrayListMultimap<Integer, MessageListener> channelMap : messageListenerMap.values()) {
+            channelMap.clear();
         }
     }
 
@@ -619,12 +610,12 @@ public class Firmata extends SerialPortEventListener {
 
     /**
      * Dispatch a message to the corresponding listener arrays in the listener map
-     * @param listenerMap HashMap of listener arrays to dispatch the message to
+     * @param listenerMap ArrayListMultimap of listener arrays to dispatch the message to
      * @param message Message to be dispatched to the listeners
      */
     @SuppressWarnings("unchecked")
-    private void dispatchMessage(HashMap<Integer, ArrayList<MessageListener>> listenerMap, Message message) {
-        ArrayList<MessageListener> messageListeners;
+    private void dispatchMessage(ArrayListMultimap<Integer, MessageListener> listenerMap, Message message) {
+        List<MessageListener> messageListeners;
 
         // If the message is a Channel Message, hit the channel based listeners first.
         if (message instanceof ChannelMessage) {
