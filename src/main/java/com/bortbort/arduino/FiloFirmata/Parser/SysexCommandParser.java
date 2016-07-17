@@ -1,11 +1,11 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
+import com.bortbort.arduino.FiloFirmata.FirmataHelper;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.SysexCapabilityResponseBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.SysexPinStateResponseBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.SysexReportFirmwareBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.SysexStringDataBuilder;
-import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
@@ -104,7 +104,7 @@ public class SysexCommandParser extends MessageBuilder {
             }
         } catch (IOException e) {
             log.error("Error reading Sysex message body for command {}.",
-                    DataTypeHelpers.bytesToHexString(sysexCommandByte));
+                    FirmataHelper.bytesToHexString(sysexCommandByte));
             return null;
         }
 
@@ -119,8 +119,8 @@ public class SysexCommandParser extends MessageBuilder {
         SysexMessageBuilder messageBuilder = messageBuilderMap.get(sysexCommandByte);
         if (messageBuilder == null) {
             log.error("There is no Sysex message parser registered for command {}. Body: {}",
-                    DataTypeHelpers.bytesToHexString(sysexCommandByte),
-                    DataTypeHelpers.bytesToHexString(messageBodyBuilder.toByteArray()));
+                    FirmataHelper.bytesToHexString(sysexCommandByte),
+                    FirmataHelper.bytesToHexString(messageBodyBuilder.toByteArray()));
             return null;
         }
 

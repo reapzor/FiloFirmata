@@ -6,7 +6,6 @@ import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandParser;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.*;
-import com.bortbort.helpers.DataTypeHelpers;
 import com.google.common.collect.ArrayListMultimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -323,7 +322,7 @@ public class Firmata extends SerialPortEventListener {
 
         try {
             log.debug("Transmitting message {}. Bytes: {}", message.getClass().getSimpleName(),
-                    DataTypeHelpers.bytesToHexString(message.toByteArray()));
+                    FirmataHelper.bytesToHexString(message.toByteArray()));
             serialPort.getOutputStream().write(message.toByteArray());
             return true;
         } catch (IOException e) {
@@ -370,7 +369,7 @@ public class Firmata extends SerialPortEventListener {
     public synchronized Boolean sendRaw(byte... rawBytes) {
         if (!start()) {
             log.error("Firmata library is not connected / started! Cannot send bytes {}",
-                    DataTypeHelpers.bytesToHexString(rawBytes));
+                    FirmataHelper.bytesToHexString(rawBytes));
             return false;
         }
 
@@ -379,7 +378,7 @@ public class Firmata extends SerialPortEventListener {
             return true;
         } catch (IOException e) {
             log.error("Unable to transmit raw bytes through serial port. Bytes: {}",
-                    DataTypeHelpers.bytesToHexString(rawBytes));
+                    FirmataHelper.bytesToHexString(rawBytes));
             stop();
         }
 

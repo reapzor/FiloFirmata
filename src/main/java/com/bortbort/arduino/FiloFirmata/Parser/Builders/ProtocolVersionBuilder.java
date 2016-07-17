@@ -1,10 +1,10 @@
 package com.bortbort.arduino.FiloFirmata.Parser.Builders;
 
+import com.bortbort.arduino.FiloFirmata.FirmataHelper;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Messages.ProtocolVersionMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
-import com.bortbort.helpers.InputStreamHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class ProtocolVersionBuilder extends MessageBuilder {
     public Message buildMessage(Byte pinByte, InputStream inputStream) {
         try {
             byte[] versionBytes = new byte[2];
-            if (InputStreamHelpers.fastReadBytesWithTimeout(inputStream, versionBytes, 2000)) {
+            if (FirmataHelper.fastReadBytesWithTimeout(inputStream, versionBytes, 2000)) {
                 return new ProtocolVersionMessage((int) versionBytes[0], (int) versionBytes[1]);
             }
             else {

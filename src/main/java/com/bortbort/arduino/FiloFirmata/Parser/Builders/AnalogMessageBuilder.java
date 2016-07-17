@@ -1,11 +1,10 @@
 package com.bortbort.arduino.FiloFirmata.Parser.Builders;
 
+import com.bortbort.arduino.FiloFirmata.FirmataHelper;
 import com.bortbort.arduino.FiloFirmata.Messages.AnalogMessage;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
-import com.bortbort.helpers.DataTypeHelpers;
-import com.bortbort.helpers.InputStreamHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +25,8 @@ public class AnalogMessageBuilder extends MessageBuilder {
     public Message buildMessage(Byte channelByte, InputStream inputStream) {
         try {
             byte[] valueByteBody = new byte[2];
-            if (InputStreamHelpers.fastReadBytesWithTimeout(inputStream, valueByteBody, 2000)) {
-                byte valueByte = DataTypeHelpers.decodeTwoSevenBitByteSequence(valueByteBody[0], valueByteBody[1]);
+            if (FirmataHelper.fastReadBytesWithTimeout(inputStream, valueByteBody, 2000)) {
+                byte valueByte = FirmataHelper.decodeTwoSevenBitByteSequence(valueByteBody[0], valueByteBody[1]);
                 return new AnalogMessage(channelByte, valueByte);
             }
             else {

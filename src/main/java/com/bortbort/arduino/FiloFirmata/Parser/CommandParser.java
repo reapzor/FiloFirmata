@@ -1,14 +1,13 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
+import com.bortbort.arduino.FiloFirmata.FirmataHelper;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.AnalogMessageBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.DigitalPortBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.ProtocolVersionBuilder;
-import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.crypto.Data;
 import java.io.InputStream;
 import java.util.HashMap;
 
@@ -84,14 +83,14 @@ public class CommandParser {
             Message message = messageBuilder.buildMessage(channelByte, inputStream);
             if (message == null) {
                 log.error("Error building Firmata messageBuilder for command byte {}.",
-                        DataTypeHelpers.bytesToHexString(commandByte));
+                        FirmataHelper.bytesToHexString(commandByte));
             }
             else {
                 return message;
             }
         }
         else {
-            log.warn("Dropped byte {}.", DataTypeHelpers.bytesToHexString(commandByte));
+            log.warn("Dropped byte {}.", FirmataHelper.bytesToHexString(commandByte));
         }
 
         return null;

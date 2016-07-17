@@ -80,6 +80,8 @@ public class FirmataTest {
         MessageListener<AnalogMessage> analogListener = new MessageListener<AnalogMessage>() {
             @Override
             public void messageReceived(AnalogMessage message) {
+                System.out.println(message.getAnalogValue());
+                System.out.println(message.getAnalogValueByte());
                 assertTrue(message.getAnalogValue() >= 0);
                 received();
             }

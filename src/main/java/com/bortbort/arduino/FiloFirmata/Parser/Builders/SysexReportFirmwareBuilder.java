@@ -1,10 +1,10 @@
 package com.bortbort.arduino.FiloFirmata.Parser.Builders;
 
+import com.bortbort.arduino.FiloFirmata.FirmataHelper;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareMessage;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexCommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.SysexMessageBuilder;
-import com.bortbort.helpers.DataTypeHelpers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,10 +48,10 @@ public class SysexReportFirmwareBuilder extends SysexMessageBuilder {
         }
         else {
             try {
-                firmwareName = DataTypeHelpers.decodeTwoSevenBitByteString(messageBody, 2, messageBody.length - 2);
+                firmwareName = FirmataHelper.decodeTwoSevenBitByteString(messageBody, 2, messageBody.length - 2);
             } catch (UnsupportedEncodingException e) {
                 log.error("Unable to decode firmware name. Bytes: {}. E: {}.",
-                        DataTypeHelpers.bytesToHexString(messageBody),
+                        FirmataHelper.bytesToHexString(messageBody),
                         e.getMessage());
                 e.printStackTrace();
                 firmwareName = null;

@@ -1,19 +1,16 @@
 package com.bortbort.arduino.FiloFirmata.Parser.Builders;
 
 import com.bortbort.arduino.FiloFirmata.DigitalPinValue;
-import com.bortbort.arduino.FiloFirmata.Messages.AnalogMessage;
 import com.bortbort.arduino.FiloFirmata.Messages.DigitalPortMessage;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Parser.CommandBytes;
 import com.bortbort.arduino.FiloFirmata.Parser.MessageBuilder;
-import com.bortbort.helpers.DataTypeHelpers;
-import com.bortbort.helpers.InputStreamHelpers;
+import com.bortbort.arduino.FiloFirmata.FirmataHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -30,8 +27,8 @@ public class DigitalPortBuilder extends MessageBuilder {
     public Message buildMessage(Byte channelByte, InputStream inputStream) {
         try {
             byte[] valueByteBody = new byte[2];
-            if (InputStreamHelpers.fastReadBytesWithTimeout(inputStream, valueByteBody, 2000)) {
-                byte valueByte = DataTypeHelpers.decodeTwoSevenBitByteSequence(valueByteBody[0], valueByteBody[1]);
+            if (FirmataHelper.fastReadBytesWithTimeout(inputStream, valueByteBody, 2000)) {
+                byte valueByte = FirmataHelper.decodeTwoSevenBitByteSequence(valueByteBody[0], valueByteBody[1]);
                 int pin = channelByte * 8;
                 HashMap<Integer, Integer> pinValues = new HashMap<>(8);
                 HashMap<Integer, DigitalPinValue> digitalPinValues = new HashMap<>(8);

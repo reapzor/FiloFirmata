@@ -17,13 +17,13 @@ Maven:
 <dependency>
     <groupId>com.bortbort.arduino</groupId>
     <artifactId>filo-firmata</artifactId>
-    <version>0.1.10</version>
+    <version>0.1.11-SNAPSHOT</version>
 </dependency>
 ```
 
 Gradle:
 ```gradle
-compile 'com.bortbort.arduino:filo-firmata:0.1.10'
+compile 'com.bortbort.arduino:filo-firmata:0.1.11-SNAPSHOT'
 ```
 
 ## Integrating With Your Project

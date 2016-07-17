@@ -1,9 +1,8 @@
 package com.bortbort.arduino.FiloFirmata.PortAdapters;
 
-import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareMessage;
+import com.bortbort.arduino.FiloFirmata.FirmataHelper;
 import com.bortbort.arduino.FiloFirmata.Messages.SysexReportFirmwareQueryMessage;
 import com.bortbort.arduino.FiloFirmata.Messages.SystemResetMessage;
-import com.bortbort.helpers.DataTypeHelpers;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.slf4j.Logger;
@@ -45,7 +44,7 @@ public class PureJavaCommSerialPortTest {
         byte[] bytes = new byte[byteCount];
         Integer readBytes = serialPort.getInputStream().read(bytes, 0, byteCount);
 
-        String returnedBytes = DataTypeHelpers.bytesToHexString(bytes);
+        String returnedBytes = FirmataHelper.bytesToHexString(bytes);
 
         log.info("Expected Bytes: {}", expectedResponseBytes);
         log.info("Returned Bytes: {}", returnedBytes);
