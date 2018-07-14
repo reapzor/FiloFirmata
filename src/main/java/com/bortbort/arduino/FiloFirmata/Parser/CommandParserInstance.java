@@ -31,6 +31,11 @@ public class CommandParserInstance {
         this.messageBuilderMap = new HashMap<>();
     }
 
+    public CommandParserInstance(CommandParserInstance commandParserInstance) {
+        this.log = commandParserInstance.log;
+        this.messageBuilderMap = new HashMap<>(commandParserInstance.messageBuilderMap);
+    }
+
     /**
      * Add a custom parser to the Firmata library. When the command byte for the parser is received, the parser
      * will be responsible for turning the the data that follows into a Firmata message.
