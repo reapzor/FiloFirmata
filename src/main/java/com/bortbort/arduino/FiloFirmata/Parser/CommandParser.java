@@ -1,13 +1,11 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
-import com.bortbort.arduino.FiloFirmata.Parser.Builders.AnalogMessageBuilder;
-import com.bortbort.arduino.FiloFirmata.Parser.Builders.DigitalPortBuilder;
-import com.bortbort.arduino.FiloFirmata.Parser.Builders.ProtocolVersionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.util.HashMap;
 
 /**
  * Firmata Command Parser.
@@ -16,22 +14,9 @@ import java.io.InputStream;
 public class CommandParser {
     private static final Logger log = LoggerFactory.getLogger(CommandParser.class);
 
-    public static final CommandParserInstance DEFAULT_INSTANCE = new CommandParserInstance(log);
-
-    /**
-     * Register all pre-built Message builder objects available in the Firmata library.
-     */
+    public static final CommandParserInstance DEFAULT_INSTANCE = new CommandParserInstance(log, new HashMap<>());
     static {
-        DEFAULT_INSTANCE.addParser(
-                // Support Sysex commands
-                new SysexCommandParser(),
-                // Support Protocol Version command
-                new ProtocolVersionBuilder(),
-                // Analog command
-                new AnalogMessageBuilder(),
-                // Digital Port command
-                new DigitalPortBuilder()
-        );
+        DEFAULT_INSTANCE.addParser(SysexCommandParser.DEFAULT_INSTANCE);
     }
 
     /**

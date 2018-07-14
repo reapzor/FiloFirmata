@@ -2,6 +2,9 @@ package com.bortbort.arduino.FiloFirmata.Parser;
 
 import com.bortbort.arduino.FiloFirmata.FirmataHelper;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
+import com.bortbort.arduino.FiloFirmata.Parser.Builders.AnalogMessageBuilder;
+import com.bortbort.arduino.FiloFirmata.Parser.Builders.DigitalPortBuilder;
+import com.bortbort.arduino.FiloFirmata.Parser.Builders.ProtocolVersionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,17 +26,38 @@ public class CommandParserInstance {
     private Map<Byte, MessageBuilder> messageBuilderMap = new HashMap<>();
 
     public CommandParserInstance() {
-        this(LoggerFactory.getLogger(CommandParserInstance.class));
+        this(LoggerFactory.getLogger(CommandParserInstance.class), new HashMap<>());
     }
 
     public CommandParserInstance(Logger log) {
+        this(log, new HashMap<>());
+    }
+
+    public CommandParserInstance(Logger log, Map<Byte, MessageBuilder> messageBuilderMap) {
         this.log = log;
         this.messageBuilderMap = new HashMap<>();
+        addDefaultParser();
+        this.messageBuilderMap.putAll(messageBuilderMap);
     }
 
     public CommandParserInstance(CommandParserInstance commandParserInstance) {
-        this.log = commandParserInstance.log;
-        this.messageBuilderMap = new HashMap<>(commandParserInstance.messageBuilderMap);
+        this(commandParserInstance.log, new HashMap<>(commandParserInstance.messageBuilderMap));
+    }
+
+    /**
+     * Register all pre-built Message builder objects available in the Firmata library.
+     */
+    private void addDefaultParser() {
+        addParser(
+                // Support Sysex commands
+                new SysexCommandParser(),
+                // Support Protocol Version command
+                new ProtocolVersionBuilder(),
+                // Analog command
+                new AnalogMessageBuilder(),
+                // Digital Port command
+                new DigitalPortBuilder()
+        );
     }
 
     /**
