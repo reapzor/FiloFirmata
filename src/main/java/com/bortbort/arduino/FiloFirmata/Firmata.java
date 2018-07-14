@@ -573,7 +573,7 @@ public class Firmata extends SerialPortEventListener {
                     return;
                 }
 
-                Message message = configuration.getCommandParserInstance().handleByte(inputByte, inputStream);
+                Message message = configuration.getCommandParser().handleInputStream(inputByte, inputStream);
 
                 if (message != null) {
                     log.debug("Routing message {}", message.getClass().getSimpleName());

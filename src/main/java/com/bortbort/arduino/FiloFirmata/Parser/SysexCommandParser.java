@@ -22,10 +22,8 @@ import java.util.Map;
  */
 public class SysexCommandParser extends MessageBuilder {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(SysexCommandParser.class);
+    public static final Logger log = LoggerFactory.getLogger(SysexCommandParser.class);
     public static final SysexCommandParser DEFAULT_INSTANCE = new SysexCommandParser();
-
-    private final Logger log;
 
     /**
      * Map of sysexMessageBuilders used to parse an array/inputstream of bytes into a Firmata Sysex Message object.
@@ -43,24 +41,15 @@ public class SysexCommandParser extends MessageBuilder {
     }
 
     public SysexCommandParser() {
-        this(LOGGER);
-    }
-
-    public SysexCommandParser(Logger log) {
-        this(log, new HashMap<>());
-    }
-
-    public SysexCommandParser(Map<Byte, SysexMessageBuilder> messageBuilderMap) {
-        this(LOGGER, messageBuilderMap);
+        this(new HashMap<>());
     }
 
     /**
      * Implement the MessageBuilder object using the START_SYSEX command byte to handle all sysex messaged passed
      * from the Firmata SerialPort.
      */
-    public SysexCommandParser(Logger log, Map<Byte, SysexMessageBuilder> messageBuilderMap) {
+    public SysexCommandParser(Map<Byte, SysexMessageBuilder> messageBuilderMap) {
         super(CommandBytes.START_SYSEX);
-        this.log = log;
         this.messageBuilderMap = new HashMap<>();
         addDefaultParsers();
         this.messageBuilderMap.putAll(messageBuilderMap);
@@ -80,10 +69,6 @@ public class SysexCommandParser extends MessageBuilder {
                 // Support Sysex Pin State Response
                 new SysexPinStateResponseBuilder()
         );
-    }
-
-    public SysexCommandParser(SysexCommandParser obj) {
-        this(obj.log, new HashMap<>(obj.messageBuilderMap));
     }
 
     /**

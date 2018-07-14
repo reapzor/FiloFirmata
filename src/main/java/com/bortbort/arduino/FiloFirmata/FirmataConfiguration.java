@@ -1,7 +1,6 @@
 package com.bortbort.arduino.FiloFirmata;
 
 import com.bortbort.arduino.FiloFirmata.Parser.CommandParser;
-import com.bortbort.arduino.FiloFirmata.Parser.CommandParserInstance;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.*;
 
 /**
@@ -53,7 +52,7 @@ public class FirmataConfiguration {
     /**
      * Command Parser Instance for parsing bytes into Messages (generally CommandParser.DEFAULT_INSTANCE)
      * */
-    private CommandParserInstance commandParserInstance = CommandParser.DEFAULT_INSTANCE;
+    private CommandParser commandParser = CommandParser.DEFAULT_INSTANCE;
 
     /**
      * Serial Port adapter class to use with this library.
@@ -116,7 +115,7 @@ public class FirmataConfiguration {
         serialPortParity = configuration.serialPortParity;
         serialPortAdapterClass = configuration.serialPortAdapterClass;
         testProtocolCommunication = configuration.testProtocolCommunication;
-        commandParserInstance = configuration.commandParserInstance;
+        commandParser = configuration.commandParser;
     }
 
     /**
@@ -238,19 +237,19 @@ public class FirmataConfiguration {
     /**
      * Command Parser Instance for parsing bytes into Messages (generally CommandParser.DEFAULT_INSTANCE)
      *
-     * @return CommandParserInstance commandParserInstance
+     * @return CommandParserInstance commandParser
      * */
-    public CommandParserInstance getCommandParserInstance() {
-        return commandParserInstance;
+    public CommandParser getCommandParser() {
+        return commandParser;
     }
 
     /**
      * Command Parser Instance for parsing bytes into Messages (generally CommandParser.DEFAULT_INSTANCE)
      *
-     * @param commandParserInstance CommandParserInstance configuration option
+     * @param commandParser CommandParserInstance configuration option
      * */
-    public void setCommandParserInstance(CommandParserInstance commandParserInstance) {
-        this.commandParserInstance = commandParserInstance;
+    public void setCommandParser(CommandParser commandParser) {
+        this.commandParser = commandParser;
     }
 
     /**
