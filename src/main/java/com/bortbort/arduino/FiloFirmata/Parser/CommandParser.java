@@ -1,6 +1,5 @@
 package com.bortbort.arduino.FiloFirmata.Parser;
 
-import com.bortbort.arduino.FiloFirmata.FirmataHelper;
 import com.bortbort.arduino.FiloFirmata.Messages.Message;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.AnalogMessageBuilder;
 import com.bortbort.arduino.FiloFirmata.Parser.Builders.DigitalPortBuilder;
@@ -9,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
-import java.util.HashMap;
 
 /**
  * Firmata Command Parser.
@@ -18,16 +16,13 @@ import java.util.HashMap;
 public class CommandParser {
     private static final Logger log = LoggerFactory.getLogger(CommandParser.class);
 
-    /**
-     * Map of messageBuilders used to parse an array/inputstream of bytes into a Firmata Message object.
-     */
-    private static final HashMap<Byte, MessageBuilder> messageBuilderMap = new HashMap<>();
+    public static final CommandParserInstance DEFAULT_INSTANCE = new CommandParserInstance(log);
 
     /**
      * Register all pre-built Message builder objects available in the Firmata library.
      */
     static {
-        CommandParser.addParser(
+        DEFAULT_INSTANCE.addParser(
                 // Support Sysex commands
                 new SysexCommandParser(),
                 // Support Protocol Version command
@@ -46,7 +41,7 @@ public class CommandParser {
      * @param messageBuilder MessageBuilder object that translates the byte message into a Message object.
      */
     public static void addParser(MessageBuilder messageBuilder) {
-        messageBuilderMap.put(messageBuilder.getCommandByte(), messageBuilder);
+        DEFAULT_INSTANCE.addParser(messageBuilder);
     }
 
     /**
@@ -56,7 +51,7 @@ public class CommandParser {
      */
     public static void addParser(MessageBuilder... messageBuilderList) {
         for (MessageBuilder messageBuilder : messageBuilderList) {
-            addParser(messageBuilder);
+            DEFAULT_INSTANCE.addParser(messageBuilder);
         }
     }
 
@@ -72,28 +67,7 @@ public class CommandParser {
      * @return Message representing the Firmata Message that the SerialPort communications device sent.
      */
     public static Message handleByte(byte commandByte, InputStream inputStream) {
-        // Firmata command bytes are limited to a 0xF0 mask, or bytes 0xF0-0xFF
-        //   The extra data in the byte is for routing the command to various 'midi channels'
-        //   or in our case Firmata device pins.
-        byte firmataCommandByte = commandByte < (byte) 0xF0 ? (byte) (commandByte & 0xF0) : commandByte;
-        MessageBuilder messageBuilder = messageBuilderMap.get(firmataCommandByte);
-        if (messageBuilder != null) {
-            // Pull out the pin identifier bits that were padded into the byte (if any)
-            byte channelByte = (byte) (commandByte & 0x0F);
-            Message message = messageBuilder.buildMessage(channelByte, inputStream);
-            if (message == null) {
-                log.error("Error building Firmata messageBuilder for command byte {}.",
-                        FirmataHelper.bytesToHexString(commandByte));
-            }
-            else {
-                return message;
-            }
-        }
-        else {
-            log.warn("Dropped byte {}.", FirmataHelper.bytesToHexString(commandByte));
-        }
-
-        return null;
+        return DEFAULT_INSTANCE.handleByte(commandByte, inputStream);
     }
 
     /**
