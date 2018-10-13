@@ -1,5 +1,6 @@
 package com.bortbort.arduino.FiloFirmata;
 
+import com.bortbort.arduino.FiloFirmata.Parser.CommandParser;
 import com.bortbort.arduino.FiloFirmata.PortAdapters.*;
 
 /**
@@ -47,6 +48,11 @@ public class FirmataConfiguration {
      * Serial Port ParityBit configuration (generally N).
      */
     private SerialPortParity serialPortParity = SerialPortParity.PARITY_NONE;
+
+    /**
+     * Command Parser Instance for parsing bytes into Messages (generally CommandParser.DEFAULT_INSTANCE)
+     * */
+    private CommandParser commandParser = CommandParser.DEFAULT_INSTANCE;
 
     /**
      * Serial Port adapter class to use with this library.
@@ -109,6 +115,7 @@ public class FirmataConfiguration {
         serialPortParity = configuration.serialPortParity;
         serialPortAdapterClass = configuration.serialPortAdapterClass;
         testProtocolCommunication = configuration.testProtocolCommunication;
+        commandParser = configuration.commandParser;
     }
 
     /**
@@ -225,6 +232,24 @@ public class FirmataConfiguration {
      */
     public void setSerialPortParity(SerialPortParity serialPortParity) {
         this.serialPortParity = serialPortParity;
+    }
+
+    /**
+     * Command Parser Instance for parsing bytes into Messages (generally CommandParser.DEFAULT_INSTANCE)
+     *
+     * @return CommandParserInstance commandParser
+     * */
+    public CommandParser getCommandParser() {
+        return commandParser;
+    }
+
+    /**
+     * Command Parser Instance for parsing bytes into Messages (generally CommandParser.DEFAULT_INSTANCE)
+     *
+     * @param commandParser CommandParserInstance configuration option
+     * */
+    public void setCommandParser(CommandParser commandParser) {
+        this.commandParser = commandParser;
     }
 
     /**
